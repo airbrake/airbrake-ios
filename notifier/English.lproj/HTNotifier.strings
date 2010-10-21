@@ -1,0 +1,6 @@
+"THANKS" = "Thanks!";
+"NO" = "No";
+"YES" = "Yes";
+"AUTOMATICALLY_SEND_QUESTION" = "Would you like to automatically send crash reports for this app in the future?";
+"NOTICE_TITLE" = "Crash Report";
+"NOTICE_BODY" = "$BUNDLE has detected unreported crashes, would you like to send a report to the developer?";
