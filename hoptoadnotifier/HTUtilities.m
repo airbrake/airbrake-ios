@@ -38,8 +38,7 @@
 	
 #else
 	
-	NSProcessInfo *process = [NSProcessInfo processInfo];
-	return [process operatingSystemVersionString];
+	return [[NSProcessInfo processInfo] operatingSystemVersionString];
 	
 #endif
 }
@@ -66,7 +65,6 @@
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.machine", machine, &size, NULL, 0);
 	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-	NSLog(@"%@", platform);
 	
 	// get common device name
 	NSString *commonString = nil;
@@ -99,7 +97,7 @@
 	
 	// try getting view controller from notifier delegate
 	id<HTNotifierDelegate> notifierDelegate = [[HTNotifier sharedNotifier] delegate];
-	if (rootController == nil && [notifierDelegate respondsToSelector:@selector(rootViewControllerForNotice)]) {
+	if ([notifierDelegate respondsToSelector:@selector(rootViewControllerForNotice)]) {
 		rootController = [notifierDelegate rootViewControllerForNotice];
 	}
 	

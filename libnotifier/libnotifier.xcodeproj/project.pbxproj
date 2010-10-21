@@ -84,7 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				3B6BB51F12707EDE00546666 /* kissxml */,
-				3B6BB52C12707EDE00546666 /* notifier */,
+				3B6BB52C12707EDE00546666 /* hoptoadnotifier */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
@@ -130,7 +130,7 @@
 			path = ../kissxml;
 			sourceTree = SOURCE_ROOT;
 		};
-		3B6BB52C12707EDE00546666 /* notifier */ = {
+		3B6BB52C12707EDE00546666 /* hoptoadnotifier */ = {
 			isa = PBXGroup;
 			children = (
 				3B6BB52D12707EDE00546666 /* HTNotifier.strings */,
@@ -141,8 +141,8 @@
 				3B6BB53312707EDE00546666 /* HTUtilities.h */,
 				3B6BB53412707EDE00546666 /* HTUtilities.m */,
 			);
-			name = notifier;
-			path = ../notifier;
+			name = hoptoadnotifier;
+			path = ../hoptoadnotifier;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
