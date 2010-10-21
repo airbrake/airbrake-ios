@@ -1,0 +1,343 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
+		3B3CC3DC12669FC600BB24AC /* HTUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CC3DB12669FC600BB24AC /* HTUtilities.m */; };
+		3B3CC40D1266A30700BB24AC /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CC390126692AE00BB24AC /* HTNotice.m */; };
+		3B3CC42E1266A46D00BB24AC /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CC42D1266A46D00BB24AC /* HTNotifier.m */; };
+		3B54C28D1257D6D600089639 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27A1257D6D600089639 /* DDXMLDocument.m */; };
+		3B54C28E1257D6D600089639 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27C1257D6D600089639 /* DDXMLElement.m */; };
+		3B54C28F1257D6D600089639 /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27E1257D6D600089639 /* DDXMLElementAdditions.m */; };
+		3B54C2901257D6D600089639 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C2801257D6D600089639 /* DDXMLNode.m */; };
+		3B54C2921257D6D600089639 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C2851257D6D600089639 /* NSStringAdditions.m */; };
+		3B54C29A1257D72100089639 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B54C2991257D72100089639 /* libxml2.dylib */; };
+		3B54C29C1257D72600089639 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B54C29B1257D72600089639 /* SystemConfiguration.framework */; };
+		3B54C2AD1257D7A800089639 /* CAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C2AC1257D7A800089639 /* CAAppDelegate.m */; };
+		3B70EFD91267AE2200057F3D /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B70EFD81267AE2200057F3D /* HTNotifier.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D6058910D05DD3D006BFB54 /* CrashPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrashPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* CrashPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashPhone_Prefix.pch; sourceTree = "<group>"; };
+		3B3CC38F126692AE00BB24AC /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
+		3B3CC390126692AE00BB24AC /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
+		3B3CC3DA12669FC600BB24AC /* HTUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTUtilities.h; sourceTree = "<group>"; };
+		3B3CC3DB12669FC600BB24AC /* HTUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTUtilities.m; sourceTree = "<group>"; };
+		3B3CC42C1266A46D00BB24AC /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
+		3B3CC42D1266A46D00BB24AC /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
+		3B54C2781257D6D600089639 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
+		3B54C2791257D6D600089639 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
+		3B54C27A1257D6D600089639 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
+		3B54C27B1257D6D600089639 /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElement.h; sourceTree = "<group>"; };
+		3B54C27C1257D6D600089639 /* DDXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElement.m; sourceTree = "<group>"; };
+		3B54C27D1257D6D600089639 /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
+		3B54C27E1257D6D600089639 /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
+		3B54C27F1257D6D600089639 /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
+		3B54C2801257D6D600089639 /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
+		3B54C2811257D6D600089639 /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
+		3B54C2841257D6D600089639 /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringAdditions.h; sourceTree = "<group>"; };
+		3B54C2851257D6D600089639 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringAdditions.m; sourceTree = "<group>"; };
+		3B54C2991257D72100089639 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		3B54C29B1257D72600089639 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		3B54C2AB1257D7A800089639 /* CAAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAppDelegate.h; sourceTree = "<group>"; };
+		3B54C2AC1257D7A800089639 /* CAAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAAppDelegate.m; sourceTree = "<group>"; };
+		3B70EFD61267AE1B00057F3D /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* CrashPhone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CrashPhone-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
+				3B54C29A1257D72100089639 /* libxml2.dylib in Frameworks */,
+				3B54C29C1257D72600089639 /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				3B54C2AB1257D7A800089639 /* CAAppDelegate.h */,
+				3B54C2AC1257D7A800089639 /* CAAppDelegate.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* CrashPhone.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				3B54C2771257D6D600089639 /* kissxml */,
+				3B54C2861257D6D600089639 /* notifier */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* CrashPhone_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+				8D1107310486CEB800E47090 /* CrashPhone-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
+				3B54C2991257D72100089639 /* libxml2.dylib */,
+				3B54C29B1257D72600089639 /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3B54C2771257D6D600089639 /* kissxml */ = {
+			isa = PBXGroup;
+			children = (
+				3B54C2781257D6D600089639 /* DDXML.h */,
+				3B54C2791257D6D600089639 /* DDXMLDocument.h */,
+				3B54C27A1257D6D600089639 /* DDXMLDocument.m */,
+				3B54C27B1257D6D600089639 /* DDXMLElement.h */,
+				3B54C27C1257D6D600089639 /* DDXMLElement.m */,
+				3B54C27D1257D6D600089639 /* DDXMLElementAdditions.h */,
+				3B54C27E1257D6D600089639 /* DDXMLElementAdditions.m */,
+				3B54C27F1257D6D600089639 /* DDXMLNode.h */,
+				3B54C2801257D6D600089639 /* DDXMLNode.m */,
+				3B54C2811257D6D600089639 /* DDXMLPrivate.h */,
+				3B54C2841257D6D600089639 /* NSStringAdditions.h */,
+				3B54C2851257D6D600089639 /* NSStringAdditions.m */,
+			);
+			name = kissxml;
+			path = ../kissxml;
+			sourceTree = SOURCE_ROOT;
+		};
+		3B54C2861257D6D600089639 /* notifier */ = {
+			isa = PBXGroup;
+			children = (
+				3B3CC42C1266A46D00BB24AC /* HTNotifier.h */,
+				3B3CC42D1266A46D00BB24AC /* HTNotifier.m */,
+				3B3CC38F126692AE00BB24AC /* HTNotice.h */,
+				3B3CC390126692AE00BB24AC /* HTNotice.m */,
+				3B3CC3DA12669FC600BB24AC /* HTUtilities.h */,
+				3B3CC3DB12669FC600BB24AC /* HTUtilities.m */,
+				3B70EFD81267AE2200057F3D /* HTNotifier.strings */,
+			);
+			name = notifier;
+			path = ../notifier;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* CrashPhone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "CrashPhone" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CrashPhone;
+			productName = CrashPhone;
+			productReference = 1D6058910D05DD3D006BFB54 /* CrashPhone.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CrashPhone" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* CrashPhone */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
+				3B70EFD91267AE2200057F3D /* HTNotifier.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				3B54C28D1257D6D600089639 /* DDXMLDocument.m in Sources */,
+				3B54C28E1257D6D600089639 /* DDXMLElement.m in Sources */,
+				3B54C28F1257D6D600089639 /* DDXMLElementAdditions.m in Sources */,
+				3B54C2901257D6D600089639 /* DDXMLNode.m in Sources */,
+				3B54C2921257D6D600089639 /* NSStringAdditions.m in Sources */,
+				3B54C2AD1257D7A800089639 /* CAAppDelegate.m in Sources */,
+				3B3CC3DC12669FC600BB24AC /* HTUtilities.m in Sources */,
+				3B3CC40D1266A30700BB24AC /* HTNotice.m in Sources */,
+				3B3CC42E1266A46D00BB24AC /* HTNotifier.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3B70EFD81267AE2200057F3D /* HTNotifier.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3B70EFD61267AE1B00057F3D /* English */,
+			);
+			name = HTNotifier.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CrashPhone_Prefix.pch;
+				INFOPLIST_FILE = "CrashPhone-Info.plist";
+				PRODUCT_NAME = CrashPhone;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CrashPhone_Prefix.pch;
+				INFOPLIST_FILE = "CrashPhone-Info.plist";
+				PRODUCT_NAME = CrashPhone;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.1;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "CrashPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CrashPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
