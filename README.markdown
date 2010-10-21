@@ -68,6 +68,11 @@ MyAppDelegate.m
       
       #pragma mark -
       #pragma mark HTNotifierDelegate
+      /*
+        These are only a few of the delegate methods you can implement
+        The rest are documented in HTNotifier.h
+        All of the delegate methods are optional
+      */
       - (UIViewController *)rootViewControllerForNotice {
         return self.rootViewController;
       }
@@ -77,8 +82,11 @@ MyAppDelegate.m
       - (void)notifierDidCloseAlert {
         [gameController resume];
       }
+      - (NSString *)titleForNoticeAlert {
+        return @"Oh Noes!";
+      }
       - (NSString *)bodyForNoticeAlert {
-        return @"I can has crash?";
+        return @"$BUNDLE has detected unreported crashes, would you like to send a report to the developer?";
       }
       
     @end
@@ -96,7 +104,7 @@ MyAppDelegate.m
 
     #import HTNotifier.h
 
-At the beginning of your applicatioin:didFinishLaunchingWithOptions:
+At the beginning of your application:didFinishLaunchingWithOptions:
 
     HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];
     [notifier setUseSSL:YES];
