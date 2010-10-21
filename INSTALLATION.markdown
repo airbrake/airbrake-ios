@@ -21,7 +21,7 @@
 6. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
     - code executed before this line will not be monitored for exceptions and crashes
 
-    `HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];`
+    `[HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];`
 
 #Testing
 
