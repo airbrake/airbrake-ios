@@ -71,10 +71,7 @@ static void HTHandleSignal(int signal);
 		// check passed in values
 		if ([apiKey length] > 0 && [environmentName length] > 0) {
 			// application notifications
-			[[NSNotificationCenter defaultCenter] addObserver:self
-													 selector:@selector(applicationDidBecomeActive:)
-														 name:UIApplicationDidBecomeActiveNotification
-													   object:nil];
+			[self performSelectorOnMainThread:@selector(registerNotifications) withObject:nil waitUntilDone:YES];
 			
 			// start reachability
 			reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
@@ -129,6 +126,8 @@ static void HTHandleSignal(int signal);
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	if ([self isHoptoadReachable]) {
+		[self performSelectorOnMainThread:@selector(unregisterNotifications) withObject:nil waitUntilDone:YES];
+		
 		NSArray *notices = [self noticePaths];
 		if ([notices count] > 0) {
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
@@ -138,10 +137,6 @@ static void HTHandleSignal(int signal);
 				[self performSelectorOnMainThread:@selector(showNoticeAlert) withObject:nil waitUntilDone:YES];
 			}
 		}
-		
-		[[NSNotificationCenter defaultCenter] removeObserver:self
-														name:UIApplicationDidBecomeActiveNotification
-													  object:nil];
 	}
 	
 	[pool drain];
@@ -151,7 +146,7 @@ static void HTHandleSignal(int signal);
 		[self.delegate notifierWillDisplayAlert];
 	}
 	
-	NSString *bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+	NSString *bundleName = [HTUtilities bundleDisplayName];
 	
 	NSString *title = HTLocalizedString(@"NOTICE_TITLE");
 	if ([self.delegate respondsToSelector:@selector(titleForNoticeAlert)]) {
@@ -272,6 +267,17 @@ static void HTHandleSignal(int signal);
 	}
 	return path;
 }
+- (void)registerNotifications {
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(applicationDidBecomeActive:)
+												 name:UIApplicationDidBecomeActiveNotification
+											   object:nil];
+}
+- (void)unregisterNotifications {
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:UIApplicationDidBecomeActiveNotification
+												  object:nil];
+}
 @end
 
 #pragma mark -
@@ -325,9 +331,7 @@ static void HTHandleSignal(int signal);
 - (void)dealloc {
 	[self stopHandler];
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:UIApplicationDidBecomeActiveNotification
-												  object:nil];
+	[self performSelectorOnMainThread:@selector(unregisterNotifications) withObject:nil waitUntilDone:YES];
 	
 	if (reachability != NULL) { CFRelease(reachability), reachability = NULL; }
 	[apiKey release], apiKey = nil;
