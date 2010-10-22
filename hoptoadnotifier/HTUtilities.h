@@ -45,6 +45,15 @@
 + (NSString *)applicationVersion;
 
 /*
+ returns a display name for the application
+ 
+ every app should have a CFBundleIdentifier. most apps have
+ a CFBundleDisplayName. the former will be used over the
+ first if it exists
+ */
++ (NSString *)bundleDisplayName;
+
+/*
  returns the current platform
  
  if the app is running in the simulator

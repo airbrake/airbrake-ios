@@ -53,6 +53,16 @@
 		return [[NSString stringWithFormat:@"%@ (%@)", bundleVersion, bundleShortVersionString] retain];
 	}
 }
++ (NSString *)bundleDisplayName {
+	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
+	NSString *displayName = [infoPlist objectForKey:@"CFBundleDisplayName"];
+	if (displayName == nil) {
+		return [infoPlist objectForKey:@"CFBundleIdentifier"];
+	}
+	else {
+		return displayName;
+	}
+}
 + (NSString *)platform {
 #if TARGET_IPHONE_SIMULATOR
 	
