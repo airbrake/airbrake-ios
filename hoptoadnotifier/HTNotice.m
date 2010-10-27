@@ -64,7 +64,12 @@
 	notice.platform = [HTUtilities platform];
 	notice.applicationVersion = [HTUtilities applicationVersion];
 	notice.viewControllerName = [HTUtilities currentViewController];
-	notice.environmentName = [[HTNotifier sharedNotifier] environmentName];
+	NSString *envName = [[HTNotifier sharedNotifier] environmentName];
+	envName = [envName stringByReplacingOccurrencesOfString:HTNotifierBuildDate
+												 withString:[NSString stringWithFormat:@"%s", __DATE__]];
+	envName = [envName stringByReplacingOccurrencesOfString:HTNotifierBundleVersion
+												 withString:notice.applicationVersion];
+	notice.environmentName = envName;
 	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
 	return [notice autorelease];
 }
@@ -85,7 +90,7 @@
 						@"2   CoreFoundation                      0x024fb42b -[NSObject(NSObject) doesNotRecognizeSelector:] + 187",
 						@"3   CoreFoundation                      0x0246b116 ___forwarding___ + 966",
 						@"4   CoreFoundation                      0x0246acd2 _CF_forwarding_prep_0 + 50",
-						@"5   CrashApp                            0x000021ba -[GCCrashReport selectorThatDoesNotExist:] + 48",
+						@"5   CrashApp                            0x000021ba -[HTNotice selectorThatDoesNotExist:] + 48",
 						@"6   UIKit                               0x002bee14 -[UIApplication sendAction:to:from:forEvent:] + 119",
 						@"7   UIKit                               0x003486c8 -[UIControl sendAction:to:forEvent:] + 67",
 						@"8   UIKit                               0x0034ab4a -[UIControl(Internal) _sendActionsForEvents:withEvent:] + 527",
@@ -130,9 +135,9 @@
 	
 	// set notifier information
 	e1 = [DDXMLElement elementWithName:@"notifier"];
-	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iPhone Notifier"]];
+	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
 	[e1 addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
-	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoadnotifier"]];
+	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
 	[payload addChild:e1];
 	
 	// set error information

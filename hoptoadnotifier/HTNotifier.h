@@ -13,6 +13,11 @@
 // notifier version
 extern NSString * const HTNotifierVersion;
 
+// string variables
+extern NSString * const HTNotifierBundleName;
+extern NSString * const HTNotifierBuildDate;
+extern NSString * const HTNotifierBundleVersion;
+
 /*
  provides callback and customizations for runtime options of
  the notifier. all of these methods are called on the main
@@ -33,7 +38,7 @@ extern NSString * const HTNotifierVersion;
 - (void)notifierDidDismissAlert;
 
 /*
- customize the text in the crash alert. include $BUNDLE in
+ customize the text in the crash alert. include ${BUNDLE} in
  the returned strings to have the bundle display name
  substituted in
  */
@@ -71,7 +76,6 @@ extern NSString * const HTNotifierVersion;
 	SCNetworkReachabilityRef reachability;
 	id<HTNotifierDelegate> delegate;
 	BOOL useSSL;
-	BOOL logCrashesInSimulator;
 }
 
 @property (nonatomic, readonly) NSString *apiKey;
@@ -95,20 +99,19 @@ extern NSString * const HTNotifierVersion;
  default:NO
  */
 @property (nonatomic, assign) BOOL useSSL;
-/*
- control whether crashes are logged in the simulator
- 
- default: NO
- */
-@property (nonatomic, assign) BOOL logCrashesInSimulator;
 
 /*
  creates and returns the shared notifier object.
  
  the values for key and environment name must not be nil and
  must have a length greater than 0.
+ 
+ pass HTNotifierBuildDate or HTNotifierBundleVersion into
+ the environment namet o have the build date or build
+ version inserted respectively
  */
-+ (HTNotifier *)sharedNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)envName;
++ (HTNotifier *)sharedNotifierWithAPIKey:(NSString *)key
+			   environmentNameWithFormat:(NSString *)fmt, ...;
 
 /*
  returns the shared notifier object.
