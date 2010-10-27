@@ -40,11 +40,11 @@
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
-												environmentName:@"Development"];
+									  environmentNameWithFormat:@"Development %@", HTNotifierBundleVersion];
+	
 	notifier.delegate = self;
-	notifier.logCrashesInSimulator = YES;
 	notifier.useSSL = YES;
-	[notifier writeTestNotice];
+	//[notifier writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;

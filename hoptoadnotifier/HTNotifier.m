@@ -14,24 +14,32 @@
 (self.useSSL) ? @"https" : @"http", \
 HTNotifierHostName]
 
+// internal variables
 static NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 static NSString * const HTNotifierFolderName = @"Hoptoad Notices";
 static NSString * const HTNotifierPathExtension = @"notice";
 static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
+
+// extern strings
 NSString * const HTNotifierVersion = @"1.0";
+NSString * const HTNotifierBundleName = @"${BUNDLE}";
+NSString * const HTNotifierBuildDate = @"${DATE}";
+NSString * const HTNotifierBundleVersion  = @"${VERSION}";
 
 #pragma mark -
 #pragma mark c function prototypes
 static NSString * HTLocalizedString(NSString *key);
-static void HTLog(NSString *frmt, ...);
+static NSString * HTLogStringWithFormat(NSString *fmt, ...);
+static NSString * HTLogStringWithArguments(NSString *fmt, va_list args);
+static void HTLog(NSString *fmt, ...);
 static void HTHandleException(NSException *);
 static void HTHandleSignal(int signal);
 
 #pragma mark -
 #pragma mark private methods
 @interface HTNotifier (private)
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)env;
+- (id)initWithAPIKey:(NSString *)key environmentNameWithFormat:(NSString *)fmt arguments:(va_list)list;
 - (void)startHandler;
 - (void)stopHandler;
 - (void)handleException:(NSException *)e;
@@ -46,7 +54,7 @@ static void HTHandleSignal(int signal);
 - (NSString *)noticePathWithName:(NSString *)name;
 @end
 @implementation HTNotifier (private)
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)env {
+- (id)initWithAPIKey:(NSString *)key environmentNameWithFormat:(NSString *)fmt arguments:(va_list)list {
 	if (self = [super init]) {
 		
 		// log start statement
@@ -60,9 +68,8 @@ static void HTHandleSignal(int signal);
 		
 		// setup values
 		apiKey = [key copy];
-		environmentName = [env copy];
+		environmentName = [[NSString alloc] initWithFormat:fmt arguments:list];
 		self.useSSL = NO;
-		self.logCrashesInSimulator = NO;
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -100,20 +107,12 @@ static void HTHandleSignal(int signal);
 }
 - (void)handleException:(NSException *)e {
 	[self stopHandler];
-	
-#if TARGET_IPHONE_SIMULATOR
-	if (self.logCrashesInSimulator) {
-#endif
 
-		// log crash
-		NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
-		NSString *noticePath = [self noticePathWithName:noticeName];
-		HTNotice *notice = [HTNotice noticeWithException:e];
-		[notice writeToFile:noticePath];
-		
-#if TARGET_IPHONE_SIMULATOR
-	}
-#endif
+	// log crash
+	NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
+	NSString *noticePath = [self noticePathWithName:noticeName];
+	HTNotice *notice = [HTNotice noticeWithException:e];
+	[notice writeToFile:noticePath];
 	
 	if ([self.delegate respondsToSelector:@selector(notifierDidHandleCrash)]) {
 		[self.delegate notifierDidHandleCrash];
@@ -155,7 +154,7 @@ static void HTHandleSignal(int signal);
 			title = tempString;
 		}
 	}
-	title = [title stringByReplacingOccurrencesOfString:@"$BUNDLE" withString:bundleName];
+	title = [title stringByReplacingOccurrencesOfString:HTNotifierBundleName withString:bundleName];
 	
 	NSString *body = HTLocalizedString(@"NOTICE_BODY");
 	if ([self.delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
@@ -164,7 +163,7 @@ static void HTHandleSignal(int signal);
 			body = tempString;
 		}
 	}
-	body = [body stringByReplacingOccurrencesOfString:@"$BUNDLE" withString:bundleName];
+	body = [body stringByReplacingOccurrencesOfString:HTNotifierBundleName withString:bundleName];
 	
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
 													message:body
@@ -287,14 +286,27 @@ static void HTHandleSignal(int signal);
 @synthesize apiKey;
 @synthesize environmentName;
 @synthesize useSSL;
-@synthesize logCrashesInSimulator;
 @synthesize environmentInfo;
 @synthesize delegate;
 
-+ (HTNotifier *)sharedNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)envName {
++ (HTNotifier *)sharedNotifierWithAPIKey:(NSString *)key environmentNameWithFormat:(NSString *)fmt, ... {
 	@synchronized(self) {
-		if(sharedNotifier == nil) {
-			sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:envName];
+		if (sharedNotifier == nil) {
+			
+			if (key == nil || [key length] == 0) {
+				[NSException raise:NSInvalidArgumentException
+							format:@"", HTLogStringWithFormat(@"The provided API key is not valid")];
+			}
+			
+			if (fmt == nil || [fmt length] == 0) {
+				[NSException raise:NSInvalidArgumentException
+							format:@"", HTLogStringWithFormat(@"The provided environment name is not valid")];
+			}
+			
+			va_list list;
+			va_start(list, fmt);
+			sharedNotifier = [[self alloc] initWithAPIKey:key environmentNameWithFormat:fmt arguments:list];
+			va_end(list);
 		}
 	}
 	return sharedNotifier;
@@ -401,14 +413,25 @@ static void HTHandleException(NSException *e) {
 static void HTHandleSignal(int signal) {
 	NSNumber *signalNumber = [NSNumber numberWithInteger:signal];
 	NSString *signalName = [[HTUtilities signals] objectForKey:signalNumber];
-	[[NSException exceptionWithName:@"HTSignalRaisedException"
-							 reason:[NSString stringWithFormat:@"Application received signal %@", signalName]
-						   userInfo:nil] raise];
+	[NSException raise:@"HTSignalRaisedException"
+				format:@"Application received signal %@", signalName];
 }
 static void HTLog(NSString *frmt, ...) {
 	va_list list;
 	va_start(list, frmt);
-	NSString *toPrint = [@"[HoptoadNotifier] " stringByAppendingString:frmt];
-	NSLogv(toPrint, list);
+	NSLog(@"%@", HTLogStringWithArguments(frmt, list));
 	va_end(list);
+}
+static NSString *HTLogStringWithFormat(NSString *fmt, ...) {
+	va_list list;
+	va_start(list, fmt);
+	NSString *toReturn = HTLogStringWithArguments(fmt, list);
+	va_end(list);
+	return toReturn;
+}
+static NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
+	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
+	NSString *toReturn = [@"[HoptoadNotifier]" stringByAppendingString:format];
+	[format release];
+	return toReturn;
 }
