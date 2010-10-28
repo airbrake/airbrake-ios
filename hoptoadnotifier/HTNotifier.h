@@ -21,7 +21,7 @@ extern NSString * const HTNotifierBundleVersion;
 /*
  provides callback and customizations for runtime options of
  the notifier. all of these methods are called on the main
- thread
+ thread and are optional
  */
 @protocol HTNotifierDelegate <NSObject>
 @optional
@@ -30,17 +30,17 @@ extern NSString * const HTNotifierBundleVersion;
  will display and did dismiss alert are always called as a
  pair in this order
  
- treat these just like -applicationWillResignActive: and
- -applicationDidBecomeActive:
+ treat these just like applicationWillResignActive: and
+ applicationDidBecomeActive:
  (pause animations, etc)
  */
 - (void)notifierWillDisplayAlert;
 - (void)notifierDidDismissAlert;
 
 /*
- customize the text in the crash alert. include ${BUNDLE} in
- the returned strings to have the bundle display name
- substituted in
+ customize the text in the crash alert. include any of the
+ above constant strings in these strings to have the value
+ replaced by the library
  */
 - (NSString *)titleForNoticeAlert;
 - (NSString *)bodyForNoticeAlert;
@@ -56,7 +56,8 @@ extern NSString * const HTNotifierBundleVersion;
 - (void)notifierDidHandleCrash;
 
 /*
- return the root view controller for the app
+ return the root view controller for the app. this is used
+ to determine the onscreen view at the time of a crash.
  */
 - (UIViewController *)rootViewControllerForNotice;
 
@@ -65,8 +66,10 @@ extern NSString * const HTNotifierBundleVersion;
 /*
  HTNotifier is the primary class of the notifer library
  
- create an instance through
- +sharedNotifierWithAPIKey:environmentName:
+ start the notifier by calling
+ startNotifierWithAPIKey:environmentName:
+ 
+ access the shared instance by calling sharedNotifier
  */
 @interface HTNotifier : NSObject <UIAlertViewDelegate> {
 @private
@@ -76,6 +79,7 @@ extern NSString * const HTNotifierBundleVersion;
 	SCNetworkReachabilityRef reachability;
 	id<HTNotifierDelegate> delegate;
 	BOOL useSSL;
+	BOOL logCrashesInSimulator;
 }
 
 @property (nonatomic, readonly) NSString *apiKey;
@@ -99,32 +103,37 @@ extern NSString * const HTNotifierBundleVersion;
  default:NO
  */
 @property (nonatomic, assign) BOOL useSSL;
+/*
+ control whether crashes are logged in the simulator
+ 
+ default:YES
+ */
+@property (nonatomic, assign) BOOL logCrashesInSimulator;
 
 /*
- creates and returns the shared notifier object.
+ this method is the entry point for the library. any code
+ executed after this method call is monitored for crashes
+ and signals
  
  the values for key and environment name must not be nil and
- must have a length greater than 0.
+ must have a length greater than 0
  
- pass HTNotifierBuildDate or HTNotifierBundleVersion into
- the environment namet o have the build date or build
- version inserted respectively
+ include any of the above constant strings in these strings
+ to have the value replaced by the library
  */
-+ (HTNotifier *)sharedNotifierWithAPIKey:(NSString *)key
-			   environmentNameWithFormat:(NSString *)fmt, ...;
++ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 
 /*
  returns the shared notifier object.
  
  if this is called before
- +sharedNotifierWithAPIKey:environmentName:
- nil will be returned.
+ startNotifierWithAPIKey:environmentNameWithFormat:, nil
+ will be returned.
  */
 + (HTNotifier *)sharedNotifier;
 
 /*
- writes a test notice to disk if one does not exist
- already
+ writes a test notice to disk if one does not exist already
  */
 - (void)writeTestNotice;
 

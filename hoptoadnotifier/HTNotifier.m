@@ -22,7 +22,7 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
 
 // extern strings
-NSString * const HTNotifierVersion = @"1.0";
+NSString * const HTNotifierVersion = @"1.1";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBuildDate = @"${DATE}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
@@ -39,7 +39,7 @@ static void HTHandleSignal(int signal);
 #pragma mark -
 #pragma mark private methods
 @interface HTNotifier (private)
-- (id)initWithAPIKey:(NSString *)key environmentNameWithFormat:(NSString *)fmt arguments:(va_list)list;
+- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 - (void)startHandler;
 - (void)stopHandler;
 - (void)handleException:(NSException *)e;
@@ -54,7 +54,7 @@ static void HTHandleSignal(int signal);
 - (NSString *)noticePathWithName:(NSString *)name;
 @end
 @implementation HTNotifier (private)
-- (id)initWithAPIKey:(NSString *)key environmentNameWithFormat:(NSString *)fmt arguments:(va_list)list {
+- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (self = [super init]) {
 		
 		// log start statement
@@ -68,28 +68,22 @@ static void HTHandleSignal(int signal);
 		
 		// setup values
 		apiKey = [key copy];
-		environmentName = [[NSString alloc] initWithFormat:fmt arguments:list];
+		environmentName = [name copy];
 		self.useSSL = NO;
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
 		 [NSDictionary dictionaryWithObject:@"NO" forKey:HTNotifierAlwaysSendKey]];
 		
-		// check passed in values
-		if ([apiKey length] > 0 && [environmentName length] > 0) {
-			// application notifications
-			[self performSelectorOnMainThread:@selector(registerNotifications) withObject:nil waitUntilDone:YES];
-			
-			// start reachability
-			reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
-			
-			// start handler
-			[self startHandler];
-		}
-		else {
-			HTLog(@"make sure you provide a valid api key and environment name");
-		}
-
+		// application notifications
+		[self performSelectorOnMainThread:@selector(registerNotifications) withObject:nil waitUntilDone:YES];
+		
+		// start reachability
+		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
+		
+		// start handler
+		[self startHandler];
+		
 	}
 	return self;
 }
@@ -288,8 +282,9 @@ static void HTHandleSignal(int signal);
 @synthesize useSSL;
 @synthesize environmentInfo;
 @synthesize delegate;
+@synthesize logCrashesInSimulator;
 
-+ (HTNotifier *)sharedNotifierWithAPIKey:(NSString *)key environmentNameWithFormat:(NSString *)fmt, ... {
++ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	@synchronized(self) {
 		if (sharedNotifier == nil) {
 			
@@ -298,18 +293,14 @@ static void HTHandleSignal(int signal);
 							format:@"", HTLogStringWithFormat(@"The provided API key is not valid")];
 			}
 			
-			if (fmt == nil || [fmt length] == 0) {
+			if (name == nil || [name length] == 0) {
 				[NSException raise:NSInvalidArgumentException
 							format:@"", HTLogStringWithFormat(@"The provided environment name is not valid")];
 			}
 			
-			va_list list;
-			va_start(list, fmt);
-			sharedNotifier = [[self alloc] initWithAPIKey:key environmentNameWithFormat:fmt arguments:list];
-			va_end(list);
+			sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:name];
 		}
 	}
-	return sharedNotifier;
 }
 + (HTNotifier *)sharedNotifier {
 	@synchronized(self) {
