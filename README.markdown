@@ -1,8 +1,17 @@
-#Introduction
+#About
 
 The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to Hoptoad (http://hoptoadapp.com) where you can see information like backtrace, device type, app version, and more!
 
-##Note
+##Notes
+
+The notifier handles all unhanded exceptions, and a select list of Unix signals:
+
+- SIGABRT
+- SIGBUS
+- SIGFPE
+- SIGILL
+- SIGSEGV
+- SIGTRAP
 
 The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h. Please read through the header file for a complete reference of the library. For quick reference and examples, read the sections below.
 
@@ -26,7 +35,7 @@ The HTNotifier class is the primary class you will interact with while using the
 
 5. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
     - code executed before this line will not be monitored for exceptions and crashes
-
+    
     `[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
                          environmentName:@"<# environment #>"];`
 
@@ -110,4 +119,3 @@ At the beginning of your application:didFinishLaunchingWithOptions:
     [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
                         environmentName:@"<# environment #>"];
     [[HTNotifier sharedNotifier] setUseSSL:YES];
-    [[HTNotifier sharedNotifier] setLogCrashesInSimulator:NO];

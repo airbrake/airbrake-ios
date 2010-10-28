@@ -85,7 +85,6 @@
 			children = (
 				3B6BB51F12707EDE00546666 /* kissxml */,
 				3B6BB52C12707EDE00546666 /* hoptoadnotifier */,
-				08FB77AEFE84172EC02AAC07 /* Classes */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -101,13 +100,6 @@
 				3B6BB51612707EBF00546666 /* UIKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		08FB77AEFE84172EC02AAC07 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Classes;
 			sourceTree = "<group>";
 		};
 		3B6BB51F12707EDE00546666 /* kissxml */ = {
