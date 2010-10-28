@@ -3,8 +3,3 @@
 "SEND" = "Send";
 "DONT_SEND" = "Don't Send";
 "ALWAYS_SEND" = "Always Send";
-
-"NO" = "No";
-"YES" = "Yes";
-"AUTOMATICALLY_SEND_QUESTION" = "Would you like to automatically send crash reports for this app in the future?";
-
