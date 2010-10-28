@@ -46,14 +46,14 @@ extern NSString * const HTNotifierBundleVersion;
 - (NSString *)bodyForNoticeAlert;
 
 /*
- lets the app delegate know that a crash has been handled.
- by the time this method is called, the offending crash has
- been logged and the notifier is no longer watching for
- crashes
+ lets the app delegate know that an exception has been
+ handled. by the time this method is called, the offending
+ crash has been logged and the notifier is no longer
+ watching for crashes
  
  this can be used to sync user defaults, save state, etc.
  */
-- (void)notifierDidHandleCrash;
+- (void)notifierDidHandleException:(NSException *)exc;
 
 /*
  return the root view controller for the app. this is used

@@ -4,7 +4,7 @@ The Hoptoad iOS Notifier is designed to give developers instant notification of 
 
 ##Note
 
-The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h. For quick reference and examples, read the sections below.
+The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h. Please read through the header file for a complete reference of the library. For quick reference and examples, read the sections below.
 
 #Installation
 
@@ -27,24 +27,24 @@ The HTNotifier class is the primary class you will interact with while using the
 5. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
     - code executed before this line will not be monitored for exceptions and crashes
 
-    `[HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];`
+    `[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                         environmentName:@"<# environment #>"];`
 
 #Testing
 
-To test that the notifier is working inside your application, a simple test method is provided. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
-    
-    HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];
-    [notifier writeTestNotice];
+To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice named [HTNotice selectorThatDoesNotExist]; with a sample backtrace and other appropriate fields. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
 
+    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                        environmentName:@"<# environment #>"];
+    [[HTNotifier sharedNotifier] writeTestNotice];
+    
 That notice will be picked up by the notifier and reported just like a normal notice.
 
 #Implementing the HTNotifierDelegate Protocol
 
-The HTNotifierDelegate protocol allows you to respond to actions going on inside the notifier as well as provide runtime customizations
+The HTNotifierDelegate protocol allows you to respond to actions going on inside the notifier as well as provide runtime customizations.
 
-The -notifierWillDisplayAlert and -notifierDidDismissAlert methods let your application respond to alert actions. These methods should be handled just like -applicationWillResignActive: and -applicationDidBecomeActive:.
-
-These methods are documented in the HTNotifierDelegate header file.
+All of the delegate methods in the HTNotifierDelegate protocol are documented in the HTNotifier header file. Here are just a few of those methods:
 
 MyAppDelegate.h
 
@@ -84,15 +84,18 @@ MyAppDelegate.m
         return @"Oh Noes!";
       }
       - (NSString *)bodyForNoticeAlert {
-        return @"$BUNDLE has detected unreported crashes, would you like to send a report to the developer?";
+        return [NSString stringWithFormat:
+                @"%@ has detected unreported crashes, would you like to send a report to the developer?",
+                HTNotifierBundleName];
       }
       
     @end
 
 Set the delegate on the notifier object at the beginning of your application:didFinishLaunchingWithOptions:
 
-    HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];
-    [notifier setDelegate:self];
+    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                        environmentName:@"<# environment #>"];
+    [[HTNotifier sharedNotifier] setDelegate:self];
 
 #Set Properties on the Notifier
 
@@ -104,6 +107,7 @@ MyAppDelegate.m
 
 At the beginning of your application:didFinishLaunchingWithOptions:
 
-    HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"<# api key #>" environmentName:@"<# environment #>"];
-    [notifier setUseSSL:YES];
-    [notifier setLogCrashesInSimulator:YES];
+    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                        environmentName:@"<# environment #>"];
+    [[HTNotifier sharedNotifier] setUseSSL:YES];
+    [[HTNotifier sharedNotifier] setLogCrashesInSimulator:NO];

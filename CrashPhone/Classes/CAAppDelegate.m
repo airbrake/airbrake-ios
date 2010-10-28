@@ -18,8 +18,8 @@
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 	return nil;
 }
-- (void)notifierDidHandleCrash {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
+- (void)notifierDidHandleException:(NSException *)exc {
+	NSLog(@"%s %@", __PRETTY_FUNCTION__, exc);
 }
 - (void)notifierWillDisplayAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);

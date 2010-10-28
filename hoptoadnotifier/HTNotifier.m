@@ -108,8 +108,8 @@ static void HTHandleSignal(int signal);
 	HTNotice *notice = [HTNotice noticeWithException:e];
 	[notice writeToFile:noticePath];
 	
-	if ([self.delegate respondsToSelector:@selector(notifierDidHandleCrash)]) {
-		[self.delegate notifierDidHandleCrash];
+	if ([self.delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
+		[self.delegate notifierDidHandleException:e];
 	}
 }
 - (void)applicationDidBecomeActive:(NSNotification *)notif {
@@ -162,8 +162,8 @@ static void HTHandleSignal(int signal);
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
 													message:body
 												   delegate:self
-										  cancelButtonTitle:HTLocalizedString(@"NO")
-										  otherButtonTitles:HTLocalizedString(@"YES"), nil];
+										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
+										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
 	[alert show];
 	[alert release];
 }
@@ -291,11 +291,13 @@ static void HTHandleSignal(int signal);
 			if (key == nil || [key length] == 0) {
 				[NSException raise:NSInvalidArgumentException
 							format:@"", HTLogStringWithFormat(@"The provided API key is not valid")];
+				return;
 			}
 			
 			if (name == nil || [name length] == 0) {
 				[NSException raise:NSInvalidArgumentException
 							format:@"", HTLogStringWithFormat(@"The provided environment name is not valid")];
+				return;
 			}
 			
 			sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:name];
@@ -354,40 +356,27 @@ static void HTHandleSignal(int signal);
 	[notice writeToFile:noticePath];
 }
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex ||
-		[[alertView title] isEqualToString:HTLocalizedString(@"THANKS")]) {
-		if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
-			[self.delegate notifierDidDismissAlert];
-		}
+	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
+		[self.delegate notifierDidDismissAlert];
 	}
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	NSString *title = [alertView title];
+	NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
 	
-	if ([title isEqualToString:HTLocalizedString(@"THANKS")]) {
-		if (buttonIndex != alertView.cancelButtonIndex) {
-			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
-			[[NSUserDefaults standardUserDefaults] synchronize];
+	if (buttonIndex == alertView.cancelButtonIndex) {
+		NSArray *noticePaths = [self noticePaths];
+		for (NSString *notice in noticePaths) {
+			[[NSFileManager defaultManager] removeItemAtPath:notice
+													   error:nil];
 		}
 	}
-	else {
-		if (buttonIndex == alertView.cancelButtonIndex) {
-			NSArray *noticePaths = [self noticePaths];
-			for (NSString *notice in noticePaths) {
-				[[NSFileManager defaultManager] removeItemAtPath:notice
-														   error:nil];
-			}
-		}
-		else {
-			[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:HTLocalizedString(@"THANKS")
-															message:HTLocalizedString(@"AUTOMATICALLY_SEND_QUESTION")
-														   delegate:self
-												  cancelButtonTitle:HTLocalizedString(@"NO")
-												  otherButtonTitles:HTLocalizedString(@"YES"), nil];
-			[alert show];
-			[alert release];
-		}
+	else if ([button isEqualToString:HTLocalizedString(@"ALWAYS_SEND")]) {
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
+	}
+	else if ([button isEqualToString:HTLocalizedString(@"SEND")]) {
+		[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
 	}
 }
 
