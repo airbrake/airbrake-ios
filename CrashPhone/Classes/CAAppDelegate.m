@@ -39,12 +39,12 @@
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	HTNotifier *notifier = [HTNotifier sharedNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
-									  environmentNameWithFormat:@"Development %@", HTNotifierBundleVersion];
-	
-	notifier.delegate = self;
-	notifier.useSSL = YES;
-	//[notifier writeTestNotice];
+	NSString *hoptoadEnvironment = [NSString stringWithFormat:@"Development @%", HTNotifierBundleVersion];
+	[HTNotifier startNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
+						environmentName:hoptoadEnvironment];
+	[[HTNotifier sharedNotifier] setDelegate:self];
+	[[HTNotifier sharedNotifier] setUseSSL:YES];
+	[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;
