@@ -1,0 +1,51 @@
+<div id="ios">
+  <h3>Setting up your iOS app</h3>
+  <ol>
+    <li>
+      Download the notifier. The notifier is currently in private beta, so you should already have this link if you are in the beta. If you'd like to be notified when the iOS notifier launches, <a href="http://help.hoptoadapp.com/discussions/ios-notifier">drop us a line in the support forum</a>.
+    </li>
+    <li>
+      Drag the hoptoadnotifier and kissxml folders to your project.
+      <ul>
+        <li> Make sure "Copy Items" and "Create Groups" are selected.</li>
+        <li> If you are already using kissxml, you don't need to include it again.</li>
+      </ul>
+    </li>
+    <li>
+      Add SystemConfiguration.framework and libxml2.dylib to your project.
+    </li>
+    <li>
+      Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings.
+      <ul>
+        <li>Make sure you add it under "All Configurations".</li>
+      </ul>
+    </li>
+    <li>
+      Import HTNotifier.h in your app delegate header file.
+      <p> <pre>#import "HTNotifier.h"</pre> </p>
+    </li>
+    <li>
+      Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
+      <ul>
+        <li>Code executed before this line will not be monitored for exceptions and crashes</li>
+      </ul>
+      <p><pre>
+[HTNotifier startNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
+                  environmentName:@"<# environment #>"];
+      </pre></p>
+    </li>
+  </ol>
+
+  <h3>Testing</h3>
+  <ol>
+    <li>
+      To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice named <code>[HTNotice selectorThatDoesNotExist]</code>; with a sample backtrace and other appropriate fields. Add the following code to the very beginning of your <code>application:didFinishLaunchingWithOptions</code>:
+    </li>
+    <p><pre>
+[HTNotifier startNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
+                    environmentName:@"<# environment #>"];
+[[HTNotifier startNotifier] writeTestNotice];
+    </pre></p>
+    <li>That notice will be picked up by the notifier and reported just like a normal notice.</li>
+  </ol>
+</div>

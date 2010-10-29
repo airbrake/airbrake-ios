@@ -19,6 +19,11 @@
 }
 
 /*
+ substitute common variables into string
+ */
++ (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string;
+
+/*
  return the backtrace from an exception as
  an array of NSStrings
  */
