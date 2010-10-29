@@ -65,11 +65,7 @@
 	notice.applicationVersion = [HTUtilities applicationVersion];
 	notice.viewControllerName = [HTUtilities currentViewController];
 	NSString *envName = [[HTNotifier sharedNotifier] environmentName];
-	envName = [envName stringByReplacingOccurrencesOfString:HTNotifierBuildDate
-												 withString:[NSString stringWithFormat:@"%s", __DATE__]];
-	envName = [envName stringByReplacingOccurrencesOfString:HTNotifierBundleVersion
-												 withString:notice.applicationVersion];
-	notice.environmentName = envName;
+	notice.environmentName = [HTUtilities stringBySubstitutingHoptoadVariablesInString:envName];
 	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
 	return [notice autorelease];
 }
@@ -143,7 +139,8 @@
 	// set error information
 	e1 = [DDXMLElement elementWithName:@"error"];
 	[e1 addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
-	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:self.exceptionReason]];
+	NSString *reason = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
+	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:reason]];
 	e2 = [DDXMLElement elementWithName:@"backtrace"];
 	NSCharacterSet *whiteSpaceCharSet = [NSCharacterSet whitespaceCharacterSet];
 	NSCharacterSet *alphabetCharSet = [NSCharacterSet alphanumericCharacterSet];

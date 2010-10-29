@@ -15,6 +15,33 @@
 
 @implementation HTUtilities
 
++ (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string {
+	NSMutableString *mutable = [string mutableCopy];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBundleName
+							 withString:[self bundleDisplayName]
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBundleVersion
+							 withString:[self applicationVersion]
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBuildDate
+							 withString:[NSString stringWithFormat:@"%s", __DATE__]
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBuildDateTime
+							 withString:[NSString stringWithFormat:@"%s %s", __DATE__, __TIME__]
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	NSString *toReturn = [NSString stringWithString:mutable];
+	[mutable release];
+	return toReturn;
+}
 + (NSArray *)backtraceWithException:(NSException *)exc {
 	NSArray *addresses = [exc callStackReturnAddresses];
 	int frames = [addresses count];

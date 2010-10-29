@@ -13,10 +13,26 @@
 // notifier version
 extern NSString * const HTNotifierVersion;
 
-// string variables
+/*
+ use these variables in your alert title, alert body, and
+ environment name to have their values replaced at runtime
+ */
+// bundle name of the app
 extern NSString * const HTNotifierBundleName;
-extern NSString * const HTNotifierBuildDate;
+// bundle version of the app
 extern NSString * const HTNotifierBundleVersion;
+// app build date
+extern NSString * const HTNotifierBuildDate;
+// app build date and time
+extern NSString * const HTNotifierBuildDateTime;
+
+/*
+ use these standard environment names to have default values
+ provided to hoptoad
+ */
+extern NSString * const HTNotifierDevelopmentEnvironment;
+extern NSString * const HTNotifierAdHocEnvironment;
+extern NSString * const HTNotifierAppStoreEnvironment;
 
 /*
  provides callback and customizations for runtime options of
@@ -127,7 +143,7 @@ extern NSString * const HTNotifierBundleVersion;
  returns the shared notifier object.
  
  if this is called before
- startNotifierWithAPIKey:environmentNameWithFormat:, nil
+ startNotifierWithAPIKey:environmentName:, nil
  will be returned.
  */
 + (HTNotifier *)sharedNotifier;

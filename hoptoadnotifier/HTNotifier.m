@@ -25,7 +25,11 @@ static HTNotifier * sharedNotifier = nil;
 NSString * const HTNotifierVersion = @"1.1";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBuildDate = @"${DATE}";
+NSString * const HTNotifierBuildDateTime = @"${DATE_TIME}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
+NSString * const HTNotifierDevelopmentEnvironment = @"Development ${DATE_TIME}";
+NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc ${DATE}";
+NSString * const HTNotifierAppStoreEnvironment = @"App Store ${VERSION}";
 
 #pragma mark -
 #pragma mark c function prototypes
@@ -68,7 +72,7 @@ static void HTHandleSignal(int signal);
 		
 		// setup values
 		apiKey = [key copy];
-		environmentName = [name copy];
+		environmentName = [[HTUtilities stringBySubstitutingHoptoadVariablesInString:name] retain];
 		self.useSSL = NO;
 		
 		// register defaults
@@ -139,8 +143,6 @@ static void HTHandleSignal(int signal);
 		[self.delegate notifierWillDisplayAlert];
 	}
 	
-	NSString *bundleName = [HTUtilities bundleDisplayName];
-	
 	NSString *title = HTLocalizedString(@"NOTICE_TITLE");
 	if ([self.delegate respondsToSelector:@selector(titleForNoticeAlert)]) {
 		NSString *tempString = [self.delegate titleForNoticeAlert];
@@ -148,7 +150,6 @@ static void HTHandleSignal(int signal);
 			title = tempString;
 		}
 	}
-	title = [title stringByReplacingOccurrencesOfString:HTNotifierBundleName withString:bundleName];
 	
 	NSString *body = HTLocalizedString(@"NOTICE_BODY");
 	if ([self.delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
@@ -157,10 +158,9 @@ static void HTHandleSignal(int signal);
 			body = tempString;
 		}
 	}
-	body = [body stringByReplacingOccurrencesOfString:HTNotifierBundleName withString:bundleName];
 	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-													message:body
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[HTUtilities stringBySubstitutingHoptoadVariablesInString:title]
+													message:[HTUtilities stringBySubstitutingHoptoadVariablesInString:body]
 												   delegate:self
 										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
 										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
