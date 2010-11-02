@@ -77,7 +77,7 @@
 		return bundleVersion;
 	}
 	else {
-		return [[NSString stringWithFormat:@"%@ (%@)", bundleVersion, bundleShortVersionString] retain];
+		return [NSString stringWithFormat:@"%@ (%@)", bundleVersion, bundleShortVersionString];
 	}
 }
 + (NSString *)bundleDisplayName {
