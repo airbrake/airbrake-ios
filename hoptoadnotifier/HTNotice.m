@@ -79,14 +79,14 @@
 + (HTNotice *)testNotice {
 	HTNotice *notice = [HTNotice notice];
 	notice.exceptionName = @"Test Crash Report";
-	notice.exceptionReason = @"-[HTNotice selectorThatDoesNotExist]: unrecognized selector sent to instance 0x59476f0";
+	notice.exceptionReason = @"-[HTNotifier crash]: unrecognized selector sent to instance 0x59476f0";
 	notice.backtrace = [NSArray arrayWithObjects:
 						@"0   CoreFoundation                      0x024f98fc __exceptionPreprocess + 156",
 						@"1   libobjc.A.dylib                     0x0230e5de objc_exception_throw + 47",
 						@"2   CoreFoundation                      0x024fb42b -[NSObject(NSObject) doesNotRecognizeSelector:] + 187",
 						@"3   CoreFoundation                      0x0246b116 ___forwarding___ + 966",
 						@"4   CoreFoundation                      0x0246acd2 _CF_forwarding_prep_0 + 50",
-						@"5   CrashApp                            0x000021ba -[HTNotice selectorThatDoesNotExist:] + 48",
+						@"5   CrashApp                            0x000021ba -[HTNotifier crash] + 48",
 						@"6   UIKit                               0x002bee14 -[UIApplication sendAction:to:from:forEvent:] + 119",
 						@"7   UIKit                               0x003486c8 -[UIControl sendAction:to:forEvent:] + 67",
 						@"8   UIKit                               0x0034ab4a -[UIControl(Internal) _sendActionsForEvents:withEvent:] + 527",
