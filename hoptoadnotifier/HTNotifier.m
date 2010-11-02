@@ -25,9 +25,9 @@ static HTNotifier * sharedNotifier = nil;
 NSString * const HTNotifierVersion = @"1.1";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBuildDate = @"${DATE}";
-NSString * const HTNotifierBuildDateTime = @"${DATE_TIME}";
+NSString * const HTNotifierBuildTime = @"${TIME}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
-NSString * const HTNotifierDevelopmentEnvironment = @"Development ${DATE_TIME}";
+NSString * const HTNotifierDevelopmentEnvironment = @"Development ${DATE} ${TIME}";
 NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc ${DATE}";
 NSString * const HTNotifierAppStoreEnvironment = @"App Store ${VERSION}";
 

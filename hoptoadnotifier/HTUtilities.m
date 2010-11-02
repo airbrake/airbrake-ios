@@ -33,8 +33,8 @@
 								options:0
 								  range:NSMakeRange(0, [mutable length])];
 	
-	[mutable replaceOccurrencesOfString:HTNotifierBuildDateTime
-							 withString:[NSString stringWithFormat:@"%s %s", __DATE__, __TIME__]
+	[mutable replaceOccurrencesOfString:HTNotifierBuildTime
+							 withString:[NSString stringWithFormat:@"%s", __TIME__]
 								options:0
 								  range:NSMakeRange(0, [mutable length])];
 	
