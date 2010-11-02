@@ -30,26 +30,35 @@ To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicoc
 3. Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings
   
     - make sure you add it under "All Configurations"
-
-4. Import HTNotifier.h in your app delegate header file
-
-    `#import "HTNotifier.h"`
-
-5. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
-    - code executed before this line will not be monitored for exceptions and crashes
     
-    `[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                         environmentName:@"<# environment #>"];`
+#Running The Notifier
 
-#Testing
+To run the notifier you only need to complete two steps. First, import the HTNotifier header file in your app delegate
 
-To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice named [HTNotice selectorThatDoesNotExist]; with a sample backtrace and other appropriate fields. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
+    #import "HTNotifier.h"
+    
+Next, call the main notifier method right at the beginning of your `application:didFinishLaunchingWithOptions:`
 
     [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
                         environmentName:@"<# environment #>"];
-    [[HTNotifier sharedNotifier] writeTestNotice];
-    
-That notice will be picked up by the notifier and reported just like a normal notice.
+
+The API key argument expects your Hoptoad project API key. The environment name you provide will be used to categorize received crash reports in the Hoptoad web interface. You can substitute several useful values into this parameter as a formatted string like:
+
+  - `HTNotifierBundleVersion`
+  - `HTNotifierBuildDate`
+  - `HTNotifierBuildTime`
+
+For convenience, the notifier provides you a few factory environment names that should cover most scenarios. They are:
+
+  - `HTNotifierDevelopmentEnvironment` - this string includes the build date and time
+  - `HTNotifierAdHocEnvironment` - this string includes the build date
+  - `HTNotifierAppStoreEnvironment` - this string includes the bundle version
+
+#Testing
+
+To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice with all of the paremeters filled out as if a method, `crash`, was called on the shared HTNotifier object. That notice will be picked up by the notifier and reported just like an actual crash. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
+
+     [[HTNotifier sharedNotifier] writeTestNotice];
 
 #Implementing the HTNotifierDelegate Protocol
 
@@ -102,22 +111,6 @@ MyAppDelegate.m
       
     @end
 
-Set the delegate on the notifier object at the beginning of your application:didFinishLaunchingWithOptions:
+Set the delegate on the notifier object in your `application:didFinishLaunchingWithOptions:`
 
-    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                        environmentName:@"<# environment #>"];
     [[HTNotifier sharedNotifier] setDelegate:self];
-
-#Set Properties on the Notifier
-
-Properties can be set on the notifier allowing you to modify some of its behaviors at run time. Any properties that can be set are defined in the HTNotifier header file.
-
-MyAppDelegate.m
-
-    #import HTNotifier.h
-
-At the beginning of your application:didFinishLaunchingWithOptions:
-
-    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                        environmentName:@"<# environment #>"];
-    [[HTNotifier sharedNotifier] setUseSSL:YES];
