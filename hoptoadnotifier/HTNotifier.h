@@ -24,7 +24,7 @@ extern NSString * const HTNotifierBundleVersion;
 // app build date
 extern NSString * const HTNotifierBuildDate;
 // app build date and time
-extern NSString * const HTNotifierBuildDateTime;
+extern NSString * const HTNotifierBuildTime;
 
 /*
  use these standard environment names to have default values
