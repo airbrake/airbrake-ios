@@ -22,7 +22,7 @@
     </li>
     <li>
       Import HTNotifier.h in your app delegate header file.
-      <p> <pre>#import "HTNotifier.h"</pre> </p>
+      <p><pre>#import "HTNotifier.h"</pre></p>
     </li>
     <li>
       Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
@@ -30,8 +30,8 @@
         <li>Code executed before this line will not be monitored for exceptions and crashes</li>
       </ul>
       <p><pre>
-[HTNotifier startNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
-                  environmentName:@"<# environment #>"];
+[HTNotifier startNotifierWithAPIKey:(API KEY)
+                  environmentName:HTNotifierDevelopmentEnvironment];
       </pre></p>
     </li>
   </ol>
@@ -42,9 +42,9 @@
       To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice named <code>[HTNotice selectorThatDoesNotExist]</code>; with a sample backtrace and other appropriate fields. Add the following code to the very beginning of your <code>application:didFinishLaunchingWithOptions</code>:
     </li>
     <p><pre>
-[HTNotifier startNotifierWithAPIKey:@"89eca7626cf92e77a69843d3a9129faf"
-                    environmentName:@"<# environment #>"];
-[[HTNotifier startNotifier] writeTestNotice];
+[HTNotifier startNotifierWithAPIKey:(API KEY)
+                    environmentName:HTNotifierDevelopmentEnvironment];
+[[HTNotifier sharedNotifier] writeTestNotice];
     </pre></p>
     <li>That notice will be picked up by the notifier and reported just like a normal notice.</li>
   </ol>

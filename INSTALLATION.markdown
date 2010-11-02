@@ -21,15 +21,15 @@
 6. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
     - code executed before this line will not be monitored for exceptions and crashes
 
-    `[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                         environmentName:@"<# environment #>"];`
+    `[HTNotifier startNotifierWithAPIKey:(API KEY)
+                         environmentName:HTNotifierDevelopmentEnvironment];`
 
 #Testing
 
 To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice named [HTNotice selectorThatDoesNotExist]; with a sample backtrace and other appropriate fields. Add the following code to the very beginning of your application:didFinishLaunchingWithOptions:
 
-    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                        environmentName:@"<# environment #>"];
+    [HTNotifier startNotifierWithAPIKey:(API KEY)
+                        environmentName:HTNotifierDevelopmentEnvironment];
     [[HTNotifier sharedNotifier] writeTestNotice];
     
 That notice will be picked up by the notifier and reported just like a normal notice.
