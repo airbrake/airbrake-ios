@@ -13,8 +13,40 @@
 #import "HTUtilities.h"
 #import "HTNotifier.h"
 
+static NSString * const HTNotifierFolderName = @"Hoptoad Notices";
+static NSString * const HTNotifierPathExtension = @"notice";
+
 @implementation HTUtilities
 
++ (NSString *)noticesDirectory {
+	NSString *path = nil;
+	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	if ([folders count] == 0) {
+		path = [NSTemporaryDirectory() stringByAppendingPathComponent:HTNotifierFolderName];
+	}
+	else {
+		NSString *library = [folders lastObject];
+		path = [library stringByAppendingPathComponent:HTNotifierFolderName];
+	}
+	return path;
+}
++ (NSArray *)noticePaths {
+	NSString *directory = [self noticesDirectory];
+	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
+	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
+	for (NSString *file in directoryContents) {
+		if ([[file pathExtension] isEqualToString:HTNotifierPathExtension]) {
+			NSString *crashPath = [directory stringByAppendingPathComponent:file];
+			[crashes addObject:crashPath];
+		}
+	}
+	return crashes;
+}
++ (NSString *)noticePathWithName:(NSString *)name {
+	NSString *path = [[self noticesDirectory] stringByAppendingPathComponent:name];
+	path = [path stringByAppendingPathExtension:HTNotifierPathExtension];
+	return path;
+}
 + (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string {
 	NSMutableString *mutable = [string mutableCopy];
 	

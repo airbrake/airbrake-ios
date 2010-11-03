@@ -18,6 +18,22 @@
 }
 
 /*
+ returns the path to the directory where notices are stored
+ */
++ (NSString *)noticesDirectory;
+
+/*
+ returns an array containing paths to all notices
+ */
++ (NSArray *)noticePaths;
+
+/*
+ returns a path for a notice given a name with the correct
+ extension
+ */
++ (NSString *)noticePathWithName:(NSString *)name;
+
+/*
  substitute common variables into string
  */
 + (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string;
