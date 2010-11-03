@@ -16,8 +16,6 @@ HTNotifierHostName]
 
 // internal variables
 static NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
-static NSString * const HTNotifierFolderName = @"Hoptoad Notices";
-static NSString * const HTNotifierPathExtension = @"notice";
 static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
 
@@ -53,9 +51,8 @@ static void HTHandleSignal(int signal);
 - (void)postAllNoticesWithAutoreleasePool;
 - (void)postNoticesWithPaths:(NSArray *)paths;
 - (BOOL)isHoptoadReachable;
-- (NSString *)noticesDirectory;
-- (NSArray *)noticePaths;
-- (NSString *)noticePathWithName:(NSString *)name;
+- (void)registerNotifications;
+- (void)unregisterNotifications;
 @end
 @implementation HTNotifier (private)
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
@@ -65,7 +62,7 @@ static void HTHandleSignal(int signal);
 		HTLog(@"version %@", HTNotifierVersion);
 		
 		// create folder
-		NSString *directory = [self noticesDirectory];
+		NSString *directory = [HTUtilities noticesDirectory];
 		if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
 			[[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:nil];
 		}
@@ -108,7 +105,7 @@ static void HTHandleSignal(int signal);
 
 	// log crash
 	NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
-	NSString *noticePath = [self noticePathWithName:noticeName];
+	NSString *noticePath = [HTUtilities noticePathWithName:noticeName];
 	HTNotice *notice = [HTNotice noticeWithException:e];
 	[notice writeToFile:noticePath];
 	
@@ -125,7 +122,7 @@ static void HTHandleSignal(int signal);
 	if ([self isHoptoadReachable]) {
 		[self performSelectorOnMainThread:@selector(unregisterNotifications) withObject:nil waitUntilDone:YES];
 		
-		NSArray *notices = [self noticePaths];
+		NSArray *notices = [HTUtilities noticePaths];
 		if ([notices count] > 0) {
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
 				[self postNoticesWithPaths:notices];
@@ -170,7 +167,7 @@ static void HTHandleSignal(int signal);
 - (void)postAllNoticesWithAutoreleasePool {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	NSArray *paths = [self noticePaths];
+	NSArray *paths = [HTUtilities noticePaths];
 	[self postNoticesWithPaths:paths];
 	
 	[pool drain];
@@ -228,37 +225,6 @@ static void HTHandleSignal(int signal);
 	SCNetworkReachabilityFlags flags;
 	SCNetworkReachabilityGetFlags(reachability, &flags);
 	return ((flags & kSCNetworkReachabilityFlagsReachable) != 0);
-}
-- (NSString *)noticesDirectory {
-	NSString *path = nil;
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-	if ([folders count] == 0) {
-		path = [NSTemporaryDirectory() stringByAppendingPathComponent:HTNotifierFolderName];
-	}
-	else {
-		NSString *library = [folders lastObject];
-		path = [library stringByAppendingPathComponent:HTNotifierFolderName];
-	}
-	return path;
-}
-- (NSArray *)noticePaths {
-	NSString *directory = [self noticesDirectory];
-	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
-	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
-	for (NSString *file in directoryContents) {
-		if ([[file pathExtension] isEqualToString:HTNotifierPathExtension]) {
-			NSString *crashPath = [directory stringByAppendingPathComponent:file];
-			[crashes addObject:crashPath];
-		}
-	}
-	return crashes;
-}
-- (NSString *)noticePathWithName:(NSString *)name {
-	NSString *path = [[self noticesDirectory] stringByAppendingPathComponent:name];
-	if ([[path pathExtension] length] == 0) {
-		path = [path stringByAppendingPathExtension:HTNotifierPathExtension];
-	}
-	return path;
 }
 - (void)registerNotifications {
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -346,7 +312,7 @@ static void HTHandleSignal(int signal);
 	[super dealloc];
 }
 - (void)writeTestNotice {
-	NSString *noticePath = [self noticePathWithName:@"TEST"];
+	NSString *noticePath = [HTUtilities noticePathWithName:@"TEST"];
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) {
 		return;
@@ -364,7 +330,7 @@ static void HTHandleSignal(int signal);
 	NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
 	
 	if (buttonIndex == alertView.cancelButtonIndex) {
-		NSArray *noticePaths = [self noticePaths];
+		NSArray *noticePaths = [HTUtilities noticePaths];
 		for (NSString *notice in noticePaths) {
 			[[NSFileManager defaultManager] removeItemAtPath:notice
 													   error:nil];
