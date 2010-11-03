@@ -1,6 +1,6 @@
 #About
 
-The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to Hoptoad (http://hoptoadapp.com) where you can see information like backtrace, device type, app version, and more!
+The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to Hoptoad ([http://hoptoadapp.com](http://hoptoadapp.com)) where you can see information like backtrace, device type, app version, and more.
 
 ##Notes
 
@@ -37,7 +37,7 @@ To run the notifier you only need to complete two steps. First, import the HTNot
 
     #import "HTNotifier.h"
     
-Next, call the main notifier method right at the beginning of your `application:didFinishLaunchingWithOptions:`
+Next, call the main notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
     [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
                         environmentName:@"<# environment #>"];
