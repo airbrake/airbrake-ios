@@ -15,8 +15,6 @@ The notifier handles all unhanded exceptions, and a select list of Unix signals:
 
 The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h. Please read through the header file for a complete reference of the library. For quick reference and examples, read the sections below.
 
-To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
-
 #Installation
 
 1. Drag the hoptoadnotifier and kissxml folders to your project
