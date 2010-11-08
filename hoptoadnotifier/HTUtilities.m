@@ -133,17 +133,18 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.machine", machine, &size, NULL, 0);
 	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-	return platform;
 	NSString *commonString = nil;
 	if ([platform isEqualToString:@"iPhone1,1"]) { commonString = @"iPhone"; }
 	else if ([platform isEqualToString:@"iPhone1,2"]) { commonString = @"iPhone 3G"; }
 	else if ([platform isEqualToString:@"iPhone2,1"]) { commonString = @"iPhone 3GS"; }
 	else if ([platform isEqualToString:@"iPhone3,1"]) { commonString = @"iPhone 4"; }
 	else if ([platform isEqualToString:@"iPad1,1"]) { commonString = @"iPad"; }
-	if (commonString != nil) {
-		platform = [NSString stringWithFormat:@"%@ (%@)", commonString, platform];
+	if (commonString == nil) {
+		return platform;
 	}
-	return platform;
+	else {
+		return commonString;
+	}
 #else
 	size_t size = 256;
 	char *machine = malloc(sizeof(char) * size);
