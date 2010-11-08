@@ -76,13 +76,9 @@ static void HTHandleSignal(int signal);
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
 		 [NSDictionary dictionaryWithObject:@"NO" forKey:HTNotifierAlwaysSendKey]];
 		
-		// application notifications
-		[self performSelectorOnMainThread:@selector(registerNotifications) withObject:nil waitUntilDone:YES];
-		
-		// start reachability
 		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
 		
-		// start handler
+		[self registerNotifications];
 		[self startHandler];
 		
 	}
@@ -301,8 +297,7 @@ static void HTHandleSignal(int signal);
 }
 - (void)dealloc {
 	[self stopHandler];
-	
-	[self performSelectorOnMainThread:@selector(unregisterNotifications) withObject:nil waitUntilDone:YES];
+	[self unregisterNotifications];
 	
 	if (reachability != NULL) { CFRelease(reachability), reachability = NULL; }
 	[apiKey release], apiKey = nil;
