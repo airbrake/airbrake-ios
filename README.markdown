@@ -45,8 +45,8 @@ your app delegate
     
 Next, call the main notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
-    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                        environmentName:@"<# environment #>"];
+    [HTNotifier startNotifierWithAPIKey:<# api key #>
+                        environmentName:<# environment #>];
 
 The API key argument expects your Hoptoad project API key. The environment name you provide will be
 used to categorize received crash reports in the Hoptoad web interface. You can substitute several
@@ -66,7 +66,7 @@ scenarios. They are:
 #Testing
 
 To test that the notifier is working inside your application, a simple test method is provided. This
-method creates a notice with all of the paremeters filled out as if a method, `crash`, was called on
+method creates a notice with all of the parameters filled out as if a method, `crash`, was called on
 the shared HTNotifier object. That notice will be picked up by the notifier and reported just like an
 actual crash. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
 
