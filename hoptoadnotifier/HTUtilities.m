@@ -49,27 +49,26 @@ static NSString * const HTNotifierPathExtension = @"notice";
 }
 + (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string {
 	NSMutableString *mutable = [string mutableCopy];
-	NSRange fullRange = NSMakeRange(0, [mutable length]);
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleName
 							 withString:[self bundleDisplayName]
 								options:0
-								  range:fullRange];
+								  range:NSMakeRange(0, [mutable length])];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleVersion
 							 withString:[self applicationVersion]
 								options:0
-								  range:fullRange];
+								  range:NSMakeRange(0, [mutable length])];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBuildDate
 							 withString:[NSString stringWithFormat:@"%s", __DATE__]
 								options:0
-								  range:fullRange];
+								  range:NSMakeRange(0, [mutable length])];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBuildTime
 							 withString:[NSString stringWithFormat:@"%s", __TIME__]
 								options:0
-								  range:fullRange];
+								  range:NSMakeRange(0, [mutable length])];
 	
 	NSString *toReturn = [NSString stringWithString:mutable];
 	[mutable release];
