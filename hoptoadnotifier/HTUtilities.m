@@ -8,7 +8,6 @@
 
 #import <execinfo.h>
 #import <sys/sysctl.h>
-#import <UIKit/UIKit.h>
 
 #import "HTUtilities.h"
 #import "HTNotifier.h"
@@ -19,16 +18,18 @@ static NSString * const HTNotifierPathExtension = @"notice";
 @implementation HTUtilities
 
 + (NSString *)noticesDirectory {
-	NSString *path = nil;
+#if TARGET_OS_IPHONE
 	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-	if ([folders count] == 0) {
-		path = [NSTemporaryDirectory() stringByAppendingPathComponent:HTNotifierFolderName];
-	}
-	else {
-		NSString *library = [folders lastObject];
-		path = [library stringByAppendingPathComponent:HTNotifierFolderName];
-	}
-	return path;
+	NSString *path = [folders objectAtIndex:0];
+	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+	return [path stringByAppendingPathComponent:HTNotifierFolderName];
+#else
+	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *path = [folders objectAtIndex:0];
+	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+	path = [path stringByAppendingPathComponent:[self bundleDisplayName]];
+	return [path stringByAppendingPathComponent:HTNotifierFolderName];
+#endif
 }
 + (NSArray *)noticePaths {
 	NSString *directory = [self noticesDirectory];
@@ -92,13 +93,9 @@ static NSString * const HTNotifierPathExtension = @"notice";
 }
 + (NSString *)operatingSystemVersion {
 #if TARGET_IPHONE_SIMULATOR
-	
 	return [[UIDevice currentDevice] systemVersion];
-	
 #else
-	
 	return [[NSProcessInfo processInfo] operatingSystemVersionString];
-	
 #endif
 }
 + (NSString *)applicationVersion {
@@ -114,13 +111,19 @@ static NSString * const HTNotifierPathExtension = @"notice";
 }
 + (NSString *)bundleDisplayName {
 	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-	NSString *displayName = [infoPlist objectForKey:@"CFBundleDisplayName"];
-	if (displayName == nil) {
-		return [infoPlist objectForKey:@"CFBundleIdentifier"];
+	NSString *bundleDisplayName = [infoPlist objectForKey:@"CFBundleDisplayName"];
+	NSString *bundleName = [infoPlist objectForKey:@"CFBundleName"];
+	NSString *bundleIdentifier = [infoPlist objectForKey:@"CFBundleIdentifier"];
+	if (bundleDisplayName != nil) {
+		return bundleDisplayName;
 	}
-	else {
-		return displayName;
+	else if (bundleName != nil) {
+		return bundleName;
 	}
+	else if (bundleIdentifier != nil) {
+		return bundleIdentifier;
+	}
+	return nil;
 }
 + (NSString *)platform {
 #if TARGET_IPHONE_SIMULATOR
@@ -160,6 +163,7 @@ static NSString * const HTNotifierPathExtension = @"notice";
 			@"SIGTRAP", [NSNumber numberWithInteger:SIGTRAP],
 			nil];
 }
+#if TARGET_OS_IPHONE
 + (NSString *)currentViewController {
 	// view controller to inspect
 	UIViewController *rootController = nil;
@@ -201,5 +205,6 @@ static NSString * const HTNotifierPathExtension = @"notice";
 		return NSStringFromClass([controller class]);
 	}
 }
+#endif
 
 @end

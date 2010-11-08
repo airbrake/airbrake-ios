@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
 
 /*
  The HTUtilities class contains a set of utility methods
@@ -91,6 +93,7 @@
  */
 + (NSDictionary *)signals;
 
+#if TARGET_OS_IPHONE
 /*
  return the class name of the on screen view controller.
  
@@ -118,5 +121,6 @@
  this method is called by +currentViewController
  */
 + (NSString *)visibleViewControllerWithViewController:(UIViewController *)controller;
+#endif
 
 @end

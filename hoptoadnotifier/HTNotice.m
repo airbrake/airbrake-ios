@@ -63,7 +63,9 @@
 	notice.operatingSystemVersion = [HTUtilities operatingSystemVersion];
 	notice.platform = [HTUtilities platform];
 	notice.applicationVersion = [HTUtilities applicationVersion];
+#if TARGET_OS_IPHONE
 	notice.viewControllerName = [HTUtilities currentViewController];
+#endif
 	NSString *envName = [[HTNotifier sharedNotifier] environmentName];
 	notice.environmentName = [HTUtilities stringBySubstitutingHoptoadVariablesInString:envName];
 	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
@@ -131,9 +133,14 @@
 	
 	// set notifier information
 	e1 = [DDXMLElement elementWithName:@"notifier"];
+#if TARGET_OS_IPHONE
 	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
-	[e1 addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
 	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
+#else
+	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad Mac Notifier"]];
+	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-mac"]];
+#endif
+	[e1 addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
 	[payload addChild:e1];
 	
 	// set error information
@@ -166,9 +173,7 @@
 	e1 = [DDXMLElement elementWithName:@"request"];
 	[e1 addChild:[DDXMLElement elementWithName:@"url"]];
 	e2 = [DDXMLElement elementWithName:@"component"];
-	if (self.viewControllerName != nil) {
-		[e2 setStringValue:self.viewControllerName];
-	}
+	[e2 setStringValue:self.viewControllerName];
 	[e1 addChild:e2];
 	[e1 addChild:[DDXMLElement elementWithName:@"action"]];
 	e2 = [DDXMLElement elementWithName:@"cgi-data"];

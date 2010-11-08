@@ -377,7 +377,7 @@ static NSString *HTLogStringWithFormat(NSString *fmt, ...) {
 }
 static NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
 	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
-	NSString *toReturn = [@"[HoptoadNotifier]" stringByAppendingString:format];
+	NSString *toReturn = [@"[HoptoadNotifier] " stringByAppendingString:format];
 	[format release];
 	return toReturn;
 }
