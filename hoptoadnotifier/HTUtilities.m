@@ -45,31 +45,31 @@ static NSString * const HTNotifierPathExtension = @"notice";
 }
 + (NSString *)noticePathWithName:(NSString *)name {
 	NSString *path = [[self noticesDirectory] stringByAppendingPathComponent:name];
-	path = [path stringByAppendingPathExtension:HTNotifierPathExtension];
-	return path;
+	return [path stringByAppendingPathExtension:HTNotifierPathExtension];
 }
 + (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string {
 	NSMutableString *mutable = [string mutableCopy];
+	NSRange fullRange = NSMakeRange(0, [mutable length]);
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleName
 							 withString:[self bundleDisplayName]
 								options:0
-								  range:NSMakeRange(0, [mutable length])];
+								  range:fullRange];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleVersion
 							 withString:[self applicationVersion]
 								options:0
-								  range:NSMakeRange(0, [mutable length])];
+								  range:fullRange];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBuildDate
 							 withString:[NSString stringWithFormat:@"%s", __DATE__]
 								options:0
-								  range:NSMakeRange(0, [mutable length])];
+								  range:fullRange];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBuildTime
 							 withString:[NSString stringWithFormat:@"%s", __TIME__]
 								options:0
-								  range:NSMakeRange(0, [mutable length])];
+								  range:fullRange];
 	
 	NSString *toReturn = [NSString stringWithString:mutable];
 	[mutable release];
@@ -127,18 +127,13 @@ static NSString * const HTNotifierPathExtension = @"notice";
 }
 + (NSString *)platform {
 #if TARGET_IPHONE_SIMULATOR
-	
 	return @"iPhone Simulator";
-	
-#else
-	
-	// get platform
+#elif TARGET_OS_IPHONE
 	size_t size = 256;
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.machine", machine, &size, NULL, 0);
 	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-	
-	// get common device name
+	return platform;
 	NSString *commonString = nil;
 	if ([platform isEqualToString:@"iPhone1,1"]) { commonString = @"iPhone"; }
 	else if ([platform isEqualToString:@"iPhone1,2"]) { commonString = @"iPhone 3G"; }
@@ -148,9 +143,12 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	if (commonString != nil) {
 		platform = [NSString stringWithFormat:@"%@ (%@)", commonString, platform];
 	}
-	
 	return platform;
-	
+#else
+	size_t size = 256;
+	char *machine = malloc(sizeof(char) * size);
+	sysctlbyname("hw.model", machine, &size, NULL, 0);
+	return [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
 #endif
 }
 + (NSDictionary *)signals {
