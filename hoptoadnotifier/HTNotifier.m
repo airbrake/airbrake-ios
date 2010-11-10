@@ -252,13 +252,13 @@ static void HTHandleSignal(int signal);
 			
 			if (key == nil || [key length] == 0) {
 				[NSException raise:NSInvalidArgumentException
-							format:@"", HTLogStringWithFormat(@"The provided API key is not valid")];
+							format:@"%@", HTLogStringWithFormat(@"The provided API key is not valid")];
 				return;
 			}
 			
 			if (name == nil || [name length] == 0) {
 				[NSException raise:NSInvalidArgumentException
-							format:@"", HTLogStringWithFormat(@"The provided environment name is not valid")];
+							format:@"%@", HTLogStringWithFormat(@"The provided environment name is not valid")];
 				return;
 			}
 			
