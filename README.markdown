@@ -6,6 +6,8 @@ automatically phone home whenever a crash or exception is encountered. These rep
 Hoptoad ([http://hoptoadapp.com](http://hoptoadapp.com)) where you can see information like backtrace,
 device type, app version, and more.
 
+To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
+
 ##Notes
 
 The notifier handles all unhanded exceptions, and a select list of Unix signals:
