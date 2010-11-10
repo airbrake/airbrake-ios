@@ -21,16 +21,23 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3B20D8B1128A3244000CE777 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D8AC128A3244000CE777 /* HTNotice.m */; };
+		3B20D8B2128A3244000CE777 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D8AE128A3244000CE777 /* HTNotifier.m */; };
+		3B20D8B3128A3244000CE777 /* HTUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D8B0128A3244000CE777 /* HTUtilities.m */; };
 		3B6BB51112707EA700546666 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B6BB51012707EA700546666 /* SystemConfiguration.framework */; };
 		3B6BB51512707EB600546666 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B6BB51412707EB600546666 /* libxml2.dylib */; };
 		3B6BB51712707EBF00546666 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B6BB51612707EBF00546666 /* UIKit.framework */; };
-		3B6BB54212707EDE00546666 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B6BB53012707EDE00546666 /* HTNotice.m */; };
-		3B6BB54412707EDE00546666 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B6BB53212707EDE00546666 /* HTNotifier.m */; };
-		3B6BB54612707EDE00546666 /* HTUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B6BB53412707EDE00546666 /* HTUtilities.m */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B20D8AA128A3244000CE777 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B20D8AB128A3244000CE777 /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
+		3B20D8AC128A3244000CE777 /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
+		3B20D8AD128A3244000CE777 /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
+		3B20D8AE128A3244000CE777 /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
+		3B20D8AF128A3244000CE777 /* HTUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTUtilities.h; sourceTree = "<group>"; };
+		3B20D8B0128A3244000CE777 /* HTUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTUtilities.m; sourceTree = "<group>"; };
 		3B6BB51012707EA700546666 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3B6BB51412707EB600546666 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		3B6BB51612707EBF00546666 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -46,13 +53,6 @@
 		3B6BB52912707EDE00546666 /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
 		3B6BB52A12707EDE00546666 /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringAdditions.h; sourceTree = "<group>"; };
 		3B6BB52B12707EDE00546666 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringAdditions.m; sourceTree = "<group>"; };
-		3B6BB52E12707EDE00546666 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		3B6BB52F12707EDE00546666 /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
-		3B6BB53012707EDE00546666 /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
-		3B6BB53112707EDE00546666 /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
-		3B6BB53212707EDE00546666 /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
-		3B6BB53312707EDE00546666 /* HTUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTUtilities.h; sourceTree = "<group>"; };
-		3B6BB53412707EDE00546666 /* HTUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTUtilities.m; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libnotifier.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnotifier.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -84,7 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				3B6BB51F12707EDE00546666 /* kissxml */,
-				3B6BB52C12707EDE00546666 /* hoptoadnotifier */,
+				3B20D8A8128A3244000CE777 /* hoptoadnotifier */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -101,6 +101,21 @@
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
+		};
+		3B20D8A8128A3244000CE777 /* hoptoadnotifier */ = {
+			isa = PBXGroup;
+			children = (
+				3B20D8A9128A3244000CE777 /* HTNotifier.strings */,
+				3B20D8AB128A3244000CE777 /* HTNotice.h */,
+				3B20D8AC128A3244000CE777 /* HTNotice.m */,
+				3B20D8AD128A3244000CE777 /* HTNotifier.h */,
+				3B20D8AE128A3244000CE777 /* HTNotifier.m */,
+				3B20D8AF128A3244000CE777 /* HTUtilities.h */,
+				3B20D8B0128A3244000CE777 /* HTUtilities.m */,
+			);
+			name = hoptoadnotifier;
+			path = ../hoptoadnotifier;
+			sourceTree = SOURCE_ROOT;
 		};
 		3B6BB51F12707EDE00546666 /* kissxml */ = {
 			isa = PBXGroup;
@@ -120,21 +135,6 @@
 			);
 			name = kissxml;
 			path = ../kissxml;
-			sourceTree = SOURCE_ROOT;
-		};
-		3B6BB52C12707EDE00546666 /* hoptoadnotifier */ = {
-			isa = PBXGroup;
-			children = (
-				3B6BB52D12707EDE00546666 /* HTNotifier.strings */,
-				3B6BB52F12707EDE00546666 /* HTNotice.h */,
-				3B6BB53012707EDE00546666 /* HTNotice.m */,
-				3B6BB53112707EDE00546666 /* HTNotifier.h */,
-				3B6BB53212707EDE00546666 /* HTNotifier.m */,
-				3B6BB53312707EDE00546666 /* HTUtilities.h */,
-				3B6BB53412707EDE00546666 /* HTUtilities.m */,
-			);
-			name = hoptoadnotifier;
-			path = ../hoptoadnotifier;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
@@ -170,6 +170,7 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* libnotifier */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -206,19 +207,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B6BB54212707EDE00546666 /* HTNotice.m in Sources */,
-				3B6BB54412707EDE00546666 /* HTNotifier.m in Sources */,
-				3B6BB54612707EDE00546666 /* HTUtilities.m in Sources */,
+				3B20D8B1128A3244000CE777 /* HTNotice.m in Sources */,
+				3B20D8B2128A3244000CE777 /* HTNotifier.m in Sources */,
+				3B20D8B3128A3244000CE777 /* HTUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		3B6BB52D12707EDE00546666 /* HTNotifier.strings */ = {
+		3B20D8A9128A3244000CE777 /* HTNotifier.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3B6BB52E12707EDE00546666 /* English */,
+				3B20D8AA128A3244000CE777 /* en */,
 			);
 			name = HTNotifier.strings;
 			sourceTree = "<group>";
