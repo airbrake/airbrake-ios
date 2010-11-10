@@ -101,28 +101,18 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
 	NSString *bundleVersion = [infoPlist objectForKey:@"CFBundleVersion"];
 	NSString *bundleShortVersionString = [infoPlist objectForKey:@"CFBundleShortVersionString"];
-	if (bundleShortVersionString == nil) {
-		return bundleVersion;
-	}
-	else {
-		return [NSString stringWithFormat:@"%@ (%@)", bundleVersion, bundleShortVersionString];
-	}
+	if (bundleShortVersionString == nil) { return bundleVersion; }
+	else { return [NSString stringWithFormat:@"%@ (%@)", bundleVersion, bundleShortVersionString]; }
 }
 + (NSString *)bundleDisplayName {
 	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
 	NSString *bundleDisplayName = [infoPlist objectForKey:@"CFBundleDisplayName"];
 	NSString *bundleName = [infoPlist objectForKey:@"CFBundleName"];
 	NSString *bundleIdentifier = [infoPlist objectForKey:@"CFBundleIdentifier"];
-	if (bundleDisplayName != nil) {
-		return bundleDisplayName;
-	}
-	else if (bundleName != nil) {
-		return bundleName;
-	}
-	else if (bundleIdentifier != nil) {
-		return bundleIdentifier;
-	}
-	return nil;
+	if (bundleDisplayName != nil) { return bundleDisplayName; }
+	else if (bundleName != nil) { return bundleName; }
+	else if (bundleIdentifier != nil) { return bundleIdentifier; }
+	else { return nil; };
 }
 + (NSString *)platform {
 #if TARGET_IPHONE_SIMULATOR
@@ -132,18 +122,20 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.machine", machine, &size, NULL, 0);
 	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-	NSString *commonString = nil;
-	if ([platform isEqualToString:@"iPhone1,1"]) { commonString = @"iPhone"; }
-	else if ([platform isEqualToString:@"iPhone1,2"]) { commonString = @"iPhone 3G"; }
-	else if ([platform isEqualToString:@"iPhone2,1"]) { commonString = @"iPhone 3GS"; }
-	else if ([platform isEqualToString:@"iPhone3,1"]) { commonString = @"iPhone 4"; }
-	else if ([platform isEqualToString:@"iPad1,1"]) { commonString = @"iPad"; }
-	if (commonString == nil) {
-		return platform;
-	}
-	else {
-		return commonString;
-	}
+	// iphones
+	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
+	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
+	else if ([platform isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
+	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4"; }
+	// ipads
+	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
+	// ipods
+	else if ([platform isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
+	else if ([platform isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
+	else if ([platform isEqualToString:@"iPod3,1"]) { return @"iPod Touch 3rd Gen"; }
+	else if ([platform isEqualToString:@"iPod4,1"]) { return @"iPod Touch 4th Gen"; }
+	// unknown
+	else { return platform; }
 #else
 	size_t size = 256;
 	char *machine = malloc(sizeof(char) * size);
