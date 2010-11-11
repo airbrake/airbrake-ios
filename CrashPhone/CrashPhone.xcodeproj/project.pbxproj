@@ -59,6 +59,7 @@
 		3B54C2AC1257D7A800089639 /* CAAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAAppDelegate.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* CrashPhone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CrashPhone-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		940BC9DE128B248100ECE9AD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		DD9EBE32128B87D800202A63 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +210,7 @@
 				German,
 				en,
 				de,
+				es,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -257,6 +259,7 @@
 			children = (
 				3B20D889128A321E000CE777 /* en */,
 				940BC9DE128B248100ECE9AD /* de */,
+				DD9EBE32128B87D800202A63 /* es */,
 			);
 			name = HTNotifier.strings;
 			sourceTree = "<group>";
