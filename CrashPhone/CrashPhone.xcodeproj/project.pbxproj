@@ -61,6 +61,7 @@
 		940BC9DE128B248100ECE9AD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		DD9EBE32128B87D800202A63 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		DD9EBE4B128C6E1E00202A63 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		DD9EBE52128DA14600202A63 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +214,7 @@
 				de,
 				es,
 				ru,
+				ro,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -263,6 +265,7 @@
 				940BC9DE128B248100ECE9AD /* de */,
 				DD9EBE32128B87D800202A63 /* es */,
 				DD9EBE4B128C6E1E00202A63 /* ru */,
+				DD9EBE52128DA14600202A63 /* ro */,
 			);
 			name = HTNotifier.strings;
 			sourceTree = "<group>";
