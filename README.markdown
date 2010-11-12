@@ -130,3 +130,14 @@ MyAppDelegate.m
 Set the delegate on the notifier object in your `application:didFinishLaunchingWithOptions:`
 
     [[HTNotifier sharedNotifier] setDelegate:self];
+
+#Contributors
+Caleb Davenport - [http://guicocoa.com](http://guicocoa.com)
+
+Marshall Huss - [http://twoguys.us](http://twoguys.us)
+
+Benjamin Broll - [http://twitter.com/bebroll](http://twitter.com/bebroll)
+
+Sergei Winitzki
+
+Irina Anastasiu
