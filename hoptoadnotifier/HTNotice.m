@@ -185,12 +185,7 @@
 	[cgiData addEntriesFromDictionary:self.environmentInfo];
 	for (NSString *key in [cgiData allKeys]) {
 		id var = [cgiData objectForKey:key];
-		if ([var isKindOfClass:[NSString class]]) {
-			e3 = [DDXMLElement elementWithName:@"var" stringValue:var];
-		}
-		else {
-			e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
-		}
+		e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
 		[e3 addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:key]];
 		[e2 addChild:e3];
 	}

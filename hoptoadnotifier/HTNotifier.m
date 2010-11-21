@@ -20,7 +20,7 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
 
 // extern strings
-NSString * const HTNotifierVersion = @"1.1";
+NSString * const HTNotifierVersion = @"1.1.1";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBuildDate = @"${DATE}";
 NSString * const HTNotifierBuildTime = @"${TIME}";
@@ -58,9 +58,6 @@ static void HTHandleSignal(int signal);
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (self = [super init]) {
 		
-		// log start statement
-		HTLog(@"version %@", HTNotifierVersion);
-		
 		// create folder
 		NSString *directory = [HTUtilities noticesDirectory];
 		if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
@@ -71,6 +68,7 @@ static void HTHandleSignal(int signal);
 		apiKey = [key copy];
 		environmentName = [[HTUtilities stringBySubstitutingHoptoadVariablesInString:name] retain];
 		self.useSSL = NO;
+		self.environmentInfo = [NSMutableDictionary dictionary];
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -80,6 +78,10 @@ static void HTHandleSignal(int signal);
 		
 		[self registerNotifications];
 		[self startHandler];
+		
+		// log start statement
+		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+		HTLog(@"Environment \"%@\"", environmentName);
 		
 	}
 	return self;
@@ -372,7 +374,7 @@ static NSString *HTLogStringWithFormat(NSString *fmt, ...) {
 }
 static NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
 	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
-	NSString *toReturn = [@"[HoptoadNotifier] " stringByAppendingString:format];
+	NSString *toReturn = [@"[Hoptoad] " stringByAppendingString:format];
 	[format release];
 	return toReturn;
 }

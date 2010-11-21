@@ -91,7 +91,7 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 @private
 	NSString *apiKey;
 	NSString *environmentName;
-	NSDictionary *environmentInfo;
+	NSMutableDictionary *environmentInfo;
 	SCNetworkReachabilityRef reachability;
 	id<HTNotifierDelegate> delegate;
 	BOOL useSSL;
@@ -102,16 +102,14 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 @property (nonatomic, readonly) NSString *environmentName;
 @property (nonatomic, assign) id<HTNotifierDelegate> delegate;
 /*
- the environment info property allows you to set a
- dictionary of string key-value pairs with additional
- context for a crash notice.
- 
- e.g. user account email address.
+ set string key-value pairs on this item to have additional
+ context for your crash notices. by default this is a blank
+ dictionary
  
  NOTE: do not use this to transmit UDID's, location, or any
  other private user information without permission
  */
-@property (nonatomic, retain) NSDictionary *environmentInfo;
+@property (nonatomic, retain) NSMutableDictionary *environmentInfo;
 /*
  control whether notices are posted using SSL. your account
  must support this feature
