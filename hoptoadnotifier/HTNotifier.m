@@ -20,14 +20,14 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
 
 // extern strings
-NSString * const HTNotifierVersion = @"1.1.1";
+NSString * const HTNotifierVersion = @"1.1.2";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBuildDate = @"${DATE}";
 NSString * const HTNotifierBuildTime = @"${TIME}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
-NSString * const HTNotifierDevelopmentEnvironment = @"Development ${DATE} ${TIME}";
-NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc ${DATE}";
-NSString * const HTNotifierAppStoreEnvironment = @"App Store ${VERSION}";
+NSString * const HTNotifierDevelopmentEnvironment = @"Development";
+NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
+NSString * const HTNotifierAppStoreEnvironment = @"App Store";
 
 #pragma mark -
 #pragma mark c function prototypes
