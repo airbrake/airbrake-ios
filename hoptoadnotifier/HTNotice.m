@@ -67,7 +67,7 @@
 	notice.viewControllerName = [HTUtilities currentViewController];
 #endif
 	NSString *envName = [[HTNotifier sharedNotifier] environmentName];
-	notice.environmentName = [HTUtilities stringBySubstitutingHoptoadVariablesInString:envName];
+	notice.environmentName = [HTUtilities stringByReplacingHoptoadVariablesInString:envName];
 	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
 	return [notice autorelease];
 }

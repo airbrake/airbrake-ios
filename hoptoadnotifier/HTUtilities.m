@@ -47,7 +47,7 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	NSString *path = [[self noticesDirectory] stringByAppendingPathComponent:name];
 	return [path stringByAppendingPathExtension:HTNotifierPathExtension];
 }
-+ (NSString *)stringBySubstitutingHoptoadVariablesInString:(NSString *)string {
++ (NSString *)stringByReplacingHoptoadVariablesInString:(NSString *)string {
 	NSMutableString *mutable = [string mutableCopy];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleName
@@ -112,7 +112,7 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	if (bundleDisplayName != nil) { return bundleDisplayName; }
 	else if (bundleName != nil) { return bundleName; }
 	else if (bundleIdentifier != nil) { return bundleIdentifier; }
-	else { return nil; };
+	else { return nil; }
 }
 + (NSString *)platform {
 #if TARGET_IPHONE_SIMULATOR
@@ -122,14 +122,14 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.machine", machine, &size, NULL, 0);
 	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-	// iphones
+	// iphone
 	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
 	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
 	else if ([platform isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
 	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4"; }
-	// ipads
+	// ipad
 	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
-	// ipods
+	// ipod
 	else if ([platform isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
 	else if ([platform isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
 	else if ([platform isEqualToString:@"iPod3,1"]) { return @"iPod Touch 3rd Gen"; }
@@ -144,13 +144,16 @@ static NSString * const HTNotifierPathExtension = @"notice";
 #endif
 }
 + (NSDictionary *)signals {
+//	return [NSDictionary dictionaryWithObjectsAndKeys:
+//			[NSNumber numberWithInteger:SIGABRT], @"SIGABRT",
+//			[NSNumber numberWithInteger:SIGBUS], @"SIGBUS",
+//			[NSNumber numberWithInteger:SIGFPE], @"SIGFPE",
+//			[NSNumber numberWithInteger:SIGILL], @"SIGILL",
+//			[NSNumber numberWithInteger:SIGSEGV], @"SIGSEGV",
+//			[NSNumber numberWithInteger:SIGTRAP], @"SIGTRAP",
+//			nil];
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-			@"SIGABRT", [NSNumber numberWithInteger:SIGABRT],
-			@"SIGBUS", [NSNumber numberWithInteger:SIGBUS],
-			@"SIGFPE", [NSNumber numberWithInteger:SIGFPE],
-			@"SIGILL", [NSNumber numberWithInteger:SIGILL],
-			@"SIGSEGV", [NSNumber numberWithInteger:SIGSEGV],
-			@"SIGTRAP", [NSNumber numberWithInteger:SIGTRAP],
+			[NSNumber numberWithInteger:SIGSEGV], @"SIGSEGV",
 			nil];
 }
 #if TARGET_OS_IPHONE

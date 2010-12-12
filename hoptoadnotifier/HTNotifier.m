@@ -88,13 +88,13 @@ static void HTHandleSignal(int signal);
 }
 - (void)startHandler {
 	NSSetUncaughtExceptionHandler(HTHandleException);
-	for (NSNumber *signalValue in [[HTUtilities signals] allKeys]) {
+	for (NSNumber *signalValue in [[HTUtilities signals] allValues]) {
 		signal([signalValue intValue], HTHandleSignal);
 	}
 }
 - (void)stopHandler {
 	NSSetUncaughtExceptionHandler(NULL);
-	for (NSNumber *signalValue in [[HTUtilities signals] allKeys]) {
+	for (NSNumber *signalValue in [[HTUtilities signals] allValues]) {
 		signal([signalValue intValue], SIG_DFL);
 	}
 }

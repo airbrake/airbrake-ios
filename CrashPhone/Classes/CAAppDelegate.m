@@ -39,11 +39,11 @@
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	[HTNotifier startNotifierWithAPIKey:@""
-						environmentName:HTNotifierAppStoreEnvironment];
-	[[HTNotifier sharedNotifier] setDelegate:self];
-	[[HTNotifier sharedNotifier] setUseSSL:YES];
-	[[HTNotifier sharedNotifier] writeTestNotice];
+//	[HTNotifier startNotifierWithAPIKey:@"a"
+//						environmentName:HTNotifierAppStoreEnvironment];
+//	[[HTNotifier sharedNotifier] setDelegate:self];
+//	[[HTNotifier sharedNotifier] setUseSSL:YES];
+//	[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;
@@ -52,28 +52,13 @@
 #pragma mark -
 #pragma mark button actions
 - (IBAction)crash:(id)sender {
-	[self performSelector:@selector(selectorThatDoesNotExist)];
+	//[self performSelector:@selector(selectorThatDoesNotExist)];
+	//[NSException raise:NSInvalidArgumentException format:@"test exception"];
 }
 - (IBAction)signal:(id)sender {
 	NSString *title = [[(UIButton *)sender titleLabel] text];
-	if ([title isEqualToString:@"SIGABRT"]) {
-		raise(SIGABRT);
-	}
-	else if ([title isEqualToString:@"SIGBUS"]) {
-		raise(SIGBUS);
-	}
-	else if ([title isEqualToString:@"SIGFPE"]) {
-		raise(SIGFPE);
-	}
-	else if ([title isEqualToString:@"SIGILL"]) {
-		raise(SIGILL);
-	}
-	else if ([title isEqualToString:@"SIGSEGV"]) {
-		raise(SIGSEGV);
-	}
-	else if ([title isEqualToString:@"SIGTRAP"]) {
-		raise(SIGTRAP);
-	}
+	NSNumber *signal = [[HTUtilities signals] objectForKey:title];
+	raise([signal intValue]);
 }
 
 #pragma mark -
