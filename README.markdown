@@ -8,6 +8,8 @@ device type, app version, and more.
 
 To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
 
+If you have questions or need support please visit the support page at [http://help.hoptoadapp.com/discussions/ios-notifier](http://help.hoptoadapp.com/discussions/ios-notifier)
+
 ##Notes
 
 The notifier handles all unhanded exceptions, and a select list of Unix signals:
