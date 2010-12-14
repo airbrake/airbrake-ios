@@ -149,21 +149,28 @@
 	NSString *reason = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
 	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:reason]];
 	e2 = [DDXMLElement elementWithName:@"backtrace"];
-	NSCharacterSet *whiteSpaceCharSet = [NSCharacterSet whitespaceCharacterSet];
-	NSCharacterSet *alphabetCharSet = [NSCharacterSet alphanumericCharacterSet];
-	NSCharacterSet *newLineCharSet = [NSCharacterSet newlineCharacterSet];
+	NSCharacterSet *whiteSpaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+	NSCharacterSet *nonWhiteSpaceCharacterSet = [whiteSpaceCharacterSet invertedSet];
 	for (NSString *line in self.backtrace) {
 		DDXMLElement *lineElement = [DDXMLElement elementWithName:@"line"];
-		NSString *scanString;
 		NSScanner *scanner = [NSScanner scannerWithString:line];
-		[scanner scanUpToCharactersFromSet:whiteSpaceCharSet intoString:&scanString];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"number" stringValue:scanString]];
-		[scanner scanUpToCharactersFromSet:alphabetCharSet intoString:nil];
-		[scanner scanUpToCharactersFromSet:whiteSpaceCharSet intoString:&scanString];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"file" stringValue:scanString]];
-		[scanner scanUpToCharactersFromSet:alphabetCharSet intoString:nil];
-		[scanner scanUpToCharactersFromSet:newLineCharSet intoString:&scanString];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"method" stringValue:scanString]]; 
+		
+		NSString *lineNumber;
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&lineNumber];
+		[lineElement addAttribute:[DDXMLElement attributeWithName:@"number" stringValue:lineNumber]];
+		
+		NSString *binaryName;
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&binaryName];
+		[lineElement addAttribute:[DDXMLElement attributeWithName:@"file" stringValue:binaryName]];
+		[scanner scanCharactersFromSet:whiteSpaceCharacterSet intoString:NULL];
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:NULL];
+		[scanner scanCharactersFromSet:whiteSpaceCharacterSet intoString:NULL];
+		
+		NSRange plusRange = [line rangeOfString:@" +" options:NSBackwardsSearch];
+		NSRange methodRange = NSMakeRange([scanner scanLocation],
+										  plusRange.location - [scanner scanLocation]);
+		NSString *method = [line substringWithRange:methodRange];
+		[lineElement addAttribute:[DDXMLElement attributeWithName:@"method" stringValue:method]];
 		[e2 addChild:lineElement];
 	}
 	[e1 addChild:e2];
