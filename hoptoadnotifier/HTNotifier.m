@@ -7,8 +7,6 @@
 //
 
 #import "HTNotifier.h"
-#import "HTUtilities.h"
-#import "HTNotice.h"
 
 #define NTNotifierURL [NSString stringWithFormat:@"%@://%@%/notifier_api/v2/notices", \
 (self.useSSL) ? @"https" : @"http", \
@@ -66,7 +64,7 @@ static void HTHandleSignal(int signal);
 		
 		// setup values
 		apiKey = [key copy];
-		environmentName = [[HTUtilities stringBySubstitutingHoptoadVariablesInString:name] retain];
+		environmentName = [[HTUtilities stringByReplacingHoptoadVariablesInString:name] retain];
 		self.useSSL = NO;
 		self.environmentInfo = [NSMutableDictionary dictionary];
 		
@@ -154,8 +152,8 @@ static void HTHandleSignal(int signal);
 		}
 	}
 	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[HTUtilities stringBySubstitutingHoptoadVariablesInString:title]
-													message:[HTUtilities stringBySubstitutingHoptoadVariablesInString:body]
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[HTUtilities stringByReplacingHoptoadVariablesInString:title]
+													message:[HTUtilities stringByReplacingHoptoadVariablesInString:body]
 												   delegate:self
 										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
 										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];

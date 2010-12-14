@@ -39,11 +39,11 @@
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-//	[HTNotifier startNotifierWithAPIKey:@"a"
-//						environmentName:HTNotifierAppStoreEnvironment];
-//	[[HTNotifier sharedNotifier] setDelegate:self];
-//	[[HTNotifier sharedNotifier] setUseSSL:YES];
-//	[[HTNotifier sharedNotifier] writeTestNotice];
+	[HTNotifier startNotifierWithAPIKey:@"a"
+						environmentName:HTNotifierAppStoreEnvironment];
+	[[HTNotifier sharedNotifier] setDelegate:self];
+	[[HTNotifier sharedNotifier] setUseSSL:YES];
+	[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;
@@ -52,13 +52,17 @@
 #pragma mark -
 #pragma mark button actions
 - (IBAction)crash:(id)sender {
-	//[self performSelector:@selector(selectorThatDoesNotExist)];
-	//[NSException raise:NSInvalidArgumentException format:@"test exception"];
+	[NSException raise:NSInvalidArgumentException format:@"test exception"];
 }
 - (IBAction)signal:(id)sender {
 	NSString *title = [[(UIButton *)sender titleLabel] text];
 	NSNumber *signal = [[HTUtilities signals] objectForKey:title];
-	raise([signal intValue]);
+	if (signal == nil) {
+		NSLog(@"signal %@ not supported", title);
+	}
+	else {
+		raise([signal intValue]);
+	}
 }
 
 #pragma mark -

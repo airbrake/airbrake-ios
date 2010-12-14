@@ -144,16 +144,13 @@ static NSString * const HTNotifierPathExtension = @"notice";
 #endif
 }
 + (NSDictionary *)signals {
-//	return [NSDictionary dictionaryWithObjectsAndKeys:
-//			[NSNumber numberWithInteger:SIGABRT], @"SIGABRT",
-//			[NSNumber numberWithInteger:SIGBUS], @"SIGBUS",
-//			[NSNumber numberWithInteger:SIGFPE], @"SIGFPE",
-//			[NSNumber numberWithInteger:SIGILL], @"SIGILL",
-//			[NSNumber numberWithInteger:SIGSEGV], @"SIGSEGV",
-//			[NSNumber numberWithInteger:SIGTRAP], @"SIGTRAP",
-//			nil];
 	return [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithInteger:SIGABRT], @"SIGABRT",
+			[NSNumber numberWithInteger:SIGBUS], @"SIGBUS",
+			[NSNumber numberWithInteger:SIGFPE], @"SIGFPE",
+			[NSNumber numberWithInteger:SIGILL], @"SIGILL",
 			[NSNumber numberWithInteger:SIGSEGV], @"SIGSEGV",
+			[NSNumber numberWithInteger:SIGTRAP], @"SIGTRAP",
 			nil];
 }
 #if TARGET_OS_IPHONE
