@@ -152,26 +152,32 @@
 	NSCharacterSet *whiteSpaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
 	NSCharacterSet *nonWhiteSpaceCharacterSet = [whiteSpaceCharacterSet invertedSet];
 	for (NSString *line in self.backtrace) {
+		
 		DDXMLElement *lineElement = [DDXMLElement elementWithName:@"line"];
 		NSScanner *scanner = [NSScanner scannerWithString:line];
+		NSString *string;
 		
-		NSString *lineNumber;
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&lineNumber];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"number" stringValue:lineNumber]];
+		// line number
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&string];
+		[lineElement addAttribute:[DDXMLElement attributeWithName:@"number" stringValue:string]];
 		
-		NSString *binaryName;
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&binaryName];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"file" stringValue:binaryName]];
-		[scanner scanCharactersFromSet:whiteSpaceCharacterSet intoString:NULL];
+		// binary name
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&string];
+		[lineElement addAttribute:[DDXMLElement attributeWithName:@"file" stringValue:string]];
+		
+		// eat that weird hex number
 		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:NULL];
-		[scanner scanCharactersFromSet:whiteSpaceCharacterSet intoString:NULL];
 		
-		NSRange plusRange = [line rangeOfString:@" +" options:NSBackwardsSearch];
-		NSRange methodRange = NSMakeRange([scanner scanLocation],
-										  plusRange.location - [scanner scanLocation]);
-		NSString *method = [line substringWithRange:methodRange];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"method" stringValue:method]];
+		// method
+		NSUInteger startLocation = [scanner scanLocation] + 1;
+		NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
+		NSRange methodRange = NSMakeRange(startLocation, endLocation - startLocation);
+		string = [line substringWithRange:methodRange];
+		[lineElement addAttribute:[DDXMLElement attributeWithName:@"method" stringValue:string]];
+		
+		// save line
 		[e2 addChild:lineElement];
+		
 	}
 	[e1 addChild:e2];
 	[payload addChild:e1];
