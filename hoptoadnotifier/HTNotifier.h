@@ -37,50 +37,7 @@ extern NSString * const HTNotifierDevelopmentEnvironment;
 extern NSString * const HTNotifierAdHocEnvironment;
 extern NSString * const HTNotifierAppStoreEnvironment;
 
-/*
- provides callback and customizations for runtime options of
- the notifier. all of these methods are called on the main
- thread and are optional
- */
-@protocol HTNotifierDelegate <NSObject>
-@optional
 
-/*
- will display and did dismiss alert are always called as a
- pair in this order
- 
- treat these just like applicationWillResignActive: and
- applicationDidBecomeActive:
- (pause animations, etc)
- */
-- (void)notifierWillDisplayAlert;
-- (void)notifierDidDismissAlert;
-
-/*
- customize the text in the crash alert. include any of the
- above constant strings in these strings to have the value
- replaced by the library
- */
-- (NSString *)titleForNoticeAlert;
-- (NSString *)bodyForNoticeAlert;
-
-/*
- lets the app delegate know that an exception has been
- handled. by the time this method is called, the offending
- crash has been logged and the notifier is no longer
- watching for crashes
- 
- this can be used to sync user defaults, save state, etc.
- */
-- (void)notifierDidHandleException:(NSException *)exc;
-
-/*
- return the root view controller for the app. this is used
- to determine the onscreen view at the time of a crash.
- */
-- (UIViewController *)rootViewControllerForNotice;
-
-@end
 
 /*
  HTNotifier is the primary class of the notifer library

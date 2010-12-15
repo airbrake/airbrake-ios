@@ -148,11 +148,11 @@
 				3B20D888128A321E000CE777 /* HTNotifier.strings */,
 				3B20D88C128A321E000CE777 /* HTNotifier.h */,
 				3B20D88D128A321E000CE777 /* HTNotifier.m */,
+				3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */,
 				3B20D88A128A321E000CE777 /* HTNotice.h */,
 				3B20D88B128A321E000CE777 /* HTNotice.m */,
 				3B20D88E128A321E000CE777 /* HTUtilities.h */,
 				3B20D88F128A321E000CE777 /* HTUtilities.m */,
-				3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */,
 			);
 			name = hoptoadnotifier;
 			path = ../hoptoadnotifier;
