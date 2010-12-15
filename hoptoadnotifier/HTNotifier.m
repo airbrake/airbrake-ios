@@ -8,7 +8,8 @@
 
 #import "HTNotifier.h"
 
-#define NTNotifierURL [NSString stringWithFormat:@"%@://%@%/notifier_api/v2/notices", \
+#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
+#define HTNotifierURL [NSString stringWithFormat:@"%@://%@%/notifier_api/v2/notices", \
 (self.useSSL) ? @"https" : @"http", \
 HTNotifierHostName]
 
@@ -29,7 +30,6 @@ NSString * const HTNotifierAppStoreEnvironment = @"App Store";
 
 #pragma mark -
 #pragma mark c function prototypes
-static NSString * HTLocalizedString(NSString *key);
 static NSString * HTLogStringWithFormat(NSString *fmt, ...);
 static NSString * HTLogStringWithArguments(NSString *fmt, va_list args);
 static void HTLog(NSString *fmt, ...);
@@ -170,7 +170,7 @@ static void HTHandleSignal(int signal);
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
 	// setup post resources
-	NSURL *url = [NSURL URLWithString:NTNotifierURL];
+	NSURL *url = [NSURL URLWithString:HTNotifierURL];
 	
 	// report each notice
 	for (NSString *noticePath in paths) {
@@ -345,9 +345,6 @@ static void HTHandleSignal(int signal);
 
 #pragma mark -
 #pragma mark c function implementations
-static NSString * HTLocalizedString(NSString *key) {
-	return NSLocalizedStringFromTable(key, @"HTNotifier", @"");
-}
 static void HTHandleException(NSException *e) {
 	[sharedNotifier performSelectorOnMainThread:@selector(handleException:) withObject:e waitUntilDone:YES];
 }
