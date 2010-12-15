@@ -12,13 +12,16 @@
 
 #import "HTUtilities.h"
 #import "HTNotice.h"
+#import "HTNotifierDelegate.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
 
 /*
+ 
  use these variables in your alert title, alert body, and
  environment name to have their values replaced at runtime
+ 
  */
 // bundle name of the app
 extern NSString * const HTNotifierBundleName;
@@ -30,22 +33,24 @@ extern NSString * const HTNotifierBuildDate;
 extern NSString * const HTNotifierBuildTime;
 
 /*
- use these standard environment names to have default values
- provided to hoptoad
+ 
+ use these standard environment names to have default
+ values provided to hoptoad
+ 
  */
 extern NSString * const HTNotifierDevelopmentEnvironment;
 extern NSString * const HTNotifierAdHocEnvironment;
 extern NSString * const HTNotifierAppStoreEnvironment;
 
-
-
 /*
+ 
  HTNotifier is the primary class of the notifer library
  
  start the notifier by calling
- startNotifierWithAPIKey:environmentName:
+	startNotifierWithAPIKey:environmentName:
  
  access the shared instance by calling sharedNotifier
+ 
  */
 @interface HTNotifier : NSObject <UIAlertViewDelegate> {
 @private
@@ -62,52 +67,64 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 @property (nonatomic, readonly) NSString *environmentName;
 @property (nonatomic, assign) id<HTNotifierDelegate> delegate;
 /*
+ 
  set string key-value pairs on this item to have additional
  context for your crash notices. by default this is a blank
- dictionary
+ mutable dictionary
  
  NOTE: do not use this to transmit UDID's, location, or any
  other private user information without permission
+ 
  */
 @property (nonatomic, retain) NSMutableDictionary *environmentInfo;
 /*
+ 
  control whether notices are posted using SSL. your account
  must support this feature
  
  default:NO
+ 
  */
 @property (nonatomic, assign) BOOL useSSL;
 /*
+ 
  control whether crashes are logged in the simulator
  
  default:YES
+ 
  */
 @property (nonatomic, assign) BOOL logCrashesInSimulator;
 
 /*
+ 
  this method is the entry point for the library. any code
  executed after this method call is monitored for crashes
  and signals
  
- the values for key and environment name must not be nil and
- must have a length greater than 0
+ the values for key and environment name must not be nil
+ and must have a length greater than 0
  
- include any of the above constant strings in these strings
- to have the value replaced by the library
+ include any of the above constant strings in the
+ enviromnent name to have the value replaced by the library
+ 
  */
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 
 /*
- returns the shared notifier object.
+ 
+ access the shared notifier object.
  
  if this is called before
- startNotifierWithAPIKey:environmentName:, nil
- will be returned.
+	startNotifierWithAPIKey:environmentName:
+ nil will be returned.
+ 
  */
 + (HTNotifier *)sharedNotifier;
 
 /*
+ 
  writes a test notice to disk if one does not exist already
+ 
  */
 - (void)writeTestNotice;
 
