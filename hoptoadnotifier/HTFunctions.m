@@ -16,6 +16,8 @@ static void HTHandleSignal(int signal) {
 	HTStopHandler();
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	HTNotice *notice = [HTNotice notice];
+	notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
+	notice.exceptionReason = @"Application received signal";
 	NSArray *addresses = [NSThread callStackReturnAddresses];
 	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
 	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
