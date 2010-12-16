@@ -189,6 +189,9 @@ NSString * const HTNotifierPathExtension = @"notice";
 				  responseString);
 			[responseString release];
 		}
+		
+		// clean up
+		[request release];
 	}
 }
 - (BOOL)isHoptoadReachable {
