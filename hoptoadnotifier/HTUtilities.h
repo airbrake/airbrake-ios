@@ -41,12 +41,6 @@
 + (NSString *)stringByReplacingHoptoadVariablesInString:(NSString *)string;
 
 /*
- return the backtrace from an exception as an array of
- NSString objects
- */
-+ (NSArray *)backtraceWithException:(NSException *)exc;
-
-/*
  returns the operating system version
  
  this is returned from the shared NSProcessInfo object on a
@@ -84,14 +78,6 @@
  "iPhone 4 (iPhone3,1)"
  */
 + (NSString *)platform;
-
-/*
- returns the collection of signals supported by the notifier
- 
- the keys are NSNumber objects with string representation
- values
- */
-+ (NSDictionary *)signals;
 
 #if TARGET_OS_IPHONE
 /*

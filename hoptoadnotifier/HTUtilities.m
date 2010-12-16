@@ -6,8 +6,8 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-#import <execinfo.h>
-#import <sys/sysctl.h>
+//#import <execinfo.h>
+//#import <sys/sysctl.h>
 
 #import "HTUtilities.h"
 #import "HTNotifier.h"
@@ -74,22 +74,6 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	[mutable release];
 	return toReturn;
 }
-+ (NSArray *)backtraceWithException:(NSException *)exc {
-	NSArray *addresses = [exc callStackReturnAddresses];
-	int frames = [addresses count];
-	void *stack[frames];
-	for (NSInteger i = 0; i < frames; i++) {
-		stack[i] = (void *)[[addresses objectAtIndex:i] unsignedIntegerValue];
-	}
-	char **strs = backtrace_symbols(stack, frames);
-	NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
-	for (NSInteger i = 0; i < frames; i++) {
-		NSString *entry = [NSString stringWithUTF8String:strs[i]];
-		[backtrace addObject:entry];
-	}
-	free(strs);
-	return backtrace;	
-}
 + (NSString *)operatingSystemVersion {
 #if TARGET_IPHONE_SIMULATOR
 	return [[UIDevice currentDevice] systemVersion];
@@ -142,16 +126,6 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	sysctlbyname("hw.model", machine, &size, NULL, 0);
 	return [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
 #endif
-}
-+ (NSDictionary *)signals {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithInteger:SIGABRT], @"SIGABRT",
-			[NSNumber numberWithInteger:SIGBUS], @"SIGBUS",
-			[NSNumber numberWithInteger:SIGFPE], @"SIGFPE",
-			[NSNumber numberWithInteger:SIGILL], @"SIGILL",
-			[NSNumber numberWithInteger:SIGSEGV], @"SIGSEGV",
-			[NSNumber numberWithInteger:SIGTRAP], @"SIGTRAP",
-			nil];
 }
 #if TARGET_OS_IPHONE
 + (NSString *)currentViewController {

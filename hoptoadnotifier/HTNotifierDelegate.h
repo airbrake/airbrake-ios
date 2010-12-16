@@ -44,14 +44,15 @@
 
 /*
  
- This lets the app delegate know that an exception has been
- handled. By the time this method is called, the offending
- crash has been logged and the notifier is no longer
- watching for crashes. Use this to sync user defaults,
- save state, etc.
+ This lets the app delegate know that an event causing a
+ crash has been handled. By the time this method is called,
+ the offending crash has been logged and the notifier is no
+ longer watching for crashes. Use this to sync user
+ defaults, save state, etc.
  
  */
-- (void)notifierDidHandleException;
+- (void)notifierDidHandleException:(NSException *)exc;
+- (void)notifierDidHandleSignal:(NSInteger)signal;
 
 /*
  
@@ -66,8 +67,5 @@
  
  */
 - (UIViewController *)rootViewControllerForNotice;
-
-// removed from future use
-- (void)notifierDidHandleException:(NSException *)exc DEPRECATED_ATTRIBUTE;
 
 @end

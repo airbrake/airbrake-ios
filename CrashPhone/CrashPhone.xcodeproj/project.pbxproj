@@ -16,7 +16,7 @@
 		3B20D891128A321E000CE777 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D88B128A321E000CE777 /* HTNotice.m */; };
 		3B20D892128A321E000CE777 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D88D128A321E000CE777 /* HTNotifier.m */; };
 		3B20D893128A321E000CE777 /* HTUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D88F128A321E000CE777 /* HTUtilities.m */; };
-		3B29FC3112B97F3C00B7A6F6 /* HTHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B29FC3012B97F3C00B7A6F6 /* HTHandler.m */; };
+		3B29FC3112B97F3C00B7A6F6 /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */; };
 		3B54C28D1257D6D600089639 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27A1257D6D600089639 /* DDXMLDocument.m */; };
 		3B54C28E1257D6D600089639 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27C1257D6D600089639 /* DDXMLElement.m */; };
 		3B54C28F1257D6D600089639 /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27E1257D6D600089639 /* DDXMLElementAdditions.m */; };
@@ -43,8 +43,8 @@
 		3B20D88E128A321E000CE777 /* HTUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTUtilities.h; sourceTree = "<group>"; };
 		3B20D88F128A321E000CE777 /* HTUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTUtilities.m; sourceTree = "<group>"; };
 		3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
-		3B29FC2F12B97F3C00B7A6F6 /* HTHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTHandler.h; sourceTree = "<group>"; };
-		3B29FC3012B97F3C00B7A6F6 /* HTHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTHandler.m; sourceTree = "<group>"; };
+		3B29FC2F12B97F3C00B7A6F6 /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
+		3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
 		3B54C2781257D6D600089639 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		3B54C2791257D6D600089639 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		3B54C27A1257D6D600089639 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -151,8 +151,8 @@
 				3B20D888128A321E000CE777 /* HTNotifier.strings */,
 				3B20D88C128A321E000CE777 /* HTNotifier.h */,
 				3B20D88D128A321E000CE777 /* HTNotifier.m */,
-				3B29FC2F12B97F3C00B7A6F6 /* HTHandler.h */,
-				3B29FC3012B97F3C00B7A6F6 /* HTHandler.m */,
+				3B29FC2F12B97F3C00B7A6F6 /* HTFunctions.h */,
+				3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */,
 				3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */,
 				3B20D88A128A321E000CE777 /* HTNotice.h */,
 				3B20D88B128A321E000CE777 /* HTNotice.m */,
@@ -259,7 +259,7 @@
 				3B20D891128A321E000CE777 /* HTNotice.m in Sources */,
 				3B20D892128A321E000CE777 /* HTNotifier.m in Sources */,
 				3B20D893128A321E000CE777 /* HTUtilities.m in Sources */,
-				3B29FC3112B97F3C00B7A6F6 /* HTHandler.m in Sources */,
+				3B29FC3112B97F3C00B7A6F6 /* HTFunctions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

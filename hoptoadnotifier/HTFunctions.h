@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface HTHandler : NSObject {
-
-}
-
-@end
+NSArray * HTHandledSignals();
+void HTRegisterHandler();
+void HTRemoveHandler();
+NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *);

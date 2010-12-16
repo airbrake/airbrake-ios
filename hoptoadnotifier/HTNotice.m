@@ -75,7 +75,8 @@
 	HTNotice *notice = [HTNotice notice];
 	notice.exceptionName = [exception name];
 	notice.exceptionReason = [exception reason];
-	notice.backtrace = [HTUtilities backtraceWithException:exception];	
+	NSArray *addresses = [exception callStackReturnAddresses];
+	notice.backtrace = HTCallStackSymbolsFromReturnAddresses(addresses);
 	return notice;
 }
 + (HTNotice *)testNotice {

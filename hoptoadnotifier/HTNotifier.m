@@ -40,9 +40,6 @@ static void HTHandleSignal(int signal);
 #pragma mark private methods
 @interface HTNotifier (private)
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
-- (void)startHandler;
-- (void)stopHandler;
-- (void)handleException:(NSException *)e;
 - (void)applicationDidBecomeActive:(NSNotification *)notif;
 - (void)checkForNoticesAndReportIfReachable;
 - (void)showNoticeAlert;
@@ -75,7 +72,6 @@ static void HTHandleSignal(int signal);
 		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
 		
 		[self registerNotifications];
-		[self startHandler];
 		
 		// log start statement
 		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
@@ -83,31 +79,6 @@ static void HTHandleSignal(int signal);
 		
 	}
 	return self;
-}
-- (void)startHandler {
-	NSSetUncaughtExceptionHandler(HTHandleException);
-	for (NSNumber *signalValue in [[HTUtilities signals] allValues]) {
-		signal([signalValue intValue], HTHandleSignal);
-	}
-}
-- (void)stopHandler {
-	NSSetUncaughtExceptionHandler(NULL);
-	for (NSNumber *signalValue in [[HTUtilities signals] allValues]) {
-		signal([signalValue intValue], SIG_DFL);
-	}
-}
-- (void)handleException:(NSException *)e {
-	[self stopHandler];
-
-	// log crash
-	NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
-	NSString *noticePath = [HTUtilities noticePathWithName:noticeName];
-	HTNotice *notice = [HTNotice noticeWithException:e];
-	[notice writeToFile:noticePath];
-	
-	if ([self.delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
-		[self.delegate notifierDidHandleException:e];
-	}
 }
 - (void)applicationDidBecomeActive:(NSNotification *)notif {
 	[self performSelectorInBackground:@selector(checkForNoticesAndReportIfReachable) withObject:nil];
@@ -296,7 +267,6 @@ static void HTHandleSignal(int signal);
 	return self;
 }
 - (void)dealloc {
-	[self stopHandler];
 	[self unregisterNotifications];
 	
 	if (reachability != NULL) { CFRelease(reachability), reachability = NULL; }
@@ -345,15 +315,6 @@ static void HTHandleSignal(int signal);
 
 #pragma mark -
 #pragma mark c function implementations
-static void HTHandleException(NSException *e) {
-	[sharedNotifier performSelectorOnMainThread:@selector(handleException:) withObject:e waitUntilDone:YES];
-}
-static void HTHandleSignal(int signal) {
-	NSNumber *signalNumber = [NSNumber numberWithInteger:signal];
-	NSString *signalName = [[HTUtilities signals] objectForKey:signalNumber];
-	[NSException raise:@"HTSignalRaisedException"
-				format:@"Application received signal %@", signalName];
-}
 static void HTLog(NSString *frmt, ...) {
 	va_list list;
 	va_start(list, frmt);
