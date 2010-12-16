@@ -12,8 +12,6 @@
 
 static void HTHandleSignal(int signal) {
 	HTStopHandler();
-	NSLog(@"%s", strsignal(signal));
-	NSLog(@"%@", [NSThread callStackReturnAddresses]);
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleSignal:)]) {
 		[delegate notifierDidHandleSignal:signal];

@@ -39,14 +39,11 @@
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-//	[HTNotifier startNotifierWithAPIKey:@""
-//						environmentName:HTNotifierAppStoreEnvironment];
-//	[[HTNotifier sharedNotifier] setDelegate:self];
-//	[[HTNotifier sharedNotifier] setUseSSL:YES];
-//	[[HTNotifier sharedNotifier] writeTestNotice];
-	
-	//HTHandler *handler = [[HTHandler alloc] init];
-	HTStartHandler();
+	[HTNotifier startNotifierWithAPIKey:@"a2aba544f9ff4261c99f2aed156064f8"
+						environmentName:HTNotifierAppStoreEnvironment];
+	[[HTNotifier sharedNotifier] setDelegate:self];
+	[[HTNotifier sharedNotifier] setUseSSL:YES];
+	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;
@@ -58,7 +55,7 @@
 	[NSException raise:NSInvalidArgumentException format:@"test exception"];
 }
 - (IBAction)signal:(id)sender {
-	raise(SIGABRT);
+	raise(SIGSEGV);
 }
 
 #pragma mark -
