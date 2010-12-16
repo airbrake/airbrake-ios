@@ -27,6 +27,8 @@ NSString * const HTNotifierBundleVersion  = @"${VERSION}";
 NSString * const HTNotifierDevelopmentEnvironment = @"Development";
 NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
 NSString * const HTNotifierAppStoreEnvironment = @"App Store";
+NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
+NSString * const HTNotifierPathExtension = @"notice";
 
 #pragma mark -
 #pragma mark c function prototypes

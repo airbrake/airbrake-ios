@@ -45,6 +45,14 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 
 /*
  
+ values used by the notifier to locate and store notices
+ 
+ */
+extern NSString * const HTNotifierDirectoryName;
+extern NSString * const HTNotifierPathExtension;
+
+/*
+ 
  HTNotifier is the primary class of the notifer library
  
  start the notifier by calling

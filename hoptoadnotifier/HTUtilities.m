@@ -8,37 +8,10 @@
 
 #import "HTNotifier.h"
 
-static NSString * const HTNotifierFolderName = @"Hoptoad Notices";
-static NSString * const HTNotifierPathExtension = @"notice";
+
 
 @implementation HTUtilities
 
-+ (NSString *)noticesDirectory {
-#if TARGET_OS_IPHONE
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-	NSString *path = [folders objectAtIndex:0];
-	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	return [path stringByAppendingPathComponent:HTNotifierFolderName];
-#else
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *path = [folders objectAtIndex:0];
-	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	path = [path stringByAppendingPathComponent:[self bundleDisplayName]];
-	return [path stringByAppendingPathComponent:HTNotifierFolderName];
-#endif
-}
-+ (NSArray *)noticePaths {
-	NSString *directory = [self noticesDirectory];
-	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
-	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
-	for (NSString *file in directoryContents) {
-		if ([[file pathExtension] isEqualToString:HTNotifierPathExtension]) {
-			NSString *crashPath = [directory stringByAppendingPathComponent:file];
-			[crashes addObject:crashPath];
-		}
-	}
-	return crashes;
-}
 + (NSString *)noticePathWithName:(NSString *)name {
 	NSString *path = [[self noticesDirectory] stringByAppendingPathComponent:name];
 	return [path stringByAppendingPathExtension:HTNotifierPathExtension];
@@ -69,13 +42,6 @@ static NSString * const HTNotifierPathExtension = @"notice";
 	NSString *toReturn = [NSString stringWithString:mutable];
 	[mutable release];
 	return toReturn;
-}
-+ (NSString *)operatingSystemVersion {
-#if TARGET_IPHONE_SIMULATOR
-	return [[UIDevice currentDevice] systemVersion];
-#else
-	return [[NSProcessInfo processInfo] operatingSystemVersionString];
-#endif
 }
 + (NSString *)applicationVersion {
 	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];

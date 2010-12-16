@@ -19,15 +19,6 @@
 
 }
 
-/*
- returns the path to the directory where notices are stored
- */
-+ (NSString *)noticesDirectory;
-
-/*
- returns an array containing paths to all notices
- */
-+ (NSArray *)noticePaths;
 
 /*
  returns a path for a notice given a name with the correct
@@ -40,14 +31,6 @@
  */
 + (NSString *)stringByReplacingHoptoadVariablesInString:(NSString *)string;
 
-/*
- returns the operating system version
- 
- this is returned from the shared NSProcessInfo object on a
- device and from the shared UIDevice object in the simulator
- to provide the most accurate data
- */
-+ (NSString *)operatingSystemVersion;
 
 /*
  returns the application version

@@ -20,6 +20,7 @@ static void HTHandleSignal(int signal) {
 	}
 	raise(signal);
 }
+
 static void HTHandleException(NSException *e) {
 	HTStopHandler();
 	NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
@@ -31,6 +32,7 @@ static void HTHandleException(NSException *e) {
 		[delegate notifierDidHandleException:e];
 	}
 }
+
 NSArray * HTHandledSignals() {
 	return [NSArray arrayWithObjects:
 			[NSNumber numberWithInteger:SIGABRT],
@@ -41,6 +43,7 @@ NSArray * HTHandledSignals() {
 			[NSNumber numberWithInteger:SIGTRAP],
 			nil];
 }
+
 void HTStartHandler() {
 	NSSetUncaughtExceptionHandler(HTHandleException);
 	NSArray *signals = HTHandledSignals();
@@ -54,6 +57,7 @@ void HTStartHandler() {
 		}
 	}
 }
+
 void HTStopHandler() {
 	NSSetUncaughtExceptionHandler(NULL);
 	NSArray *signals = HTHandledSignals();
@@ -65,6 +69,7 @@ void HTStopHandler() {
 		sigaction(signal, &action, NULL);
 	}
 }
+
 NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	int frames = [addresses count];
 	void *stack[frames];
@@ -80,12 +85,50 @@ NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	free(strs);
 	return backtrace;
 }
+
+NSString * HTNoticesDirectory() {
+#if TARGET_OS_IPHONE
+	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	NSString *path = [folders objectAtIndex:0];
+	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
+#else
+	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *path = [folders objectAtIndex:0];
+	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+	path = [path stringByAppendingPathComponent:[self bundleDisplayName]];
+	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
+#endif
+}
+
+NSArray * HTNotices() {
+	NSString *directory = HTNoticesDirectory();
+	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
+	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
+	for (NSString *file in directoryContents) {
+		if ([[file pathExtension] isEqualToString:HTNotifierPathExtension]) {
+			NSString *crashPath = [directory stringByAppendingPathComponent:file];
+			[crashes addObject:crashPath];
+		}
+	}
+	return crashes;
+}
+
+NSString * HTOperatingSystemVersion() {
+#if TARGET_IPHONE_SIMULATOR
+	return [[UIDevice currentDevice] systemVersion];
+#else
+	return [[NSProcessInfo processInfo] operatingSystemVersionString];
+#endif
+}
+
 void HTLog(NSString *frmt, ...) {
 	va_list list;
 	va_start(list, frmt);
 	NSLog(@"%@", HTLogStringWithArguments(frmt, list));
 	va_end(list);
 }
+
 NSString *HTLogStringWithFormat(NSString *fmt, ...) {
 	va_list list;
 	va_start(list, fmt);
@@ -93,6 +136,7 @@ NSString *HTLogStringWithFormat(NSString *fmt, ...) {
 	va_end(list);
 	return toReturn;
 }
+
 NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
 	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
 	NSString *toReturn = [@"[Hoptoad] " stringByAppendingString:format];
