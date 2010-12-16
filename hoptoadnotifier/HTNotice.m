@@ -28,7 +28,7 @@
 - (id)initWithCoder:(NSCoder *)decoder {
 	if (self = [super init]) {
 		NSInteger version = [decoder decodeInt32ForKey:@"archive_version"];
-		if (version <= 1) {
+		if (version >= 1) {
 			self.operatingSystemVersion = [decoder decodeObjectForKey:@"os_version"];
 			self.applicationVersion = [decoder decodeObjectForKey:@"app_version"];
 			self.exceptionName = [decoder decodeObjectForKey:@"exc_name"];
@@ -39,7 +39,7 @@
 			self.environmentInfo = [decoder decodeObjectForKey:@"env_info"];
 			self.viewControllerName = [decoder decodeObjectForKey:@"view_controller"];
 		}
-		if (version <= 2) {
+		if (version >= 2) {
 			self.executableName = [decoder decodeObjectForKey:@"executable"];
 		}
 	}

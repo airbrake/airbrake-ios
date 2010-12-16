@@ -149,6 +149,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 		
 		// get notice payload
 		HTNotice *notice = [HTNotice readFromFile:noticePath];
+		NSLog(@"%@", [notice hoptoadXMLString]);
 		NSData *xmlData = [notice hoptoadXMLData];
 		
 		// create url request
@@ -162,27 +163,29 @@ NSString * const HTNotifierPathExtension = @"notice";
 		// create connection
 		NSHTTPURLResponse *response = nil;
 		NSError *error = nil;
-		[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+		NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
+													 returningResponse:&response
+																 error:&error];
 		[request release];
 		NSInteger statusCode = [response statusCode];
+		NSString *responseString = [[[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding] autorelease];
 		
 		// error
 		if (error != nil) {
 			HTLog(@"encountered error while posting notice\n%@", error);
 		}
 		
-		// status code
+		// response
 		if (statusCode == 200) {
 			HTLog(@"crash report posted");
 		}
-		else if (statusCode == 403) {
-			HTLog(@"the requested project does not support SSL");
-		}
-		else if (statusCode == 422) {
-			HTLog(@"your api key is not correct");
+		else if (responseString == nil) {
+			HTLog(@"unexpected response from Hoptoad\nstatus code:%d", statusCode);
 		}
 		else {
-			HTLog(@"unexpected errors (%d) - submit a bug report at http://help.hoptoadapp.com", statusCode);
+			HTLog(@"unexpected response from Hoptoad\nstatus code:%d\nresponse body:%@",
+				  statusCode,
+				  responseString);
 		}
 		
 		// delete report
