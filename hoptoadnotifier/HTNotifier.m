@@ -149,7 +149,6 @@ NSString * const HTNotifierPathExtension = @"notice";
 		
 		// get notice payload
 		HTNotice *notice = [HTNotice readFromFile:noticePath];
-		NSLog(@"%@", [notice hoptoadXMLString]);
 		NSData *xmlData = [notice hoptoadXMLData];
 		
 		// create url request
@@ -160,36 +159,36 @@ NSString * const HTNotifierPathExtension = @"notice";
 		[request setHTTPMethod:@"POST"];
 		[request setHTTPBody:xmlData];
 		
-		// create connection
+		// perform request
 		NSHTTPURLResponse *response = nil;
 		NSError *error = nil;
 		NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
 													 returningResponse:&response
 																 error:&error];
-		[request release];
 		NSInteger statusCode = [response statusCode];
-		NSString *responseString = [[[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding] autorelease];
 		
-		// error
-		if (error != nil) {
+		if (error == nil) {
+			[[NSFileManager defaultManager] removeItemAtPath:noticePath error:nil];
+		}
+		else {
 			HTLog(@"encountered error while posting notice\n%@", error);
 		}
 		
-		// response
+		// all went well
 		if (statusCode == 200) {
 			HTLog(@"crash report posted");
 		}
-		else if (responseString == nil) {
-			HTLog(@"unexpected response from Hoptoad\nstatus code:%d", statusCode);
+		else if (responseBody == nil) {
+			HTLog(@"unexpected response\nstatus code:%d", statusCode);
 		}
 		else {
-			HTLog(@"unexpected response from Hoptoad\nstatus code:%d\nresponse body:%@",
+			NSString *responseString = [[NSString alloc] initWithData:responseBody
+															 encoding:NSUTF8StringEncoding];
+			HTLog(@"unexpected response\nstatus code:%d\nresponse body:%@",
 				  statusCode,
 				  responseString);
+			[responseString release];
 		}
-		
-		// delete report
-		[[NSFileManager defaultManager] removeItemAtPath:noticePath error:nil];
 	}
 }
 - (BOOL)isHoptoadReachable {
