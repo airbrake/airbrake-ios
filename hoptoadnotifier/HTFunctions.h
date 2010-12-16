@@ -59,6 +59,50 @@ NSString * HTBundleDisplayName();
  */
 NSString * HTPlatform();
 
+/*
+ get the path to a notice given a file name
+ 
+ the file name should not contain a path extension
+ */
+NSString * HTPathForNewNoticeWithName(NSString *);
+
+/*
+ returns a string with all of the hoptoad variables
+ replaced by their appropriate values
+ */
+NSString * HTStringByReplacingHoptoadVariablesInString(NSString *);
+
+#if TARGET_OS_IPHONE
+/*
+ return the class name of the on screen view controller.
+ 
+ this does not indicate the controller where the crash
+ occured, simply the one that has a view on screen
+ 
+ if the HTNotifier delegate implements
+	 - rootViewControllerForNotice
+ the heirarchy of the returned controller will be inspected
+ 
+ if not, the rootViewController of the key window will be
+ inspected (if it exists)
+ */
+NSString * HTCurrentViewController();
+
+/*
+ return the name of the visible view controller given a
+ starting view controller.
+ 
+ this method makes assumptions about tab bar and navigation
+ controllers and will traverse the view heirarchy until an
+ unknown controller class is encountered. this is often the
+ onscreen controller
+ 
+ this method is recursive and is called by
+	+ currentViewController
+ */
+NSString * HTVisibleViewControllerWithViewController(UIViewController *);
+#endif
+
 // library logging methods
 void HTLog(NSString *fmt, ...);
 NSString * HTLogStringWithFormat(NSString *fmt, ...);

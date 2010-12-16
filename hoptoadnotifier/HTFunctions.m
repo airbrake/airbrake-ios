@@ -23,10 +23,10 @@ static void HTHandleSignal(int signal) {
 
 static void HTHandleException(NSException *e) {
 	HTStopHandler();
-	NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
-	NSString *noticePath = [HTUtilities noticePathWithName:noticeName];
+	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
+	NSString *path = HTPathForNewNoticeWithName(name);
 	HTNotice *notice = [HTNotice noticeWithException:e];
-	[notice writeToFile:noticePath];
+	[notice writeToFile:path];
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
 		[delegate notifierDidHandleException:e];
@@ -174,6 +174,86 @@ NSString * HTPlatform() {
 	return [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
 #endif
 }
+
+NSString * HTPathForNewNoticeWithName(NSString *name) {
+	NSString *path = [HTNoticesDirectory() stringByAppendingPathComponent:name];
+	return [path stringByAppendingPathExtension:HTNotifierPathExtension];
+}
+
+NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
+	NSMutableString *mutable = [string mutableCopy];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBundleName
+							 withString:HTBundleDisplayName()
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBundleVersion
+							 withString:HTApplicationVersion()
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBuildDate
+							 withString:[NSString stringWithFormat:@"%s", __DATE__]
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	[mutable replaceOccurrencesOfString:HTNotifierBuildTime
+							 withString:[NSString stringWithFormat:@"%s", __TIME__]
+								options:0
+								  range:NSMakeRange(0, [mutable length])];
+	
+	NSString *toReturn = [NSString stringWithString:mutable];
+	[mutable release];
+	return toReturn;
+}
+
+#if TARGET_OS_IPHONE
+NSString * HTCurrentViewController() {
+	// view controller to inspect
+	UIViewController *rootController = nil;
+	
+	// try getting view controller from notifier delegate
+	id<HTNotifierDelegate> notifierDelegate = [[HTNotifier sharedNotifier] delegate];
+	if ([notifierDelegate respondsToSelector:@selector(rootViewControllerForNotice)]) {
+		rootController = [notifierDelegate rootViewControllerForNotice];
+	}
+	
+	// try getting view controller from window
+	UIApplication *app = [UIApplication sharedApplication];
+	UIWindow *keyWindow = [app keyWindow];
+	if (rootController == nil && [keyWindow respondsToSelector:@selector(rootViewController)]) {
+		rootController = [keyWindow rootViewController];
+	}
+	
+	// if we don't have a controller yet, give up
+	if (rootController == nil) {
+		return nil;
+	}
+	
+	// call method to get class name
+	return HTVisibleViewControllerWithViewController(rootController);
+}
+
+NSString * HTVisibleViewControllerWithViewController(UIViewController *controller) {
+	
+	// tab bar controller
+	if ([controller isKindOfClass:[UITabBarController class]]) {
+		UIViewController *visibleController = [(UITabBarController *)controller selectedViewController];
+		return HTVisibleViewControllerWithViewController(visibleController);
+	}
+	// navigation controller
+	else if ([controller isKindOfClass:[UINavigationController class]]) {
+		UIViewController *visibleController = [(UINavigationController *)controller visibleViewController];
+		return HTVisibleViewControllerWithViewController(visibleController);
+	}
+	// other type
+	else {
+		return NSStringFromClass([controller class]);
+	}
+	
+}
+#endif
 
 void HTLog(NSString *frmt, ...) {
 	va_list list;

@@ -62,10 +62,10 @@
 	notice.platform = HTPlatform();
 	notice.applicationVersion = HTApplicationVersion();
 #if TARGET_OS_IPHONE
-	notice.viewControllerName = [HTUtilities currentViewController];
+	notice.viewControllerName = HTCurrentViewController();
 #endif
 	NSString *envName = [[HTNotifier sharedNotifier] environmentName];
-	notice.environmentName = [HTUtilities stringByReplacingHoptoadVariablesInString:envName];
+	notice.environmentName = HTStringByReplacingHoptoadVariablesInString(envName);
 	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
 	return [notice autorelease];
 }

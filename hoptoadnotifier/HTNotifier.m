@@ -54,7 +54,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 		
 		// setup values
 		apiKey = [key copy];
-		environmentName = [[HTUtilities stringByReplacingHoptoadVariablesInString:name] retain];
+		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
 		self.useSSL = NO;
 		self.environmentInfo = [NSMutableDictionary dictionary];
 		
@@ -124,8 +124,8 @@ NSString * const HTNotifierPathExtension = @"notice";
 		}
 	}
 	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[HTUtilities stringByReplacingHoptoadVariablesInString:title]
-													message:[HTUtilities stringByReplacingHoptoadVariablesInString:body]
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
+													message:HTStringByReplacingHoptoadVariablesInString(body)
 												   delegate:self
 										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
 										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
@@ -272,7 +272,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 	[super dealloc];
 }
 - (void)writeTestNotice {
-	NSString *noticePath = [HTUtilities noticePathWithName:@"TEST"];
+	NSString *noticePath = HTPathForNewNoticeWithName(@"TEST");
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) {
 		return;

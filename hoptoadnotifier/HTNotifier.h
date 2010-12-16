@@ -13,7 +13,6 @@
 #import "HTNotifierDelegate.h"
 #import "HTFunctions.h"
 #import "HTNotice.h"
-#import "HTUtilities.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
