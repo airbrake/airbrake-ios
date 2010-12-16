@@ -66,6 +66,7 @@
 	notice.operatingSystemVersion = HTOperatingSystemVersion();
 	notice.platform = HTPlatform();
 	notice.applicationVersion = HTApplicationVersion();
+	notice.executableName = HTExecutableName();
 #if TARGET_OS_IPHONE
 	notice.viewControllerName = HTCurrentViewController();
 #endif
@@ -120,7 +121,6 @@
 
 #pragma mark -
 #pragma mark object methods
-// TODO: add process name to xml payload
 - (NSString *)hoptoadXMLString {
 	DDXMLElement *payload;
 	DDXMLElement *e1;

@@ -129,6 +129,11 @@ NSString * HTOperatingSystemVersion() {
 #endif
 }
 
+NSString * HTExecutableName() {
+	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
+	return [infoPlist objectForKey:@"CFBundleExecutable"];
+}
+
 NSString * HTApplicationVersion() {
 	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
 	NSString *bundleVersion = [infoPlist objectForKey:@"CFBundleVersion"];

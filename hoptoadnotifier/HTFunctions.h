@@ -29,6 +29,9 @@ NSArray * HTNotices();
 // get the operating system version
 NSString * HTOperatingSystemVersion();
 
+// get the executable name
+NSString * HTExecutableName();
+
 /*
  get the application version
  
