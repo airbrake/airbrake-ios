@@ -14,6 +14,7 @@
 
 @synthesize operatingSystemVersion;
 @synthesize applicationVersion;
+@synthesize executableName;
 @synthesize exceptionName;
 @synthesize exceptionReason;
 @synthesize platform;
@@ -27,7 +28,7 @@
 - (id)initWithCoder:(NSCoder *)decoder {
 	if (self = [super init]) {
 		NSInteger version = [decoder decodeInt32ForKey:@"archive_version"];
-		if (version == 1) {
+		if (version <= 1) {
 			self.operatingSystemVersion = [decoder decodeObjectForKey:@"os_version"];
 			self.applicationVersion = [decoder decodeObjectForKey:@"app_version"];
 			self.exceptionName = [decoder decodeObjectForKey:@"exc_name"];
@@ -37,6 +38,9 @@
 			self.environmentName = [decoder decodeObjectForKey:@"env_name"];
 			self.environmentInfo = [decoder decodeObjectForKey:@"env_info"];
 			self.viewControllerName = [decoder decodeObjectForKey:@"view_controller"];
+		}
+		if (version <= 2) {
+			self.executableName = [decoder decodeObjectForKey:@"executable"];
 		}
 	}
 	return self;
@@ -52,6 +56,7 @@
 	[encoder encodeObject:self.environmentName forKey:@"env_name"];
 	[encoder encodeObject:self.environmentInfo forKey:@"env_info"];
 	[encoder encodeObject:self.viewControllerName forKey:@"view_controller"];
+	[encoder encodeObject:self.executableName forKey:@"executable"];
 }
 
 #pragma mark -
@@ -115,6 +120,7 @@
 
 #pragma mark -
 #pragma mark object methods
+// TODO: add process name to xml payload
 - (NSString *)hoptoadXMLString {
 	DDXMLElement *payload;
 	DDXMLElement *e1;

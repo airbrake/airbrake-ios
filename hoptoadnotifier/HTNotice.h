@@ -26,6 +26,7 @@
 @private
 	NSString *operatingSystemVersion;
 	NSString *applicationVersion;
+	NSString *executableName;
 	NSString *exceptionName;
 	NSString *exceptionReason;
 	NSString *platform;
@@ -37,6 +38,7 @@
 
 @property (nonatomic, copy) NSString *operatingSystemVersion;
 @property (nonatomic, copy) NSString *applicationVersion;
+@property (nonatomic, copy) NSString *executableName;
 @property (nonatomic, copy) NSString *exceptionName;
 @property (nonatomic, copy) NSString *exceptionReason;
 @property (nonatomic, copy) NSString *platform;
