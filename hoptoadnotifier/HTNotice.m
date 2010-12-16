@@ -46,7 +46,7 @@
 	return self;
 }
 - (void)encodeWithCoder:(NSCoder *)encoder {
-	[encoder encodeInt32:1 forKey:@"archive_version"];
+	[encoder encodeInt32:2 forKey:@"archive_version"];
 	[encoder encodeObject:self.operatingSystemVersion forKey:@"os_version"];
 	[encoder encodeObject:self.applicationVersion forKey:@"app_version"];
 	[encoder encodeObject:self.exceptionName forKey:@"exc_name"];
@@ -195,14 +195,13 @@
 	[e1 addChild:e2];
 	[e1 addChild:[DDXMLElement elementWithName:@"action"]];
 	e2 = [DDXMLElement elementWithName:@"cgi-data"];
-	NSMutableDictionary *cgiData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-									self.platform, @"Device",
-									self.applicationVersion, @"App Version",
-									self.operatingSystemVersion, @"Operating System",
-									nil];
-	[cgiData addEntriesFromDictionary:self.environmentInfo];
-	for (NSString *key in [cgiData allKeys]) {
-		id var = [cgiData objectForKey:key];
+	NSMutableDictionary *cgi = [NSMutableDictionary dictionaryWithDictionary:self.environmentInfo];
+	if (self.platform != nil) { [cgi setObject:self.platform forKey:@"Device"]; }
+	if (self.applicationVersion != nil) { [cgi setObject:self.applicationVersion forKey:@"App Version"]; }
+	if (self.operatingSystemVersion != nil) { [cgi setObject:self.operatingSystemVersion forKey:@"Operating System"]; }
+	if (self.executableName != nil) { [cgi setObject:self.executableName forKey:@"Executable"]; }
+	for (NSString *key in [cgi allKeys]) {
+		id var = [cgi objectForKey:key];
 		e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
 		[e3 addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:key]];
 		[e2 addChild:e3];
