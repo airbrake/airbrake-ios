@@ -31,10 +31,6 @@ NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
 NSString * const HTNotifierPathExtension = @"notice";
 
 #pragma mark -
-#pragma mark c function prototypes
-
-
-#pragma mark -
 #pragma mark private methods
 @interface HTNotifier (private)
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
@@ -44,7 +40,6 @@ NSString * const HTNotifierPathExtension = @"notice";
 - (void)postAllNoticesWithAutoreleasePool;
 - (void)postNoticesWithPaths:(NSArray *)paths;
 - (BOOL)isHoptoadReachable;
-- (void)registerNotifications;
 - (void)unregisterNotifications;
 @end
 @implementation HTNotifier (private)
@@ -52,7 +47,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 	if (self = [super init]) {
 		
 		// create folder
-		NSString *directory = [HTUtilities noticesDirectory];
+		NSString *directory = HTNoticesDirectory();
 		if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
 			[[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:nil];
 		}
@@ -67,9 +62,17 @@ NSString * const HTNotifierPathExtension = @"notice";
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
 		 [NSDictionary dictionaryWithObject:@"NO" forKey:HTNotifierAlwaysSendKey]];
 		
+		// setup reachability
 		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
 		
-		[self registerNotifications];
+		// register for application notifications
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(applicationDidBecomeActive:)
+													 name:UIApplicationDidBecomeActiveNotification
+												   object:nil];
+		
+		// start handler
+		HTStartHandler();
 		
 		// log start statement
 		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
@@ -87,7 +90,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 	if ([self isHoptoadReachable]) {
 		[self performSelectorOnMainThread:@selector(unregisterNotifications) withObject:nil waitUntilDone:YES];
 		
-		NSArray *notices = [HTUtilities noticePaths];
+		NSArray *notices = HTNotices();
 		if ([notices count] > 0) {
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
 				[self postNoticesWithPaths:notices];
@@ -132,7 +135,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 - (void)postAllNoticesWithAutoreleasePool {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	NSArray *paths = [HTUtilities noticePaths];
+	NSArray *paths = HTNotices();
 	[self postNoticesWithPaths:paths];
 	
 	[pool drain];
@@ -190,12 +193,6 @@ NSString * const HTNotifierPathExtension = @"notice";
 	SCNetworkReachabilityFlags flags;
 	SCNetworkReachabilityGetFlags(reachability, &flags);
 	return ((flags & kSCNetworkReachabilityFlagsReachable) != 0);
-}
-- (void)registerNotifications {
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(applicationDidBecomeActive:)
-												 name:UIApplicationDidBecomeActiveNotification
-											   object:nil];
 }
 - (void)unregisterNotifications {
 	[[NSNotificationCenter defaultCenter] removeObserver:self
@@ -293,7 +290,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 	NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
 	
 	if (buttonIndex == alertView.cancelButtonIndex) {
-		NSArray *noticePaths = [HTUtilities noticePaths];
+		NSArray *noticePaths = HTNotices();
 		for (NSString *notice in noticePaths) {
 			[[NSFileManager defaultManager] removeItemAtPath:notice
 													   error:nil];
@@ -310,7 +307,3 @@ NSString * const HTNotifierPathExtension = @"notice";
 }
 
 @end
-
-#pragma mark -
-#pragma mark c function implementations
-

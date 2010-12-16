@@ -32,35 +32,7 @@
 + (NSString *)stringByReplacingHoptoadVariablesInString:(NSString *)string;
 
 
-/*
- returns the application version
- 
- every app should have a CFBundleVersion some apps have a
- CFBundleShortVersionString if it has both, this method will
- return "CFBundleVersion (CFBundleShortVersionString)"
- */
-+ (NSString *)applicationVersion;
 
-/*
- returns a display name for the application
- 
- this method will attempt to return the CFBundleDisplayName
- if that isn't set, it will return CFBundleIdentifier
- */
-+ (NSString *)bundleDisplayName;
-
-/*
- returns the current platform
- 
- if the app is running in the simulator this simply returns
- "iPhone Simulator" otherwise, it first get the hardware
- model. ex. "iPhone1,2"
- 
- if possible, this will be matched with a common string
- the returned result is often of the form
- "iPhone 4 (iPhone3,1)"
- */
-+ (NSString *)platform;
 
 #if TARGET_OS_IPHONE
 /*

@@ -26,7 +26,38 @@ NSString * HTNoticesDirectory();
 // get a list of all notices saved on disk
 NSArray * HTNotices();
 
+// get the operating system version
 NSString * HTOperatingSystemVersion();
+
+/*
+ get the application version
+ 
+ this is returned as a combination of the CFBundleVersion
+ and CFBundleShortVersionString
+ */
+NSString * HTApplicationVersion();
+
+/*
+ get a string that can be shown to the user that represents
+ the application name
+ 
+ a name is searched for in this order:
+	- CFBundleDisplayName
+	- CFBundleName
+	- CFBundleIdentifier
+ */
+NSString * HTBundleDisplayName();
+
+/*
+ get the current platform
+ 
+ if the app is running on an iOS device, a common string
+ like "iPhone 3G" or "iPad" is returned.
+ 
+ if the app is running on a Mac OS device an identifier
+ is returned like "MacBookPro7,1"
+ */
+NSString * HTPlatform();
 
 // library logging methods
 void HTLog(NSString *fmt, ...);

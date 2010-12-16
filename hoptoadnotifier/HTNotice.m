@@ -58,9 +58,9 @@
 #pragma mark class methods
 + (HTNotice *)notice {
 	HTNotice *notice = [[HTNotice alloc] init];
-	notice.operatingSystemVersion = [HTUtilities operatingSystemVersion];
-	notice.platform = [HTUtilities platform];
-	notice.applicationVersion = [HTUtilities applicationVersion];
+	notice.operatingSystemVersion = HTOperatingSystemVersion();
+	notice.platform = HTPlatform();
+	notice.applicationVersion = HTApplicationVersion();
 #if TARGET_OS_IPHONE
 	notice.viewControllerName = [HTUtilities currentViewController];
 #endif
