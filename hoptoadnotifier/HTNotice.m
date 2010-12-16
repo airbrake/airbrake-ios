@@ -19,7 +19,7 @@
 @synthesize platform;
 @synthesize environmentName;
 @synthesize environmentInfo;
-@synthesize backtrace;
+@synthesize callStack;
 @synthesize viewControllerName;
 
 #pragma mark -
@@ -33,7 +33,7 @@
 			self.exceptionName = [decoder decodeObjectForKey:@"exc_name"];
 			self.exceptionReason = [decoder decodeObjectForKey:@"exc_reason"];
 			self.platform = [decoder decodeObjectForKey:@"platform"];
-			self.backtrace = [decoder decodeObjectForKey:@"backtrace"];
+			self.callStack = [decoder decodeObjectForKey:@"backtrace"];
 			self.environmentName = [decoder decodeObjectForKey:@"env_name"];
 			self.environmentInfo = [decoder decodeObjectForKey:@"env_info"];
 			self.viewControllerName = [decoder decodeObjectForKey:@"view_controller"];
@@ -48,7 +48,7 @@
 	[encoder encodeObject:self.exceptionName forKey:@"exc_name"];
 	[encoder encodeObject:self.exceptionReason forKey:@"exc_reason"];
 	[encoder encodeObject:self.platform forKey:@"platform"];
-	[encoder encodeObject:self.backtrace forKey:@"backtrace"];
+	[encoder encodeObject:self.callStack forKey:@"backtrace"];
 	[encoder encodeObject:self.environmentName forKey:@"env_name"];
 	[encoder encodeObject:self.environmentInfo forKey:@"env_info"];
 	[encoder encodeObject:self.viewControllerName forKey:@"view_controller"];
@@ -74,14 +74,14 @@
 	notice.exceptionName = [exception name];
 	notice.exceptionReason = [exception reason];
 	NSArray *addresses = [exception callStackReturnAddresses];
-	notice.backtrace = HTCallStackSymbolsFromReturnAddresses(addresses);
+	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
 	return notice;
 }
 + (HTNotice *)testNotice {
 	HTNotice *notice = [HTNotice notice];
 	notice.exceptionName = @"Test Crash Report";
 	notice.exceptionReason = @"-[HTNotifier crash]: unrecognized selector sent to instance 0x59476f0";
-	notice.backtrace = [NSArray arrayWithObjects:
+	notice.callStack = [NSArray arrayWithObjects:
 						@"0   CoreFoundation                      0x024f98fc __exceptionPreprocess + 156",
 						@"1   libobjc.A.dylib                     0x0230e5de objc_exception_throw + 47",
 						@"2   CoreFoundation                      0x024fb42b -[NSObject(NSObject) doesNotRecognizeSelector:] + 187",
@@ -150,7 +150,7 @@
 	e2 = [DDXMLElement elementWithName:@"backtrace"];
 	NSCharacterSet *whiteSpaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
 	NSCharacterSet *nonWhiteSpaceCharacterSet = [whiteSpaceCharacterSet invertedSet];
-	for (NSString *line in self.backtrace) {
+	for (NSString *line in self.callStack) {
 		
 		DDXMLElement *lineElement = [DDXMLElement elementWithName:@"line"];
 		NSScanner *scanner = [NSScanner scannerWithString:line];

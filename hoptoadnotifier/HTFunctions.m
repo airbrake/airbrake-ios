@@ -17,7 +17,7 @@ static void HTHandleSignal(int signal) {
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	HTNotice *notice = [HTNotice notice];
 	NSArray *addresses = [NSThread callStackReturnAddresses];
-	notice.backtrace = HTCallStackSymbolsFromReturnAddresses(addresses);
+	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
 	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
 	[notice writeToFile:HTPathForNewNoticeWithName(name)];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleSignal:)]) {

@@ -32,7 +32,7 @@
 	NSString *environmentName;
 	NSString *viewControllerName;
 	NSDictionary *environmentInfo;
-	NSArray *backtrace;
+	NSArray *callStack;
 }
 
 @property (nonatomic, copy) NSString *operatingSystemVersion;
@@ -43,7 +43,7 @@
 @property (nonatomic, copy) NSString *environmentName;
 @property (nonatomic, copy) NSString *viewControllerName;
 @property (nonatomic, retain) NSDictionary *environmentInfo;
-@property (nonatomic, retain) NSArray *backtrace;
+@property (nonatomic, retain) NSArray *callStack;
 
 // create a notice with a few base properties set
 + (HTNotice *)notice;
