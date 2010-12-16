@@ -19,7 +19,7 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
 
 // extern strings
-NSString * const HTNotifierVersion = @"1.2";
+NSString * const HTNotifierVersion = @"2.0";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBuildDate = @"${DATE}";
 NSString * const HTNotifierBuildTime = @"${TIME}";
