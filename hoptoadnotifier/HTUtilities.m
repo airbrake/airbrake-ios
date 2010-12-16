@@ -6,10 +6,6 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-//#import <execinfo.h>
-//#import <sys/sysctl.h>
-
-#import "HTUtilities.h"
 #import "HTNotifier.h"
 
 static NSString * const HTNotifierFolderName = @"Hoptoad Notices";

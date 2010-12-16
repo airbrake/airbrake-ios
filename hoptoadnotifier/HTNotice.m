@@ -6,8 +6,6 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-#import "HTNotice.h"
-#import "HTUtilities.h"
 #import "HTNotifier.h"
 
 #import "DDXML.h"

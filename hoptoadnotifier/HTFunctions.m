@@ -8,13 +8,10 @@
 
 #import <execinfo.h>
 
-#import "HTHandler.h"
-#import "HTNotice.h"
 #import "HTNotifier.h"
-#import "HTNotifierDelegate.h"
 
 static void HTHandleSignal(int signal) {
-	HTRemoveHandler();
+	HTStopHandler();
 	NSLog(@"%s", strsignal(signal));
 	NSLog(@"%@", [NSThread callStackReturnAddresses]);
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
@@ -24,7 +21,7 @@ static void HTHandleSignal(int signal) {
 	raise(signal);
 }
 static void HTHandleException(NSException *e) {
-	HTRemoveHandler();
+	HTStopHandler();
 	NSString *noticeName = [NSString stringWithFormat:@"%d", time(NULL)];
 	NSString *noticePath = [HTUtilities noticePathWithName:noticeName];
 	HTNotice *notice = [HTNotice noticeWithException:e];
@@ -44,7 +41,7 @@ NSArray * HTHandledSignals() {
 			[NSNumber numberWithInteger:SIGTRAP],
 			nil];
 }
-void HTRegisterHandler() {
+void HTStartHandler() {
 	NSSetUncaughtExceptionHandler(HTHandleException);
 	NSArray *signals = HTHandledSignals();
 	for (NSUInteger i = 0; i < [signals count]; i++) {
@@ -57,7 +54,7 @@ void HTRegisterHandler() {
 		}
 	}
 }
-void HTRemoveHandler() {
+void HTStopHandler() {
 	NSSetUncaughtExceptionHandler(NULL);
 	NSArray *signals = HTHandledSignals();
 	for (NSUInteger i = 0; i < [signals count]; i++) {
@@ -82,4 +79,23 @@ NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	}
 	free(strs);
 	return backtrace;
+}
+void HTLog(NSString *frmt, ...) {
+	va_list list;
+	va_start(list, frmt);
+	NSLog(@"%@", HTLogStringWithArguments(frmt, list));
+	va_end(list);
+}
+NSString *HTLogStringWithFormat(NSString *fmt, ...) {
+	va_list list;
+	va_start(list, fmt);
+	NSString *toReturn = HTLogStringWithArguments(fmt, list);
+	va_end(list);
+	return toReturn;
+}
+NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
+	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
+	NSString *toReturn = [@"[Hoptoad] " stringByAppendingString:format];
+	[format release];
+	return toReturn;
 }

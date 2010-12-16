@@ -30,11 +30,7 @@ NSString * const HTNotifierAppStoreEnvironment = @"App Store";
 
 #pragma mark -
 #pragma mark c function prototypes
-static NSString * HTLogStringWithFormat(NSString *fmt, ...);
-static NSString * HTLogStringWithArguments(NSString *fmt, va_list args);
-static void HTLog(NSString *fmt, ...);
-static void HTHandleException(NSException *);
-static void HTHandleSignal(int signal);
+
 
 #pragma mark -
 #pragma mark private methods
@@ -315,22 +311,4 @@ static void HTHandleSignal(int signal);
 
 #pragma mark -
 #pragma mark c function implementations
-static void HTLog(NSString *frmt, ...) {
-	va_list list;
-	va_start(list, frmt);
-	NSLog(@"%@", HTLogStringWithArguments(frmt, list));
-	va_end(list);
-}
-static NSString *HTLogStringWithFormat(NSString *fmt, ...) {
-	va_list list;
-	va_start(list, fmt);
-	NSString *toReturn = HTLogStringWithArguments(fmt, list);
-	va_end(list);
-	return toReturn;
-}
-static NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
-	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
-	NSString *toReturn = [@"[Hoptoad] " stringByAppendingString:format];
-	[format release];
-	return toReturn;
-}
+

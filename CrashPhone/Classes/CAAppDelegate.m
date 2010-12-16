@@ -46,7 +46,7 @@
 //	[[HTNotifier sharedNotifier] writeTestNotice];
 	
 	//HTHandler *handler = [[HTHandler alloc] init];
-	HTRegisterHandler();
+	HTStartHandler();
 	
     [window makeKeyAndVisible];
 	return YES;

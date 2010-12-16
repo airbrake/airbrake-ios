@@ -10,10 +10,10 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <UIKit/UIKit.h>
 
-#import "HTUtilities.h"
-#import "HTNotice.h"
 #import "HTNotifierDelegate.h"
-#import "HTHandler.h"
+#import "HTFunctions.h"
+#import "HTNotice.h"
+#import "HTUtilities.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
