@@ -20,7 +20,7 @@
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
+	<key>CFBundleShortVersionString</key>
 	<string>2.0 Beta</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

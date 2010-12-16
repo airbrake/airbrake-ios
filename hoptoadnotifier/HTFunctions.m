@@ -7,12 +7,19 @@
 //
 
 #import <execinfo.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 #import "HTNotifier.h"
 
 static void HTHandleSignal(int signal) {
 	HTStopHandler();
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
+	HTNotice *notice = [HTNotice notice];
+	NSArray *addresses = [NSThread callStackReturnAddresses];
+	notice.backtrace = HTCallStackSymbolsFromReturnAddresses(addresses);
+	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
+	[notice writeToFile:HTPathForNewNoticeWithName(name)];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleSignal:)]) {
 		[delegate notifierDidHandleSignal:signal];
 	}
