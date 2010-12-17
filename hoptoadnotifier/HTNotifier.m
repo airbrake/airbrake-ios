@@ -268,6 +268,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 }
 - (void)dealloc {
 	[self unregisterNotifications];
+	HTStopHandler();
 	
 	if (reachability != NULL) { CFRelease(reachability), reachability = NULL; }
 	[apiKey release], apiKey = nil;

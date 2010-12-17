@@ -13,31 +13,50 @@
 #import "HTNotifier.h"
 
 static void HTHandleSignal(int signal) {
+	
+	// stop handlers
 	HTStopHandler();
-	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
+	
+	// create notice and set properties
+	NSArray *addresses = [NSThread callStackReturnAddresses];
 	HTNotice *notice = [HTNotice notice];
 	notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
 	notice.exceptionReason = @"Application received signal";
-	NSArray *addresses = [NSThread callStackReturnAddresses];
 	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
+	
+	// write notice
 	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
 	[notice writeToFile:HTPathForNewNoticeWithName(name)];
+	
+	// delegate call
+	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleSignal:)]) {
 		[delegate notifierDidHandleSignal:signal];
 	}
+	
+	// re raise
 	raise(signal);
+	
 }
 
 static void HTHandleException(NSException *e) {
+	
+	// stop handlers
 	HTStopHandler();
-	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
-	NSString *path = HTPathForNewNoticeWithName(name);
+	
+	// create notice and set properties
 	HTNotice *notice = [HTNotice noticeWithException:e];
-	[notice writeToFile:path];
+	
+	// write notice
+	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
+	[notice writeToFile:HTPathForNewNoticeWithName(name)];
+	
+	// delegate call
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
 		[delegate notifierDidHandleException:e];
 	}
+	
 }
 
 NSArray * HTHandledSignals() {
@@ -103,7 +122,7 @@ NSString * HTNoticesDirectory() {
 	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *path = [folders objectAtIndex:0];
 	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	path = [path stringByAppendingPathComponent:[self bundleDisplayName]];
+	path = [path stringByAppendingPathComponent:HTBundleDisplayName()];
 	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
 #endif
 }
@@ -274,7 +293,7 @@ void HTLog(NSString *frmt, ...) {
 	va_end(list);
 }
 
-NSString *HTLogStringWithFormat(NSString *fmt, ...) {
+NSString * HTLogStringWithFormat(NSString *fmt, ...) {
 	va_list list;
 	va_start(list, fmt);
 	NSString *toReturn = HTLogStringWithArguments(fmt, list);
@@ -282,7 +301,7 @@ NSString *HTLogStringWithFormat(NSString *fmt, ...) {
 	return toReturn;
 }
 
-NSString *HTLogStringWithArguments(NSString *fmt, va_list args) {
+NSString * HTLogStringWithArguments(NSString *fmt, va_list args) {
 	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
 	NSString *toReturn = [@"[Hoptoad] " stringByAppendingString:format];
 	[format release];
