@@ -200,10 +200,10 @@
 	if (self.applicationVersion != nil) { [cgi setObject:self.applicationVersion forKey:@"App Version"]; }
 	if (self.operatingSystemVersion != nil) { [cgi setObject:self.operatingSystemVersion forKey:@"Operating System"]; }
 	if (self.executableName != nil) { [cgi setObject:self.executableName forKey:@"Executable"]; }
-	for (NSString *key in [cgi allKeys]) {
+	for (id key in [cgi allKeys]) {
 		id var = [cgi objectForKey:key];
 		e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
-		[e3 addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:key]];
+		[e3 addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:[key description]]];
 		[e2 addChild:e3];
 	}
 	[e1 addChild:e2];
