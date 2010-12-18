@@ -218,23 +218,20 @@ NSString * const HTNotifierPathExtension = @"notice";
 @synthesize logCrashesInSimulator;
 
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
-	@synchronized(self) {
-		if (sharedNotifier == nil) {
-			
-			if (key == nil || [key length] == 0) {
-				[NSException raise:NSInvalidArgumentException
-							format:@"%@", HTLogStringWithFormat(@"The provided API key is not valid")];
-				return;
-			}
-			
-			if (name == nil || [name length] == 0) {
-				[NSException raise:NSInvalidArgumentException
-							format:@"%@", HTLogStringWithFormat(@"The provided environment name is not valid")];
-				return;
-			}
-			
-			sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:name];
+	if (sharedNotifier == nil) {
+		if (key == nil || [key length] == 0) {
+			[NSException raise:NSInvalidArgumentException
+						format:@"%@", HTLogStringWithFormat(@"The provided API key is not valid")];
+			return;
 		}
+		
+		if (name == nil || [name length] == 0) {
+			[NSException raise:NSInvalidArgumentException
+						format:@"%@", HTLogStringWithFormat(@"The provided environment name is not valid")];
+			return;
+		}
+		
+		sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:name];
 	}
 }
 + (HTNotifier *)sharedNotifier {
