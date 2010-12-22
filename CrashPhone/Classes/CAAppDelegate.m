@@ -13,30 +13,6 @@
 @synthesize window;
 
 #pragma mark -
-#pragma mark notifier delegate
-- (UIViewController *)rootViewControllerForNotice {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
-	return nil;
-}
-- (void)notifierDidHandleException:(NSException *)exc {
-	NSLog(@"%s %@", __PRETTY_FUNCTION__, exc);
-}
-- (void)notifierWillDisplayAlert {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-- (void)notifierDidDismissAlert {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-- (NSString *)titleForNoticeAlert {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
-	return nil;
-}
-- (NSString *)bodyForNoticeAlert {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
-	return nil;
-}
-
-#pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	[HTNotifier startNotifierWithAPIKey:@""
@@ -64,6 +40,33 @@
 	self.window = nil;
 	
     [super dealloc];
+}
+
+#pragma mark -
+#pragma mark notifier delegate
+- (UIViewController *)rootViewControllerForNotice {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+	return nil;
+}
+- (void)notifierDidHandleException:(NSException *)exc {
+	NSLog(@"%s %@", __PRETTY_FUNCTION__, exc);
+}
+- (void)notifierDidHandleSignal:(NSInteger)signal {
+	NSLog(@"%s %d", __PRETTY_FUNCTION__, signal);
+}
+- (void)notifierWillDisplayAlert {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+- (void)notifierDidDismissAlert {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+- (NSString *)titleForNoticeAlert {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+	return nil;
+}
+- (NSString *)bodyForNoticeAlert {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+	return nil;
 }
 
 @end
