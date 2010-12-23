@@ -152,9 +152,8 @@ NSString * const HTNotifierPathExtension = @"notice";
 		NSData *xmlData = [notice hoptoadXMLData];
 		
 		// create url request
-		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url
-																	cachePolicy:NSURLCacheStorageNotAllowed
-																timeoutInterval:10.0];
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+		[request setTimeoutInterval:10.0];
 		[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
 		[request setHTTPMethod:@"POST"];
 		[request setHTTPBody:xmlData];
@@ -165,7 +164,6 @@ NSString * const HTNotifierPathExtension = @"notice";
 		NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
 													 returningResponse:&response
 																 error:&error];
-		NSInteger statusCode = [response statusCode];
 		
 		if (error == nil) {
 			[[NSFileManager defaultManager] removeItemAtPath:noticePath error:nil];
@@ -174,7 +172,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 			HTLog(@"encountered error while posting notice\n%@", error);
 		}
 		
-		// all went well
+		NSInteger statusCode = [response statusCode];
 		if (statusCode == 200) {
 			HTLog(@"crash report posted");
 		}
@@ -189,9 +187,6 @@ NSString * const HTNotifierPathExtension = @"notice";
 				  responseString);
 			[responseString release];
 		}
-		
-		// clean up
-		[request release];
 	}
 }
 - (BOOL)isHoptoadReachable {
