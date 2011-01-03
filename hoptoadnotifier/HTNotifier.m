@@ -8,27 +8,20 @@
 
 #import "HTNotifier.h"
 
-#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
-#define HTNotifierURL [NSString stringWithFormat:@"%@://%@%/notifier_api/v2/notices", \
-(self.useSSL) ? @"https" : @"http", \
-HTNotifierHostName]
-
 // internal variables
-static NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
-static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 static HTNotifier * sharedNotifier = nil;
 
 // extern strings
 NSString * const HTNotifierVersion = @"2.0";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
-NSString * const HTNotifierBuildDate = @"${DATE}";
-NSString * const HTNotifierBuildTime = @"${TIME}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
 NSString * const HTNotifierDevelopmentEnvironment = @"Development";
-NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
-NSString * const HTNotifierAppStoreEnvironment = @"App Store";
+NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc ${VERSION}";
+NSString * const HTNotifierAppStoreEnvironment = @"App Store ${VERSION}";
 NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
 NSString * const HTNotifierPathExtension = @"notice";
+NSString * const HTNotifierHostName = @"hoptoadapp.com";
+NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -
 #pragma mark private methods
@@ -236,7 +229,7 @@ NSString * const HTNotifierPathExtension = @"notice";
 }
 + (id)allocWithZone:(NSZone *)zone {
 	@synchronized(self) {
-		if(sharedNotifier == nil) {
+		if (sharedNotifier == nil) {
 			sharedNotifier = [super allocWithZone:zone];
 			return sharedNotifier;
 		}

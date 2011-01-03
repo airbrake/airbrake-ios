@@ -71,7 +71,7 @@ NSArray * HTHandledSignals() {
 }
 
 void HTStartHandler() {
-	NSSetUncaughtExceptionHandler(HTHandleException);
+	NSSetUncaughtExceptionHandler(&HTHandleException);
 	NSArray *signals = HTHandledSignals();
 	for (NSUInteger i = 0; i < [signals count]; i++) {
 		NSInteger signal = [[signals objectAtIndex:i] integerValue];
@@ -221,16 +221,6 @@ NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleVersion
 							 withString:HTApplicationVersion()
-								options:0
-								  range:NSMakeRange(0, [mutable length])];
-	
-	[mutable replaceOccurrencesOfString:HTNotifierBuildDate
-							 withString:[NSString stringWithFormat:@"%s", __DATE__]
-								options:0
-								  range:NSMakeRange(0, [mutable length])];
-	
-	[mutable replaceOccurrencesOfString:HTNotifierBuildTime
-							 withString:[NSString stringWithFormat:@"%s", __TIME__]
 								options:0
 								  range:NSMakeRange(0, [mutable length])];
 	

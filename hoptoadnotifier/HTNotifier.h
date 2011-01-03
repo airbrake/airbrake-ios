@@ -13,6 +13,7 @@
 #import "HTNotifierDelegate.h"
 #import "HTFunctions.h"
 #import "HTNotice.h"
+#import "HTNotifier_iOS.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
@@ -27,10 +28,6 @@ extern NSString * const HTNotifierVersion;
 extern NSString * const HTNotifierBundleName;
 // bundle version of the app
 extern NSString * const HTNotifierBundleVersion;
-// app build date
-extern NSString * const HTNotifierBuildDate;
-// app build date and time
-extern NSString * const HTNotifierBuildTime;
 
 /*
  
@@ -42,13 +39,17 @@ extern NSString * const HTNotifierDevelopmentEnvironment;
 extern NSString * const HTNotifierAdHocEnvironment;
 extern NSString * const HTNotifierAppStoreEnvironment;
 
-/*
- 
- values used by the notifier to locate and store notices
- 
- */
+// internal
 extern NSString * const HTNotifierDirectoryName;
 extern NSString * const HTNotifierPathExtension;
+extern NSString * const HTNotifierHostName;
+extern NSString * const HTNotifierAlwaysSendKey;
+#define HTNotifierURL [NSURL URLWithString: \
+[NSString stringWithFormat: \
+@"%@://%@%/notifier_api/v2/notices", \
+(self.useSSL) ? @"https" : @"http", \
+HTNotifierHostName]]
+#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
 
 /*
  
