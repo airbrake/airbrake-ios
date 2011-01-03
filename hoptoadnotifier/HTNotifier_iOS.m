@@ -8,7 +8,6 @@
 
 #import "HTNotifier_iOS.h"
 
-
 @implementation HTNotifier_iOS
 
 @end

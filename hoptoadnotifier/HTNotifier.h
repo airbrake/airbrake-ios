@@ -13,7 +13,7 @@
 #import "HTNotifierDelegate.h"
 #import "HTFunctions.h"
 #import "HTNotice.h"
-#import "HTNotifier_iOS.h"
+//#import "HTNotifier_iOS.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
@@ -61,7 +61,7 @@ HTNotifierHostName]]
  access the shared instance by calling sharedNotifier
  
  */
-@interface HTNotifier : NSObject <UIAlertViewDelegate> {
+@interface HTNotifier : NSObject {
 @private
 	NSString *apiKey;
 	NSString *environmentName;

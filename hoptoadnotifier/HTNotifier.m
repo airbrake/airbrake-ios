@@ -42,7 +42,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// create folder
 		NSString *directory = HTNoticesDirectory();
 		if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
-			[[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:nil];
+			[[NSFileManager defaultManager] createDirectoryAtPath:directory
+									  withIntermediateDirectories:YES
+													   attributes:nil
+															error:nil];
 		}
 		
 		// setup values
@@ -63,13 +66,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 												 selector:@selector(applicationDidBecomeActive:)
 													 name:UIApplicationDidBecomeActiveNotification
 												   object:nil];
-		
-		// start handler
-		HTStartHandler();
-		
-		// log start statement
-		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-		HTLog(@"Environment \"%@\"", environmentName);
 		
 	}
 	return self;
@@ -207,19 +203,28 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {
+		
+		// validate
 		if (key == nil || [key length] == 0) {
 			[NSException raise:NSInvalidArgumentException
 						format:@"%@", HTLogStringWithFormat(@"The provided API key is not valid")];
 			return;
 		}
-		
 		if (name == nil || [name length] == 0) {
 			[NSException raise:NSInvalidArgumentException
 						format:@"%@", HTLogStringWithFormat(@"The provided environment name is not valid")];
 			return;
 		}
 		
+		// create
 		sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:name];
+		
+		// start
+		HTStartHandler();
+		
+		// log
+		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+		HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
 	}
 }
 + (HTNotifier *)sharedNotifier {
