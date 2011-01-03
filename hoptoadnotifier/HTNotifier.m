@@ -10,8 +10,14 @@
 #import "HTNotifier_iOS.h"
 #import "HTNotifier_Mac.h"
 
-// internal variables
+// internal
 static HTNotifier * sharedNotifier = nil;
+static NSString * const HTNotifierHostName = @"hoptoadapp.com";
+#define HTNotifierURL [NSURL URLWithString: \
+[NSString stringWithFormat: \
+@"%@://%@%/notifier_api/v2/notices", \
+(self.useSSL) ? @"https" : @"http", \
+HTNotifierHostName]]
 
 // extern strings
 NSString * const HTNotifierVersion = @"2.0";
@@ -22,7 +28,6 @@ NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc ${VERSION}";
 NSString * const HTNotifierAppStoreEnvironment = @"App Store ${VERSION}";
 NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
 NSString * const HTNotifierPathExtension = @"notice";
-NSString * const HTNotifierHostName = @"hoptoadapp.com";
 NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -

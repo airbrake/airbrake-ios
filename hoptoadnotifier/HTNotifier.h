@@ -128,14 +128,7 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 // internal
 extern NSString * const HTNotifierDirectoryName;
 extern NSString * const HTNotifierPathExtension;
-extern NSString * const HTNotifierHostName;
 extern NSString * const HTNotifierAlwaysSendKey;
-#define HTNotifierURL [NSURL URLWithString: \
-[NSString stringWithFormat: \
-@"%@://%@%/notifier_api/v2/notices", \
-(self.useSSL) ? @"https" : @"http", \
-HTNotifierHostName]]
-#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
-@interface HTNotifier (HTInternal)
 
-@end
+#define HTLocalizedString(key) \
+NSLocalizedStringFromTable((key), @"HTNotifier", @"")
