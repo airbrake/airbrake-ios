@@ -7,6 +7,7 @@
 //
 
 #import "HTNotifier.h"
+#import "HTNotifier_iOS.h"
 
 // internal variables
 static HTNotifier * sharedNotifier = nil;
@@ -26,8 +27,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #pragma mark -
 #pragma mark private methods
 @interface HTNotifier (private)
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
-- (void)applicationDidBecomeActive:(NSNotification *)notif;
+
 - (void)checkForNoticesAndReportIfReachable;
 - (void)showNoticeAlert;
 - (void)postAllNoticesWithAutoreleasePool;
@@ -61,17 +61,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// setup reachability
 		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
 		
-		// register for application notifications
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(applicationDidBecomeActive:)
-													 name:UIApplicationDidBecomeActiveNotification
-												   object:nil];
+		
 		
 	}
 	return self;
-}
-- (void)applicationDidBecomeActive:(NSNotification *)notif {
-	[self performSelectorInBackground:@selector(checkForNoticesAndReportIfReachable) withObject:nil];
 }
 - (void)checkForNoticesAndReportIfReachable {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -217,7 +210,11 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		}
 		
 		// create
-		sharedNotifier = [[self alloc] initWithAPIKey:key environmentName:name];
+#if TARGET_OS_IPHONE
+		sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
+#elif TARGET_OS_MAC
+		sharedNotifier = nil;
+#endif
 		
 		// start
 		HTStartHandler();

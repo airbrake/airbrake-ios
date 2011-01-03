@@ -13,7 +13,6 @@
 #import "HTNotifierDelegate.h"
 #import "HTFunctions.h"
 #import "HTNotice.h"
-//#import "HTNotifier_iOS.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
@@ -38,18 +37,6 @@ extern NSString * const HTNotifierBundleVersion;
 extern NSString * const HTNotifierDevelopmentEnvironment;
 extern NSString * const HTNotifierAdHocEnvironment;
 extern NSString * const HTNotifierAppStoreEnvironment;
-
-// internal
-extern NSString * const HTNotifierDirectoryName;
-extern NSString * const HTNotifierPathExtension;
-extern NSString * const HTNotifierHostName;
-extern NSString * const HTNotifierAlwaysSendKey;
-#define HTNotifierURL [NSURL URLWithString: \
-[NSString stringWithFormat: \
-@"%@://%@%/notifier_api/v2/notices", \
-(self.useSSL) ? @"https" : @"http", \
-HTNotifierHostName]]
-#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
 
 /*
  
@@ -137,4 +124,19 @@ HTNotifierHostName]]
  */
 - (void)writeTestNotice;
 
+@end
+
+// internal
+extern NSString * const HTNotifierDirectoryName;
+extern NSString * const HTNotifierPathExtension;
+extern NSString * const HTNotifierHostName;
+extern NSString * const HTNotifierAlwaysSendKey;
+#define HTNotifierURL [NSURL URLWithString: \
+[NSString stringWithFormat: \
+@"%@://%@%/notifier_api/v2/notices", \
+(self.useSSL) ? @"https" : @"http", \
+HTNotifierHostName]]
+#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
+@interface HTNotifier (HTInternal)
+- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 @end
