@@ -28,24 +28,33 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #pragma mark private methods
 @interface HTNotifier (private)
 
+// methods to be implemented
+- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 - (void)checkForNoticesAndReportIfReachable;
-- (void)showNoticeAlert;
 - (void)postAllNoticesWithAutoreleasePool;
 - (void)postNoticesWithPaths:(NSArray *)paths;
 - (BOOL)isHoptoadReachable;
+
+// methods to be overridden
+- (void)showNoticeAlert;
+- (void)registerNotifications;
 - (void)unregisterNotifications;
+
 @end
 @implementation HTNotifier (private)
+
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
-	if (self = [super init]) {
+	self = [super init];
+	if (self) {
 		
 		// create folder
 		NSString *directory = HTNoticesDirectory();
 		if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
-			[[NSFileManager defaultManager] createDirectoryAtPath:directory
-									  withIntermediateDirectories:YES
-													   attributes:nil
-															error:nil];
+			[[NSFileManager defaultManager]
+			 createDirectoryAtPath:directory
+			 withIntermediateDirectories:YES
+			 attributes:nil
+			 error:nil];
 		}
 		
 		// setup values
@@ -61,7 +70,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// setup reachability
 		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
 		
-		
+		// notifications
+		[self registerNotifications];
 		
 	}
 	return self;
@@ -84,35 +94,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	}
 	
 	[pool drain];
-}
-- (void)showNoticeAlert {
-	if ([self.delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
-		[self.delegate notifierWillDisplayAlert];
-	}
-	
-	NSString *title = HTLocalizedString(@"NOTICE_TITLE");
-	if ([self.delegate respondsToSelector:@selector(titleForNoticeAlert)]) {
-		NSString *tempString = [self.delegate titleForNoticeAlert];
-		if (tempString != nil) {
-			title = tempString;
-		}
-	}
-	
-	NSString *body = HTLocalizedString(@"NOTICE_BODY");
-	if ([self.delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
-		NSString *tempString = [self.delegate bodyForNoticeAlert];
-		if (tempString != nil) {
-			body = tempString;
-		}
-	}
-	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
-													message:HTStringByReplacingHoptoadVariablesInString(body)
-												   delegate:self
-										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
-										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
-	[alert show];
-	[alert release];
 }
 - (void)postAllNoticesWithAutoreleasePool {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -176,11 +157,11 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	SCNetworkReachabilityGetFlags(reachability, &flags);
 	return ((flags & kSCNetworkReachabilityFlagsReachable) != 0);
 }
-- (void)unregisterNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:UIApplicationDidBecomeActiveNotification
-												  object:nil];
-}
+
+- (void)registerNotifications {}
+- (void)unregisterNotifications {}
+- (void)showNoticeAlert {}
+
 @end
 
 #pragma mark -
@@ -274,29 +255,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	HTNotice *notice = [HTNotice testNotice];
 	[notice writeToFile:noticePath];
 }
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
-		[self.delegate notifierDidDismissAlert];
-	}
-}
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
-	
-	if (buttonIndex == alertView.cancelButtonIndex) {
-		NSArray *noticePaths = HTNotices();
-		for (NSString *notice in noticePaths) {
-			[[NSFileManager defaultManager] removeItemAtPath:notice
-													   error:nil];
-		}
-	}
-	else if ([button isEqualToString:HTLocalizedString(@"ALWAYS_SEND")]) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
-	}
-	else if ([button isEqualToString:HTLocalizedString(@"SEND")]) {
-		[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
-	}
-}
 
 @end
+
+@implementation HTNotifier (HTInternal)
+
+@end
+

@@ -12,24 +12,78 @@
 
 @implementation HTNotifier_iOS
 
-#pragma mark -
-#pragma mark init
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
-	self = [super initWithAPIKey:key environmentName:name];
-	if (self) {
-		[[NSNotificationCenter defaultCenter]
-		 addObserver:self
-		 selector:@selector(applicationDidBecomeActive:)
-		 name:UIApplicationDidBecomeActiveNotification
-		 object:nil];
+- (void)registerNotifications {
+	[[NSNotificationCenter defaultCenter]
+	 addObserver:self
+	 selector:@selector(applicationDidBecomeActive:)
+	 name:UIApplicationDidBecomeActiveNotification
+	 object:nil];
+}
+- (void)unregisterNotifications {
+	[[NSNotificationCenter defaultCenter]
+	 removeObserver:self
+	 name:UIApplicationDidBecomeActiveNotification
+	 object:nil];
+}
+- (void)applicationDidBecomeActive:(NSNotification *)notif {
+	[self performSelectorInBackground:@selector(checkForNoticesAndReportIfReachable) withObject:nil];
+}
+- (void)showNoticeAlert {
+	if ([self.delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
+		[self.delegate notifierWillDisplayAlert];
 	}
-	return self;
+	
+	NSString *title = HTLocalizedString(@"NOTICE_TITLE");
+	if ([self.delegate respondsToSelector:@selector(titleForNoticeAlert)]) {
+		NSString *tempString = [self.delegate titleForNoticeAlert];
+		if (tempString != nil) {
+			title = tempString;
+		}
+	}
+	
+	NSString *body = HTLocalizedString(@"NOTICE_BODY");
+	if ([self.delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
+		NSString *tempString = [self.delegate bodyForNoticeAlert];
+		if (tempString != nil) {
+			body = tempString;
+		}
+	}
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
+													message:HTStringByReplacingHoptoadVariablesInString(body)
+												   delegate:self
+										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
+										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
+	[alert show];
+	[alert release];
 }
 
 #pragma mark -
-#pragma mark application notifications
-- (void)applicationDidBecomeActive:(NSNotification *)notif {
-	//[self performSelectorInBackground:@selector(checkForNoticesAndReportIfReachable) withObject:nil];
+#pragma mark UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
+		[self.delegate notifierDidDismissAlert];
+	}
+}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
+	
+	if (buttonIndex == alertView.cancelButtonIndex) {
+		NSArray *noticePaths = HTNotices();
+		for (NSString *notice in noticePaths) {
+			[[NSFileManager defaultManager]
+			 removeItemAtPath:notice
+			 error:nil];
+		}
+	}
+	else if ([button isEqualToString:HTLocalizedString(@"ALWAYS_SEND")]) {
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
+	}
+	else if ([button isEqualToString:HTLocalizedString(@"SEND")]) {
+		[self performSelectorInBackground:@selector(postAllNoticesWithAutoreleasePool) withObject:nil];
+	}
 }
 
 @end

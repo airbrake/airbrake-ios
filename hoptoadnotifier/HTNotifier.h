@@ -138,5 +138,5 @@ extern NSString * const HTNotifierAlwaysSendKey;
 HTNotifierHostName]]
 #define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
 @interface HTNotifier (HTInternal)
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
+
 @end
