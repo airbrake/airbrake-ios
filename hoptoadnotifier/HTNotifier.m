@@ -104,8 +104,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	[pool drain];
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
-	// setup post resources
-	NSURL *url = [NSURL URLWithString:HTNotifierURL];
 	
 	// report each notice
 	for (NSString *noticePath in paths) {
@@ -115,7 +113,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		NSData *xmlData = [notice hoptoadXMLData];
 		
 		// create url request
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
 		[request setTimeoutInterval:10.0];
 		[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
 		[request setHTTPMethod:@"POST"];

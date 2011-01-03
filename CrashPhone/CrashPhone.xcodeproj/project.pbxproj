@@ -16,6 +16,7 @@
 		3B20D891128A321E000CE777 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D88B128A321E000CE777 /* HTNotice.m */; };
 		3B20D892128A321E000CE777 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20D88D128A321E000CE777 /* HTNotifier.m */; };
 		3B289A8B12D27C910069E7FF /* HTNotifier_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289A8A12D27C910069E7FF /* HTNotifier_iOS.m */; };
+		3B289B4812D285CF0069E7FF /* HTNotifier_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289B4712D285CF0069E7FF /* HTNotifier_Mac.m */; };
 		3B29FC3112B97F3C00B7A6F6 /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */; };
 		3B54C28D1257D6D600089639 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27A1257D6D600089639 /* DDXMLDocument.m */; };
 		3B54C28E1257D6D600089639 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B54C27C1257D6D600089639 /* DDXMLElement.m */; };
@@ -42,6 +43,8 @@
 		3B20D88D128A321E000CE777 /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
 		3B289A8912D27C910069E7FF /* HTNotifier_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_iOS.h; sourceTree = "<group>"; };
 		3B289A8A12D27C910069E7FF /* HTNotifier_iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_iOS.m; sourceTree = "<group>"; };
+		3B289B4612D285CF0069E7FF /* HTNotifier_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_Mac.h; sourceTree = "<group>"; };
+		3B289B4712D285CF0069E7FF /* HTNotifier_Mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_Mac.m; sourceTree = "<group>"; };
 		3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
 		3B29FC2F12B97F3C00B7A6F6 /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
 		3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
@@ -153,6 +156,8 @@
 				3B20D88D128A321E000CE777 /* HTNotifier.m */,
 				3B289A8912D27C910069E7FF /* HTNotifier_iOS.h */,
 				3B289A8A12D27C910069E7FF /* HTNotifier_iOS.m */,
+				3B289B4612D285CF0069E7FF /* HTNotifier_Mac.h */,
+				3B289B4712D285CF0069E7FF /* HTNotifier_Mac.m */,
 				3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */,
 				3B29FC2F12B97F3C00B7A6F6 /* HTFunctions.h */,
 				3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */,
@@ -277,6 +282,7 @@
 				3B20D892128A321E000CE777 /* HTNotifier.m in Sources */,
 				3B29FC3112B97F3C00B7A6F6 /* HTFunctions.m in Sources */,
 				3B289A8B12D27C910069E7FF /* HTNotifier_iOS.m in Sources */,
+				3B289B4812D285CF0069E7FF /* HTNotifier_Mac.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
