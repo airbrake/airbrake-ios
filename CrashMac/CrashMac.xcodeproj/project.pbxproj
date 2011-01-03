@@ -1,0 +1,413 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		256AC3DA0F4B6AC300CF3369 /* CrashMacAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* CrashMacAppDelegate.m */; };
+		3B289B8B12D288EB0069E7FF /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B289B7A12D288EB0069E7FF /* HTNotifier.strings */; };
+		3B289B8C12D288EB0069E7FF /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289B7F12D288EB0069E7FF /* HTFunctions.m */; };
+		3B289B8D12D288EB0069E7FF /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289B8112D288EB0069E7FF /* HTNotice.m */; };
+		3B289B8E12D288EB0069E7FF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289B8312D288EB0069E7FF /* HTNotifier.m */; };
+		3B289B8F12D288EB0069E7FF /* HTNotifier_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289B8512D288EB0069E7FF /* HTNotifier_iOS.m */; };
+		3B289B9012D288EB0069E7FF /* HTNotifier_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B289B8712D288EB0069E7FF /* HTNotifier_Mac.m */; };
+		3B60EEE812710E4D00943D7A /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B60EEDA12710E4D00943D7A /* DDXMLDocument.m */; };
+		3B60EEE912710E4D00943D7A /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B60EEDC12710E4D00943D7A /* DDXMLElement.m */; };
+		3B60EEEA12710E4D00943D7A /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B60EEDE12710E4D00943D7A /* DDXMLElementAdditions.m */; };
+		3B60EEEB12710E4D00943D7A /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B60EEE012710E4D00943D7A /* DDXMLNode.m */; };
+		3B60EEEC12710E4D00943D7A /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B60EEE312710E4D00943D7A /* NSStringAdditions.m */; };
+		3B60EEEF12710E6300943D7A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B60EEEE12710E6300943D7A /* SystemConfiguration.framework */; };
+		3B60EEF312710E7100943D7A /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B60EEF212710E7100943D7A /* libxml2.dylib */; };
+		3B60F03812712F8600943D7A /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B60F03712712F8600943D7A /* ExceptionHandling.framework */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		256AC3D80F4B6AC300CF3369 /* CrashMacAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashMacAppDelegate.h; sourceTree = "<group>"; };
+		256AC3D90F4B6AC300CF3369 /* CrashMacAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashMacAppDelegate.m; sourceTree = "<group>"; };
+		256AC3F00F4B6AF500CF3369 /* CrashMac_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashMac_Prefix.pch; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3B289B7B12D288EB0069E7FF /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B289B7C12D288EB0069E7FF /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B289B7D12D288EB0069E7FF /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B289B7E12D288EB0069E7FF /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
+		3B289B7F12D288EB0069E7FF /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
+		3B289B8012D288EB0069E7FF /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
+		3B289B8112D288EB0069E7FF /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
+		3B289B8212D288EB0069E7FF /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
+		3B289B8312D288EB0069E7FF /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
+		3B289B8412D288EB0069E7FF /* HTNotifier_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_iOS.h; sourceTree = "<group>"; };
+		3B289B8512D288EB0069E7FF /* HTNotifier_iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_iOS.m; sourceTree = "<group>"; };
+		3B289B8612D288EB0069E7FF /* HTNotifier_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_Mac.h; sourceTree = "<group>"; };
+		3B289B8712D288EB0069E7FF /* HTNotifier_Mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_Mac.m; sourceTree = "<group>"; };
+		3B289B8812D288EB0069E7FF /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
+		3B289B8912D288EB0069E7FF /* ro */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B289B8A12D288EB0069E7FF /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B60EED812710E4D00943D7A /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
+		3B60EED912710E4D00943D7A /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
+		3B60EEDA12710E4D00943D7A /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
+		3B60EEDB12710E4D00943D7A /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElement.h; sourceTree = "<group>"; };
+		3B60EEDC12710E4D00943D7A /* DDXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElement.m; sourceTree = "<group>"; };
+		3B60EEDD12710E4D00943D7A /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
+		3B60EEDE12710E4D00943D7A /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
+		3B60EEDF12710E4D00943D7A /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
+		3B60EEE012710E4D00943D7A /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
+		3B60EEE112710E4D00943D7A /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
+		3B60EEE212710E4D00943D7A /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringAdditions.h; sourceTree = "<group>"; };
+		3B60EEE312710E4D00943D7A /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringAdditions.m; sourceTree = "<group>"; };
+		3B60EEEE12710E6300943D7A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		3B60EEF212710E7100943D7A /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		3B60F03712712F8600943D7A /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = System/Library/Frameworks/ExceptionHandling.framework; sourceTree = SDKROOT; };
+		8D1107310486CEB800E47090 /* CrashMac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CrashMac-Info.plist"; plistStructureDefinitionIdentifier = "<none>"; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* CrashMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrashMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				3B60EEEF12710E6300943D7A /* SystemConfiguration.framework in Frameworks */,
+				3B60EEF312710E7100943D7A /* libxml2.dylib in Frameworks */,
+				3B60F03812712F8600943D7A /* ExceptionHandling.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				256AC3D80F4B6AC300CF3369 /* CrashMacAppDelegate.h */,
+				256AC3D90F4B6AC300CF3369 /* CrashMacAppDelegate.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* CrashMac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CrashMac */ = {
+			isa = PBXGroup;
+			children = (
+				3B289B7912D288EB0069E7FF /* hoptoadnotifier */,
+				3B60EED712710E4D00943D7A /* kissxml */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CrashMac;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				256AC3F00F4B6AF500CF3369 /* CrashMac_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* CrashMac-Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3B60F03712712F8600943D7A /* ExceptionHandling.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+				3B60EEEE12710E6300943D7A /* SystemConfiguration.framework */,
+				3B60EEF212710E7100943D7A /* libxml2.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3B289B7912D288EB0069E7FF /* hoptoadnotifier */ = {
+			isa = PBXGroup;
+			children = (
+				3B289B7A12D288EB0069E7FF /* HTNotifier.strings */,
+				3B289B7E12D288EB0069E7FF /* HTFunctions.h */,
+				3B289B7F12D288EB0069E7FF /* HTFunctions.m */,
+				3B289B8012D288EB0069E7FF /* HTNotice.h */,
+				3B289B8112D288EB0069E7FF /* HTNotice.m */,
+				3B289B8212D288EB0069E7FF /* HTNotifier.h */,
+				3B289B8312D288EB0069E7FF /* HTNotifier.m */,
+				3B289B8412D288EB0069E7FF /* HTNotifier_iOS.h */,
+				3B289B8512D288EB0069E7FF /* HTNotifier_iOS.m */,
+				3B289B8612D288EB0069E7FF /* HTNotifier_Mac.h */,
+				3B289B8712D288EB0069E7FF /* HTNotifier_Mac.m */,
+				3B289B8812D288EB0069E7FF /* HTNotifierDelegate.h */,
+			);
+			name = hoptoadnotifier;
+			path = ../hoptoadnotifier;
+			sourceTree = SOURCE_ROOT;
+		};
+		3B60EED712710E4D00943D7A /* kissxml */ = {
+			isa = PBXGroup;
+			children = (
+				3B60EED812710E4D00943D7A /* DDXML.h */,
+				3B60EED912710E4D00943D7A /* DDXMLDocument.h */,
+				3B60EEDA12710E4D00943D7A /* DDXMLDocument.m */,
+				3B60EEDB12710E4D00943D7A /* DDXMLElement.h */,
+				3B60EEDC12710E4D00943D7A /* DDXMLElement.m */,
+				3B60EEDD12710E4D00943D7A /* DDXMLElementAdditions.h */,
+				3B60EEDE12710E4D00943D7A /* DDXMLElementAdditions.m */,
+				3B60EEDF12710E4D00943D7A /* DDXMLNode.h */,
+				3B60EEE012710E4D00943D7A /* DDXMLNode.m */,
+				3B60EEE112710E4D00943D7A /* DDXMLPrivate.h */,
+				3B60EEE212710E4D00943D7A /* NSStringAdditions.h */,
+				3B60EEE312710E4D00943D7A /* NSStringAdditions.m */,
+			);
+			name = kissxml;
+			path = ../kissxml;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* CrashMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "CrashMac" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CrashMac;
+			productInstallPath = "$(HOME)/Applications";
+			productName = CrashMac;
+			productReference = 8D1107320486CEB800E47090 /* CrashMac.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CrashMac" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				de,
+				en,
+				es,
+				ro,
+				ru,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CrashMac */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* CrashMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				3B289B8B12D288EB0069E7FF /* HTNotifier.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				256AC3DA0F4B6AC300CF3369 /* CrashMacAppDelegate.m in Sources */,
+				3B60EEE812710E4D00943D7A /* DDXMLDocument.m in Sources */,
+				3B60EEE912710E4D00943D7A /* DDXMLElement.m in Sources */,
+				3B60EEEA12710E4D00943D7A /* DDXMLElementAdditions.m in Sources */,
+				3B60EEEB12710E4D00943D7A /* DDXMLNode.m in Sources */,
+				3B60EEEC12710E4D00943D7A /* NSStringAdditions.m in Sources */,
+				3B289B8C12D288EB0069E7FF /* HTFunctions.m in Sources */,
+				3B289B8D12D288EB0069E7FF /* HTNotice.m in Sources */,
+				3B289B8E12D288EB0069E7FF /* HTNotifier.m in Sources */,
+				3B289B8F12D288EB0069E7FF /* HTNotifier_iOS.m in Sources */,
+				3B289B9012D288EB0069E7FF /* HTNotifier_Mac.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58150DA1D0A300B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		3B289B7A12D288EB0069E7FF /* HTNotifier.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3B289B7B12D288EB0069E7FF /* de */,
+				3B289B7C12D288EB0069E7FF /* en */,
+				3B289B7D12D288EB0069E7FF /* es */,
+				3B289B8912D288EB0069E7FF /* ro */,
+				3B289B8A12D288EB0069E7FF /* ru */,
+			);
+			name = HTNotifier.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CrashMac_Prefix.pch;
+				INFOPLIST_FILE = "CrashMac-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = CrashMac;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CrashMac_Prefix.pch;
+				INFOPLIST_FILE = "CrashMac-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = CrashMac;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "CrashMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CrashMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

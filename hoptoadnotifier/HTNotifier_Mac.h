@@ -6,9 +6,11 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+#if !TARGET_OS_IPHONE
 
-#import "HTNotice.h"
+#import <Cocoa/Cocoa.h>
+
+#import "HTNotifier.h"
 
 @interface HTNotifier_Mac : HTNotifier {
 

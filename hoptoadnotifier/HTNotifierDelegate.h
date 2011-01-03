@@ -54,6 +54,7 @@
 - (void)notifierDidHandleException:(NSException *)exc;
 - (void)notifierDidHandleSignal:(NSInteger)signal;
 
+#if TARGET_OS_IPHONE
 /*
  
  This method asks the delegate to return the root view
@@ -67,5 +68,6 @@
  
  */
 - (UIViewController *)rootViewControllerForNotice;
+#endif
 
 @end

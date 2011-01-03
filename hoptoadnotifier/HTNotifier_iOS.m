@@ -12,6 +12,8 @@
 
 @implementation HTNotifier_iOS
 
+#pragma mark -
+#pragma mark object methods
 - (void)registerNotifications {
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self

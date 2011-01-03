@@ -8,6 +8,7 @@
 
 #import "HTNotifier.h"
 #import "HTNotifier_iOS.h"
+#import "HTNotifier_Mac.h"
 
 // internal variables
 static HTNotifier * sharedNotifier = nil;
@@ -178,13 +179,11 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		
 		// validate
 		if (key == nil || [key length] == 0) {
-			[NSException raise:NSInvalidArgumentException
-						format:@"%@", HTLogStringWithFormat(@"The provided API key is not valid")];
+			HTLog(@"The provided API key is not valid");
 			return;
 		}
 		if (name == nil || [name length] == 0) {
-			[NSException raise:NSInvalidArgumentException
-						format:@"%@", HTLogStringWithFormat(@"The provided environment name is not valid")];
+			HTLog(@"The provided environment name is not valid");
 			return;
 		}
 		
@@ -192,7 +191,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #if TARGET_OS_IPHONE
 		sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
 #elif TARGET_OS_MAC
-		sharedNotifier = nil;
+		sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
 #endif
 		
 		// start
