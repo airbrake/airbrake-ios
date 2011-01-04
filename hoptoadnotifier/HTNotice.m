@@ -222,5 +222,19 @@
 - (void)writeToFile:(NSString *)file {
 	[NSKeyedArchiver archiveRootObject:self toFile:file];
 }
+- (void)dealloc {
+	self.operatingSystemVersion = nil;
+	self.applicationVersion = nil;
+	self.executableName = nil;
+	self.exceptionName = nil;
+	self.exceptionReason = nil;
+	self.platform = nil;
+	self.environmentName = nil;
+	self.environmentInfo = nil;
+	self.callStack = nil;
+	self.viewControllerName = nil;
+	
+	[super dealloc];
+}
 
 @end

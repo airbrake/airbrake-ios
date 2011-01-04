@@ -129,6 +129,5 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 extern NSString * const HTNotifierDirectoryName;
 extern NSString * const HTNotifierPathExtension;
 extern NSString * const HTNotifierAlwaysSendKey;
-
 #define HTLocalizedString(key) \
 NSLocalizedStringFromTable((key), @"HTNotifier", @"")

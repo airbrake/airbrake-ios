@@ -7,8 +7,8 @@
 //
 
 #import <execinfo.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
+#import <sys/types.h>
+#import <sys/sysctl.h>
 
 #import "HTNotifier.h"
 

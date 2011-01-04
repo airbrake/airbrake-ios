@@ -240,9 +240,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	[self unregisterNotifications];
 	HTStopHandler();
 	
-	if (reachability != NULL) { CFRelease(reachability), reachability = NULL; }
-	[apiKey release], apiKey = nil;
-	[environmentName release], environmentName = nil;
+	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
+	[apiKey release];apiKey = nil;
+	[environmentName release];environmentName = nil;
 	self.environmentInfo = nil;
 	
 	[super dealloc];
@@ -259,8 +259,3 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 
 @end
-
-@implementation HTNotifier (HTInternal)
-
-@end
-
