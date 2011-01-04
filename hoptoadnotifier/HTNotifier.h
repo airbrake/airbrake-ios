@@ -55,7 +55,6 @@ extern NSString * const HTNotifierAppStoreEnvironment;
 	SCNetworkReachabilityRef reachability;
 	id<HTNotifierDelegate> delegate;
 	BOOL useSSL;
-	BOOL logCrashesInSimulator;
 }
 
 @property (nonatomic, readonly) NSString *apiKey;
@@ -81,14 +80,6 @@ extern NSString * const HTNotifierAppStoreEnvironment;
  
  */
 @property (nonatomic, assign) BOOL useSSL;
-/*
- 
- control whether crashes are logged in the simulator
- 
- default:YES
- 
- */
-@property (nonatomic, assign) BOOL logCrashesInSimulator;
 
 /*
  

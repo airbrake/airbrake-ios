@@ -177,7 +177,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 @synthesize useSSL;
 @synthesize environmentInfo;
 @synthesize delegate;
-@synthesize logCrashesInSimulator;
 
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {
