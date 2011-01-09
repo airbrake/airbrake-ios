@@ -36,6 +36,7 @@ extern NSString * const HTNotifierBundleVersion;
 extern NSString * const HTNotifierDevelopmentEnvironment;
 extern NSString * const HTNotifierAdHocEnvironment;
 extern NSString * const HTNotifierAppStoreEnvironment;
+extern NSString * const HTNotifierReleaseEnvironment;
 
 /*
  
