@@ -111,6 +111,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
 	
+#if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	NSUInteger task = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+#endif
+	
 	// report each notice
 	for (NSString *noticePath in paths) {
 		
@@ -155,6 +159,11 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			[responseString release];
 		}
 	}
+	
+#if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	[[UIApplication sharedApplication] endBackgroundTask:task];
+#endif
+	
 }
 - (BOOL)isHoptoadReachable {
 	SCNetworkReachabilityFlags flags;
