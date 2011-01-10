@@ -113,7 +113,11 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)postNoticesWithPaths:(NSArray *)paths {
 	
 #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	NSUInteger task = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+	NSUInteger task = UIBackgroundTaskInvalid;
+	UIApplication *app = [UIApplication sharedApplication];
+	if ([app respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) {
+		task = [app beginBackgroundTaskWithExpirationHandler:nil];
+	}
 #endif
 	
 	// report each notice
@@ -162,7 +166,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	}
 	
 #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	[[UIApplication sharedApplication] endBackgroundTask:task];
+	if ([app respondsToSelector:@selector(endBackgroundTask:)]) {
+		[app endBackgroundTask:task];
+	}
 #endif
 	
 }
