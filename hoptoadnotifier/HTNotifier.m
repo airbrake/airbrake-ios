@@ -18,6 +18,12 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 @"%@://%@%/notifier_api/v2/notices", \
 (self.useSSL) ? @"https" : @"http", \
 HTNotifierHostName]]
+#ifndef kCFCoreFoundationVersionNumber_iPhoneOS_4_0
+#define kCFCoreFoundationVersionNumber_iPhoneOS_4_0	550.32
+#endif
+#define HTIsMultitaskingSupported \
+[[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] && \
+[[UIDevice currentDevice] isMultitaskingSupported]
 
 // extern strings
 NSString * const HTNotifierVersion = @"2.0";
@@ -113,15 +119,24 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)postNoticesWithPaths:(NSArray *)paths {
 	
 #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	NSUInteger task = UIBackgroundTaskInvalid;
-	UIApplication *app = [UIApplication sharedApplication];
-	if ([app respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) {
-		task = [app beginBackgroundTaskWithExpirationHandler:nil];
+	__block NSUInteger task;
+	__block UIApplication *app = [UIApplication sharedApplication];
+	__block BOOL shouldKeepPosting = YES;
+	if (HTIsMultitaskingSupported) {
+		task = [app beginBackgroundTaskWithExpirationHandler:^{
+			shouldKeepPosting = NO;
+		}];
 	}
 #endif
 	
 	// report each notice
 	for (NSString *noticePath in paths) {
+		
+#if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+		if (!shouldKeepPosting) {
+			break;
+		}
+#endif
 		
 		// get notice payload
 		HTNotice *notice = [HTNotice readFromFile:noticePath];
@@ -166,7 +181,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	}
 	
 #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([app respondsToSelector:@selector(endBackgroundTask:)]) {
+	if (HTIsMultitaskingSupported) {
 		[app endBackgroundTask:task];
 	}
 #endif
