@@ -18,9 +18,6 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 @"%@://%@%/notifier_api/v2/notices", \
 (self.useSSL) ? @"https" : @"http", \
 HTNotifierHostName]]
-#ifndef kCFCoreFoundationVersionNumber_iPhoneOS_4_0
-#define kCFCoreFoundationVersionNumber_iPhoneOS_4_0	550.32
-#endif
 #define HTIsMultitaskingSupported \
 [[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] && \
 [[UIDevice currentDevice] isMultitaskingSupported]
