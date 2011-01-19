@@ -21,6 +21,7 @@ HTNotifierHostName]]
 #define HTIsMultitaskingSupported \
 [[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] && \
 [[UIDevice currentDevice] isMultitaskingSupported]
+#define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
 NSString * const HTNotifierVersion = @"2.0";
@@ -114,8 +115,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	[pool drain];
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
-	
-#if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+
+#if HT_IOS_SDK_4
 	__block NSUInteger task;
 	__block UIApplication *app = [UIApplication sharedApplication];
 	__block BOOL shouldKeepPosting = YES;
@@ -129,7 +130,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	// report each notice
 	for (NSString *noticePath in paths) {
 		
-#if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+#if HT_IOS_SDK_4
 		if (!shouldKeepPosting) {
 			break;
 		}
@@ -177,7 +178,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		}
 	}
 	
-#if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+#if HT_IOS_SDK_4
 	if (HTIsMultitaskingSupported) {
 		[app endBackgroundTask:task];
 	}
