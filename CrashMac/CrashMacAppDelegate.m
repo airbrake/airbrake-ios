@@ -13,7 +13,7 @@
 @synthesize window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	[HTNotifier startNotifierWithAPIKey:@""
+	[HTNotifier startNotifierWithAPIKey:@"a"
 						environmentName:HTNotifierDevelopmentEnvironment];
 }
 

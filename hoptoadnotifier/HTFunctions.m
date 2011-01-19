@@ -122,7 +122,7 @@ NSString * HTNoticesDirectory() {
 	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString *path = [folders objectAtIndex:0];
 	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	path = [path stringByAppendingPathComponent:HTBundleDisplayName()];
+	path = [path stringByAppendingPathComponent:HTApplicationName()];
 	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
 #endif
 }
