@@ -143,7 +143,7 @@
 	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
 #else
 	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad Mac Notifier"]];
-	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-mac"]];
+	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
 #endif
 	[e1 addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
 	[payload addChild:e1];
