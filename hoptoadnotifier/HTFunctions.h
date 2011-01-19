@@ -29,13 +29,16 @@ NSArray * HTNotices();
 // get the operating system version
 NSString * HTOperatingSystemVersion();
 
+// utility method for getting a value from info.plist
+id HTInfoPlistValueForKey(NSString *key);
+
 // get the executable name
 NSString * HTExecutableName();
 
 /*
  get the application version
  
- this is returned as a combination of the CFBundleVersion
+ the value returned is a combination of the CFBundleVersion
  and CFBundleShortVersionString
  */
 NSString * HTApplicationVersion();
@@ -49,7 +52,7 @@ NSString * HTApplicationVersion();
 	- CFBundleName
 	- CFBundleIdentifier
  */
-NSString * HTBundleDisplayName();
+NSString * HTApplicationName();
 
 /*
  get the current platform

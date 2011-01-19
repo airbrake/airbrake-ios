@@ -148,31 +148,32 @@ NSString * HTOperatingSystemVersion() {
 #endif
 }
 
+id HTInfoPlistValueForKey(NSString *key) {
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
+}
+
 NSString * HTExecutableName() {
-	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-	return [infoPlist objectForKey:@"CFBundleExecutable"];
+	return HTInfoPlistValueForKey(@"CFBundleExecutable");
 }
 
 NSString * HTApplicationVersion() {
-	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-	NSString *bundleVersion = [infoPlist objectForKey:@"CFBundleVersion"];
-	NSString *bundleShortVersionString = [infoPlist objectForKey:@"CFBundleShortVersionString"];
-	if (bundleVersion != nil && bundleShortVersionString != nil) {
-		return [NSString stringWithFormat:@"%@ (%@)", bundleShortVersionString, bundleVersion];
+	NSString *bundleVersion = HTInfoPlistValueForKey(@"CFBundleVersion");
+	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
+	if (bundleVersion != nil && versionString != nil) {
+		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
 	}
 	else if (bundleVersion != nil) { return bundleVersion; }
-	else if (bundleShortVersionString != nil) { return bundleShortVersionString; }
+	else if (versionString != nil) { return versionString; }
 	else { return nil; }
 }
 
-NSString * HTBundleDisplayName() {
-	NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-	NSString *bundleDisplayName = [infoPlist objectForKey:@"CFBundleDisplayName"];
-	NSString *bundleName = [infoPlist objectForKey:@"CFBundleName"];
-	NSString *bundleIdentifier = [infoPlist objectForKey:@"CFBundleIdentifier"];
-	if (bundleDisplayName != nil) { return bundleDisplayName; }
+NSString * HTApplicationName() {
+	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
+	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
+	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
+	if (displayName != nil) { return displayName; }
 	else if (bundleName != nil) { return bundleName; }
-	else if (bundleIdentifier != nil) { return bundleIdentifier; }
+	else if (identifier != nil) { return identifier; }
 	else { return nil; }
 }
 
@@ -215,7 +216,7 @@ NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
 	NSMutableString *mutable = [string mutableCopy];
 	
 	[mutable replaceOccurrencesOfString:HTNotifierBundleName
-							 withString:HTBundleDisplayName()
+							 withString:HTApplicationName()
 								options:0
 								  range:NSMakeRange(0, [mutable length])];
 	
