@@ -15,6 +15,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	[HTNotifier startNotifierWithAPIKey:@"a"
 						environmentName:HTNotifierDevelopmentEnvironment];
+	[[HTNotifier sharedNotifier] writeTestNotice];
 }
 
 - (IBAction)crash:(id)sender {
