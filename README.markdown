@@ -53,19 +53,12 @@ Next, call the main notifier method at the very beginning of your `application:d
                         environmentName:<# environment #>];
 
 The API key argument expects your Hoptoad project API key. The environment name you provide will be
-used to categorize received crash reports in the Hoptoad web interface. You can substitute several
-useful values into this parameter as a formatted string like:
+used to categorize received crash reports in the Hoptoad web interface. The notifier provides several factory environment names that you are free to use.
 
-  - `HTNotifierBundleVersion`
-  - `HTNotifierBuildDate`
-  - `HTNotifierBuildTime`
-
-For convenience, the notifier provides you a few factory environment names that should cover most
-scenarios. They are:
-
-  - `HTNotifierDevelopmentEnvironment` - this string includes the build date and time
-  - `HTNotifierAdHocEnvironment` - this string includes the build date
-  - `HTNotifierAppStoreEnvironment` - this string includes the bundle version
+  - `HTNotifierDevelopmentEnvironment`
+  - `HTNotifierAdHocEnvironment`
+  - `HTNotifierAppStoreEnvironment`
+  - `HTNotifierReleaseEnvironment`
 
 #Testing
 
@@ -106,12 +99,9 @@ MyAppDelegate.m
       #pragma mark HTNotifierDelegate
       /*
         These are only a few of the delegate methods you can implement
-        The rest are documented in HTNotifier.h
+        The rest are documented in HTNotifierDelegate.h
         All of the delegate methods are optional
       */
-      - (UIViewController *)rootViewControllerForNotice {
-        return self.rootViewController;
-      }
       - (void)notifierWillDisplayAlert {
         [gameController pause];
       }
