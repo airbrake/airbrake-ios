@@ -19,7 +19,7 @@
 						environmentName:HTNotifierAppStoreEnvironment];
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
-	[[HTNotifier sharedNotifier] writeTestNotice];
+	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;

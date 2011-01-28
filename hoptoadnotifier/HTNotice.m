@@ -154,35 +154,20 @@
 	NSString *reason = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
 	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:reason]];
 	e2 = [DDXMLElement elementWithName:@"backtrace"];
-	NSCharacterSet *whiteSpaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
-	NSCharacterSet *nonWhiteSpaceCharacterSet = [whiteSpaceCharacterSet invertedSet];
-	for (NSString *line in self.callStack) {
-		
+	NSArray *parsedStack = HTParseCallstack(self.callStack);
+	NSLog(@"%@", parsedStack);
+	for (NSDictionary *line in parsedStack) {
 		DDXMLElement *lineElement = [DDXMLElement elementWithName:@"line"];
-		NSScanner *scanner = [NSScanner scannerWithString:line];
-		NSString *string;
-		
-		// line number
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&string];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"number" stringValue:string]];
-		
-		// binary name
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&string];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"file" stringValue:string]];
-		
-		// eat that weird hex number
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:NULL];
-		
-		// method
-		NSUInteger startLocation = [scanner scanLocation] + 1;
-		NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
-		NSRange methodRange = NSMakeRange(startLocation, endLocation - startLocation);
-		string = [line substringWithRange:methodRange];
-		[lineElement addAttribute:[DDXMLElement attributeWithName:@"method" stringValue:string]];
-		
-		// save line
+		[lineElement addAttribute:
+		 [DDXMLElement attributeWithName:@"number" stringValue:
+		  [[line objectForKey:@"number"] stringValue]]];
+		[lineElement addAttribute:
+		 [DDXMLElement attributeWithName:@"file" stringValue:
+		  [line objectForKey:@"file"]]];
+		[lineElement addAttribute:
+		 [DDXMLElement attributeWithName:@"method" stringValue:
+		  [line objectForKey:@"method"]]];
 		[e2 addChild:lineElement];
-		
 	}
 	[e1 addChild:e2];
 	[payload addChild:e1];
@@ -193,7 +178,9 @@
 	e2 = [DDXMLElement elementWithName:@"component"];
 	[e2 setStringValue:self.viewControllerName];
 	[e1 addChild:e2];
-	[e1 addChild:[DDXMLElement elementWithName:@"action"]];
+	e2 = [DDXMLElement elementWithName:@"action"];
+	[e2 setStringValue:HTActionFromCallstack(parsedStack)];
+	[e1 addChild:e2];
 	e2 = [DDXMLElement elementWithName:@"cgi-data"];
 	NSMutableDictionary *cgi = [NSMutableDictionary dictionaryWithDictionary:self.environmentInfo];
 	if (self.platform != nil) { [cgi setObject:self.platform forKey:@"Device"]; }
@@ -214,6 +201,8 @@
 	[e1 addChild:[DDXMLElement elementWithName:@"environment-name" stringValue:self.environmentName]];
 	[payload addChild:e1];
 	
+	// return
+	NSLog(@"%@", [payload XMLString]);
 	return [payload XMLString];
 }
 - (NSData *)hoptoadXMLData {

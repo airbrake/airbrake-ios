@@ -112,6 +112,60 @@ NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	return backtrace;
 }
 
+NSArray * HTParseCallstack(NSArray *symbols) {
+	NSCharacterSet *whiteSpaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+	NSCharacterSet *nonWhiteSpaceCharacterSet = [whiteSpaceCharacterSet invertedSet];
+	NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
+	for (NSString *line in symbols) {
+		NSScanner *scanner = [NSScanner scannerWithString:line];
+		
+		// line number
+		NSInteger number;
+		[scanner scanInteger:&number];
+		
+		// binary name
+		NSString *binary;
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&binary];
+
+		// eat that weird hex number
+		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:NULL];
+		
+		// method
+		NSString *method;
+		NSUInteger startLocation = [scanner scanLocation] + 1;
+		NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
+		NSRange methodRange = NSMakeRange(startLocation, endLocation - startLocation);
+		method = [line substringWithRange:methodRange];
+		
+		// add line
+		[parsed addObject:
+		 [NSDictionary dictionaryWithObjectsAndKeys:
+		  [NSNumber numberWithInteger:number], @"number",
+		  binary, @"file",
+		  method, @"method",
+		  nil]];
+	}
+	return parsed;
+}
+
+NSString * HTActionFromCallstack(NSArray *callStack) {
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"file like %@", HTExecutableName()];
+	NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"number" ascending:YES];
+	NSArray *matching = [callStack filteredArrayUsingPredicate:predicate];
+	matching = [matching sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+	matching = [matching valueForKey:@"method"];
+	[sort release];
+	for (NSString *file in matching) {
+		if ([file isEqualToString:@"HTHandleSignal"]) {
+			continue;
+		}
+		else {
+			return file;
+		}
+	}
+	return @"";
+}
+
 NSString * HTNoticesDirectory() {
 #if TARGET_OS_IPHONE
 	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
@@ -276,25 +330,3 @@ NSString * HTVisibleViewControllerWithViewController(UIViewController *controlle
 	
 }
 #endif
-
-void HTLog(NSString *frmt, ...) {
-	va_list list;
-	va_start(list, frmt);
-	NSLog(@"%@", HTLogStringWithArguments(frmt, list));
-	va_end(list);
-}
-
-NSString * HTLogStringWithFormat(NSString *fmt, ...) {
-	va_list list;
-	va_start(list, fmt);
-	NSString *toReturn = HTLogStringWithArguments(fmt, list);
-	va_end(list);
-	return toReturn;
-}
-
-NSString * HTLogStringWithArguments(NSString *fmt, va_list args) {
-	NSString *format = [[NSString alloc] initWithFormat:fmt arguments:args];
-	NSString *toReturn = [@"[Hoptoad] " stringByAppendingString:format];
-	[format release];
-	return toReturn;
-}

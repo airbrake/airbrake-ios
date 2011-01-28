@@ -20,6 +20,12 @@ void HTStopHandler();
 // get symbolicated call stack given return addresses
 NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *);
 
+// parse callstack
+NSArray * HTParseCallstack(NSArray *symbols);
+
+// get action from callstack
+NSString * HTActionFromCallstack(NSArray *callStack);
+
 // get folder where notices are stored
 NSString * HTNoticesDirectory();
 
@@ -109,8 +115,6 @@ NSString * HTCurrentViewController();
 NSString * HTVisibleViewControllerWithViewController(UIViewController *);
 #endif
 
-// library logging methods
-void HTLog(NSString *fmt, ...);
-NSString * HTLogStringWithFormat(NSString *fmt, ...);
-NSString * HTLogStringWithArguments(NSString *fmt, va_list args);
+// library logging
+#define HTLog(fmt, args...) NSLog(@"[Hoptoad] " fmt, ##args)
 
