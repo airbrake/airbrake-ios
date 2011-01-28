@@ -122,12 +122,12 @@
 #pragma mark -
 #pragma mark object methods
 - (NSString *)hoptoadXMLString {
-	DDXMLElement *payload;
 	DDXMLElement *e1;
 	DDXMLElement *e2;
 	DDXMLElement *e3;
 	
 	// setup payload
+	DDXMLElement *payload;
 	payload = [DDXMLElement elementWithName:@"notice"];
 	[payload addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.0"]];
 	
@@ -155,7 +155,6 @@
 	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:reason]];
 	e2 = [DDXMLElement elementWithName:@"backtrace"];
 	NSArray *parsedStack = HTParseCallstack(self.callStack);
-	NSLog(@"%@", parsedStack);
 	for (NSDictionary *line in parsedStack) {
 		DDXMLElement *lineElement = [DDXMLElement elementWithName:@"line"];
 		[lineElement addAttribute:

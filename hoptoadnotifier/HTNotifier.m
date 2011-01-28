@@ -14,13 +14,13 @@
 static HTNotifier * sharedNotifier = nil;
 static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 #define HTNotifierURL [NSURL URLWithString: \
-[NSString stringWithFormat: \
-@"%@://%@%/notifier_api/v2/notices", \
-(self.useSSL) ? @"https" : @"http", \
-HTNotifierHostName]]
+	[NSString stringWithFormat: \
+	@"%@://%@%/notifier_api/v2/notices", \
+	(self.useSSL) ? @"https" : @"http", \
+	HTNotifierHostName]]
 #define HTIsMultitaskingSupported \
-[[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] && \
-[[UIDevice currentDevice] isMultitaskingSupported]
+	[[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] && \
+	[[UIDevice currentDevice] isMultitaskingSupported]
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
@@ -71,8 +71,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// setup values
 		apiKey = [key copy];
 		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
+		environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
-		self.environmentInfo = [NSMutableDictionary dictionary];
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -223,7 +223,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// create
 #if TARGET_OS_IPHONE
 		sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
-#elif TARGET_OS_MAC
+#else
 		sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
 #endif
 		
@@ -271,7 +271,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
 	[apiKey release];apiKey = nil;
 	[environmentName release];environmentName = nil;
-	self.environmentInfo = nil;
+	[environmentInfo release];environmentInfo = nil;
 	
 	[super dealloc];
 }

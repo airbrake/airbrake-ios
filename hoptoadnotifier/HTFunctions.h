@@ -115,6 +115,6 @@ NSString * HTCurrentViewController();
 NSString * HTVisibleViewControllerWithViewController(UIViewController *);
 #endif
 
-// library logging
+// useful defines
 #define HTLog(fmt, args...) NSLog(@"[Hoptoad] " fmt, ##args)
-
+#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")

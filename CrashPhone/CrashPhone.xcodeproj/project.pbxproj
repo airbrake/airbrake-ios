@@ -154,15 +154,15 @@
 				3B20D888128A321E000CE777 /* HTNotifier.strings */,
 				3B20D88C128A321E000CE777 /* HTNotifier.h */,
 				3B20D88D128A321E000CE777 /* HTNotifier.m */,
+				3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */,
 				3B289A8912D27C910069E7FF /* HTNotifier_iOS.h */,
 				3B289A8A12D27C910069E7FF /* HTNotifier_iOS.m */,
 				3B289B4612D285CF0069E7FF /* HTNotifier_Mac.h */,
 				3B289B4712D285CF0069E7FF /* HTNotifier_Mac.m */,
-				3B29FC1312B974DA00B7A6F6 /* HTNotifierDelegate.h */,
-				3B29FC2F12B97F3C00B7A6F6 /* HTFunctions.h */,
-				3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */,
 				3B20D88A128A321E000CE777 /* HTNotice.h */,
 				3B20D88B128A321E000CE777 /* HTNotice.m */,
+				3B29FC2F12B97F3C00B7A6F6 /* HTFunctions.h */,
+				3B29FC3012B97F3C00B7A6F6 /* HTFunctions.m */,
 			);
 			name = hoptoadnotifier;
 			path = ../hoptoadnotifier;

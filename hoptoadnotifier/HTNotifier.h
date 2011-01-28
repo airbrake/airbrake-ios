@@ -6,6 +6,12 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
+#if TARGET_OS_IPHONE
+#elif TARGET_OS_MAC
+#else
+#error [Hoptoad] Unsupported platform
+#endif
+
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
@@ -71,7 +77,7 @@ extern NSString * const HTNotifierReleaseEnvironment;
  other private user information without permission
  
  */
-@property (nonatomic, retain) NSMutableDictionary *environmentInfo;
+@property (nonatomic, readonly) NSMutableDictionary *environmentInfo;
 /*
  
  control whether notices are posted using SSL. your account
@@ -121,5 +127,3 @@ extern NSString * const HTNotifierReleaseEnvironment;
 extern NSString * const HTNotifierDirectoryName;
 extern NSString * const HTNotifierPathExtension;
 extern NSString * const HTNotifierAlwaysSendKey;
-#define HTLocalizedString(key) \
-NSLocalizedStringFromTable((key), @"HTNotifier", @"")
