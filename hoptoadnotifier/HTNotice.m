@@ -185,7 +185,6 @@
 	if (self.platform != nil) { [cgi setObject:self.platform forKey:@"Device"]; }
 	if (self.applicationVersion != nil) { [cgi setObject:self.applicationVersion forKey:@"App Version"]; }
 	if (self.operatingSystemVersion != nil) { [cgi setObject:self.operatingSystemVersion forKey:@"Operating System"]; }
-	if (self.executableName != nil) { [cgi setObject:self.executableName forKey:@"Executable"]; }
 	for (id key in [cgi allKeys]) {
 		id var = [cgi objectForKey:key];
 		e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
