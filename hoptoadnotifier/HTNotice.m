@@ -202,7 +202,6 @@
 	[payload addChild:e1];
 	
 	// return
-	NSLog(@"%@", [payload XMLString]);
 	return [payload XMLString];
 }
 - (NSData *)hoptoadXMLData {
