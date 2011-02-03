@@ -25,8 +25,7 @@ static void HTHandleSignal(int signal) {
 	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
 	
 	// write notice
-	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
-	[notice writeToFile:HTPathForNewNoticeWithName(name)];
+	[notice writeToFile:[NSString stringWithUTF8String:ht_notice_info.file_name]];
 	
 	// delegate call
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
@@ -48,8 +47,7 @@ static void HTHandleException(NSException *e) {
 	HTNotice *notice = [HTNotice noticeWithException:e];
 	
 	// write notice
-	NSString *name = [NSString stringWithFormat:@"%d", time(NULL)];
-	[notice writeToFile:HTPathForNewNoticeWithName(name)];
+	[notice writeToFile:[NSString stringWithUTF8String:ht_notice_info.file_name]];
 	
 	// delegate call
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
@@ -270,6 +268,11 @@ NSString * HTPlatform() {
 NSString * HTPathForNewNoticeWithName(NSString *name) {
 	NSString *path = [HTNoticesDirectory() stringByAppendingPathComponent:name];
 	return [path stringByAppendingPathExtension:HTNotifierPathExtension];
+}
+
+NSString * HTPathForNextNotice() {
+	NSString *name = [NSString stringWithFormat:@"%d.notice", time(NULL)];
+	return [HTNoticesDirectory() stringByAppendingPathComponent:name];
 }
 
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {

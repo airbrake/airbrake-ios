@@ -8,6 +8,31 @@
 
 #import <Foundation/Foundation.h>
 
+// notice info
+typedef struct ht_notice_info_t {
+	
+	// crash file name
+	const char *file_name;
+	
+	// os version
+	const char *os_version;
+	int os_version_len;
+	
+	// platform
+	const char *platform;
+	int platform_len;
+	
+	// app version
+	const char *app_version;
+	int app_version_len;
+	
+	// environment name
+	const char *env_name;
+	int env_name_len;
+	
+} ht_notice_info_t;
+ht_notice_info_t ht_notice_info;
+
 /*
  Instances of the HTNotice class represent a single crash
  report. It holds all of the properties that get posted to

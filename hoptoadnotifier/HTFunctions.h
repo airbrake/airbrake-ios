@@ -79,6 +79,12 @@ NSString * HTPlatform();
 NSString * HTPathForNewNoticeWithName(NSString *);
 
 /*
+ returns the full path to the next notice that will be
+ written
+ */
+NSString * HTPathForNextNotice();
+
+/*
  returns a string with all of the hoptoad variables
  replaced by their appropriate values
  */
