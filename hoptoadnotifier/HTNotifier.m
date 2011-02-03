@@ -44,7 +44,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)checkForNoticesAndReportIfReachable;
 - (void)postAllNoticesWithAutoreleasePool;
 - (void)postNoticesWithPaths:(NSArray *)paths;
-- (void)postNoticeWithPath:(NSString *)noticePath;
+- (void)postNoticeWithPath:(NSString *)path;
 - (BOOL)isHoptoadReachable;
 
 // methods to be overridden
@@ -120,34 +120,33 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #if HT_IOS_SDK_4
 	
 	if (HTIsMultitaskingSupported) {
+		
+		// start background task
 		UIApplication *app = [UIApplication sharedApplication];
-		UIBackgroundTaskIdentifier task;
-		
-		__block BOOL shouldKeepPosting = YES;
-		
-		task = [app beginBackgroundTaskWithExpirationHandler:^{
-			shouldKeepPosting = NO;
+		__block BOOL keepPosting = YES;
+		UIBackgroundTaskIdentifier task = [app beginBackgroundTaskWithExpirationHandler:^{
+			keepPosting = NO;
 		}];
 		
 		// report each notice
-		for (NSString *noticePath in paths) {
-			if (!shouldKeepPosting) {
-				break;
-			}
-			
-			[self postNoticeWithPath:noticePath];
+		for (NSString *path in paths) {
+			if (!keepPosting) { break; }
+			[self postNoticeWithPath:path];
 		}
 		
+		// end background task
 		if (task != UIBackgroundTaskInvalid) {
 			[app endBackgroundTask:task];
 		}
-	} else {
+		
+	}
+	else {
 		
 #endif
 
 		// report each notice
-		for (NSString *noticePath in paths) {
-			[self postNoticeWithPath:noticePath];
+		for (NSString *path in paths) {
+			[self postNoticeWithPath:path];
 		}
 		
 #if HT_IOS_SDK_4
@@ -157,9 +156,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #endif
 	
 }
-- (void)postNoticeWithPath:(NSString *)noticePath {
+- (void)postNoticeWithPath:(NSString *)path {
+	
 	// get notice payload
-	HTNotice *notice = [HTNotice readFromFile:noticePath];
+	HTNotice *notice = [HTNotice readFromFile:path];
 	NSData *xmlData = [notice hoptoadXMLData];
 	
 	// create url request
@@ -176,13 +176,15 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 												 returningResponse:&response
 															 error:&error];
 	
+	// error checking
 	if (error == nil) {
-		[[NSFileManager defaultManager] removeItemAtPath:noticePath error:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 	}
 	else {
 		HTLog(@"encountered error while posting notice\n%@", error);
 	}
 	
+	// status code checking
 	NSInteger statusCode = [response statusCode];
 	if (statusCode == 200) {
 		HTLog(@"crash report posted");
