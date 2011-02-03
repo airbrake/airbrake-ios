@@ -10,6 +10,9 @@
 #import "HTNotifier_iOS.h"
 #import "HTNotifier_Mac.h"
 
+#import <sys/types.h>
+#import <sys/event.h>
+
 // internal
 static HTNotifier * sharedNotifier = nil;
 static NSString * const HTNotifierHostName = @"hoptoadapp.com";
@@ -69,11 +72,24 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			 error:nil];
 		}
 		
+		kqueue();
+		
 		// setup values
 		apiKey = [key copy];
 		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
 		environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
+		
+		// set notice info values
+		ht_notice_info.file_name = [HTPathForNextNotice() UTF8String];
+		ht_notice_info.os_version = [HTOperatingSystemVersion() UTF8String];
+		ht_notice_info.os_version_len = strlen(ht_notice_info.os_version);
+		ht_notice_info.app_version = [HTApplicationVersion() UTF8String];
+		ht_notice_info.app_version_len = strlen(ht_notice_info.app_version);
+		ht_notice_info.platform = [HTPlatform() UTF8String];
+		ht_notice_info.platform_len = strlen(ht_notice_info.platform);
+		ht_notice_info.env_name = [self.environmentName UTF8String];
+		ht_notice_info.env_name_len = strlen(ht_notice_info.env_name);
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:

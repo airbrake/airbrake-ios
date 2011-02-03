@@ -64,15 +64,16 @@
 #pragma mark class methods
 + (HTNotice *)notice {
 	HTNotice *notice = [[HTNotice alloc] init];
-	notice.operatingSystemVersion = HTOperatingSystemVersion();
-	notice.platform = HTPlatform();
-	notice.applicationVersion = HTApplicationVersion();
+	
+	notice.operatingSystemVersion = [NSString stringWithUTF8String:ht_notice_info.os_version];
+	notice.platform = [NSString stringWithUTF8String:ht_notice_info.platform];
+	notice.applicationVersion = [NSString stringWithUTF8String:ht_notice_info.app_version];
+	notice.environmentName = [NSString stringWithUTF8String:ht_notice_info.env_name];
+	
 	notice.executableName = HTExecutableName();
 #if TARGET_OS_IPHONE
 	notice.viewControllerName = HTCurrentViewController();
 #endif
-	NSString *envName = [[HTNotifier sharedNotifier] environmentName];
-	notice.environmentName = HTStringByReplacingHoptoadVariablesInString(envName);
 	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
 	return [notice autorelease];
 }
