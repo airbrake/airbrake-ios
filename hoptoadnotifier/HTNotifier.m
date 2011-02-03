@@ -44,6 +44,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)checkForNoticesAndReportIfReachable;
 - (void)postAllNoticesWithAutoreleasePool;
 - (void)postNoticesWithPaths:(NSArray *)paths;
+- (void)postNoticeWithPath:(NSString *)noticePath;
 - (BOOL)isHoptoadReachable;
 
 // methods to be overridden
@@ -117,73 +118,86 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)postNoticesWithPaths:(NSArray *)paths {
 
 #if HT_IOS_SDK_4
-	__block NSUInteger task;
-	__block UIApplication *app = [UIApplication sharedApplication];
-	__block BOOL shouldKeepPosting = YES;
+	
 	if (HTIsMultitaskingSupported) {
+		UIApplication *app = [UIApplication sharedApplication];
+		UIBackgroundTaskIdentifier task;
+		
+		__block BOOL shouldKeepPosting = YES;
+		
 		task = [app beginBackgroundTaskWithExpirationHandler:^{
 			shouldKeepPosting = NO;
 		}];
-	}
+		
+		// report each notice
+		for (NSString *noticePath in paths) {
+			if (!shouldKeepPosting) {
+				break;
+			}
+			
+			[self postNoticeWithPath:noticePath];
+		}
+		
+		if (task != UIBackgroundTaskInvalid) {
+			[app endBackgroundTask:task];
+		}
+	} else {
+		
 #endif
-	
-	// report each notice
-	for (NSString *noticePath in paths) {
+
+		// report each notice
+		for (NSString *noticePath in paths) {
+			[self postNoticeWithPath:noticePath];
+		}
 		
 #if HT_IOS_SDK_4
-		if (!shouldKeepPosting) {
-			break;
-		}
-#endif
 		
-		// get notice payload
-		HTNotice *notice = [HTNotice readFromFile:noticePath];
-		NSData *xmlData = [notice hoptoadXMLData];
-		
-		// create url request
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
-		[request setTimeoutInterval:10.0];
-		[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
-		[request setHTTPMethod:@"POST"];
-		[request setHTTPBody:xmlData];
-		
-		// perform request
-		NSHTTPURLResponse *response = nil;
-		NSError *error = nil;
-		NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
-													 returningResponse:&response
-																 error:&error];
-		
-		if (error == nil) {
-			[[NSFileManager defaultManager] removeItemAtPath:noticePath error:nil];
-		}
-		else {
-			HTLog(@"encountered error while posting notice\n%@", error);
-		}
-		
-		NSInteger statusCode = [response statusCode];
-		if (statusCode == 200) {
-			HTLog(@"crash report posted");
-		}
-		else if (responseBody == nil) {
-			HTLog(@"unexpected response\nstatus code:%d", statusCode);
-		}
-		else {
-			NSString *responseString = [[NSString alloc] initWithData:responseBody
-															 encoding:NSUTF8StringEncoding];
-			HTLog(@"unexpected response\nstatus code:%d\nresponse body:%@",
-				  statusCode,
-				  responseString);
-			[responseString release];
-		}
 	}
 	
-#if HT_IOS_SDK_4
-	if (HTIsMultitaskingSupported) {
-		[app endBackgroundTask:task];
-	}
 #endif
 	
+}
+- (void)postNoticeWithPath:(NSString *)noticePath {
+	// get notice payload
+	HTNotice *notice = [HTNotice readFromFile:noticePath];
+	NSData *xmlData = [notice hoptoadXMLData];
+	
+	// create url request
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
+	[request setTimeoutInterval:10.0];
+	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:xmlData];
+	
+	// perform request
+	NSHTTPURLResponse *response = nil;
+	NSError *error = nil;
+	NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
+												 returningResponse:&response
+															 error:&error];
+	
+	if (error == nil) {
+		[[NSFileManager defaultManager] removeItemAtPath:noticePath error:nil];
+	}
+	else {
+		HTLog(@"encountered error while posting notice\n%@", error);
+	}
+	
+	NSInteger statusCode = [response statusCode];
+	if (statusCode == 200) {
+		HTLog(@"crash report posted");
+	}
+	else if (responseBody == nil) {
+		HTLog(@"unexpected response\nstatus code:%d", statusCode);
+	}
+	else {
+		NSString *responseString = [[NSString alloc] initWithData:responseBody
+														 encoding:NSUTF8StringEncoding];
+		HTLog(@"unexpected response\nstatus code:%d\nresponse body:%@",
+			  statusCode,
+			  responseString);
+		[responseString release];
+	}
 }
 - (BOOL)isHoptoadReachable {
 	SCNetworkReachabilityFlags flags;
