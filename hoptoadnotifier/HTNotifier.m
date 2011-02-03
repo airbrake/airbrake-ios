@@ -24,7 +24,7 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString * const HTNotifierVersion = @"1.3.1";
+NSString * const HTNotifierVersion = @"1.3.2";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
 NSString * const HTNotifierDevelopmentEnvironment = @"Development";
