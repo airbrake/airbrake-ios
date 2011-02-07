@@ -131,3 +131,4 @@ Set the delegate on the notifier object in your `application:didFinishLaunchingW
 - [Benjamin Broll](http://twitter.com/bebroll)
 - Sergei Winitzki
 - Irina Anastasiu
+- [Jordan Breeding](http://jordanbreeding.com)
