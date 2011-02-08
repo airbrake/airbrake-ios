@@ -243,7 +243,8 @@ NSString * HTPlatform() {
 	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
 	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
 	else if ([platform isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
-	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4"; }
+	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4 (GSM)"; }
+        else if ([platform isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
 	// ipad
 	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
 	// ipod
