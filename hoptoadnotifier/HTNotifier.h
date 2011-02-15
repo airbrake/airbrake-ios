@@ -6,10 +6,9 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-#if TARGET_OS_IPHONE
-#elif TARGET_OS_MAC
+#if (TARGET_OS_IPHONE)
 #else
-//#error [Hoptoad] Unsupported platform
+#error [Hoptoad] Unsupported platform
 #endif
 
 #import <Foundation/Foundation.h>

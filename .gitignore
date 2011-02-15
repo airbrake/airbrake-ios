@@ -1,5 +1,9 @@
 .DS_Store
-.svn/
+*.swp
+*~.nib
 build/
+.svn/
 *.pbxuser
 *.mode1v3
+*.mode2v3
+xcuserdata/

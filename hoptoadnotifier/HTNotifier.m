@@ -190,13 +190,13 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		HTLog(@"crash report posted");
 	}
 	else if (responseBody == nil) {
-		HTLog(@"unexpected response\nstatus code:%d", statusCode);
+		HTLog(@"unexpected response\nstatus code:%ld", (long)statusCode);
 	}
 	else {
 		NSString *responseString = [[NSString alloc] initWithData:responseBody
 														 encoding:NSUTF8StringEncoding];
-		HTLog(@"unexpected response\nstatus code:%d\nresponse body:%@",
-			  statusCode,
+		HTLog(@"unexpected response\nstatus code:%ld\nresponse body:%@",
+			  (long)statusCode,
 			  responseString);
 		[responseString release];
 	}
