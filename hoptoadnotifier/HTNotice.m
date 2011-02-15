@@ -26,7 +26,8 @@
 #pragma mark -
 #pragma mark NSCoder
 - (id)initWithCoder:(NSCoder *)decoder {
-	if (self = [super init]) {
+    self = [super init];
+	if (self) {
 		NSInteger version = [decoder decodeInt32ForKey:@"archive_version"];
 		if (version >= 1) {
 			self.operatingSystemVersion = [decoder decodeObjectForKey:@"os_version"];
@@ -93,7 +94,7 @@
 						@"2   CoreFoundation                      0x024fb42b -[NSObject(NSObject) doesNotRecognizeSelector:] + 187",
 						@"3   CoreFoundation                      0x0246b116 ___forwarding___ + 966",
 						@"4   CoreFoundation                      0x0246acd2 _CF_forwarding_prep_0 + 50",
-						@"5   CrashApp                            0x000021ba -[HTNotifier crash] + 48",
+						@"5   CrashPhone                          0x000021ba -[HTNotifier crash] + 48",
 						@"6   UIKit                               0x002bee14 -[UIApplication sendAction:to:from:forEvent:] + 119",
 						@"7   UIKit                               0x003486c8 -[UIControl sendAction:to:forEvent:] + 67",
 						@"8   UIKit                               0x0034ab4a -[UIControl(Internal) _sendActionsForEvents:withEvent:] + 527",
@@ -110,8 +111,8 @@
 						@"19  GraphicsServices                    0x02bff2c8 GSEventRunModal + 217",
 						@"20  GraphicsServices                    0x02bff38d GSEventRun + 115",
 						@"21  UIKit                               0x002ccb58 UIApplicationMain + 1160",
-						@"22  CrashApp                            0x000020a0 main + 102",
-						@"23  CrashApp                            0x00002031 start + 53",
+						@"22  CrashPhone                          0x000020a0 main + 102",
+						@"23  CrashPhone                          0x00002031 start + 53",
 						nil];
 	return notice;
 }

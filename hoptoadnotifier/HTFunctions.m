@@ -113,8 +113,8 @@ NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 }
 
 NSArray * HTParseCallstack(NSArray *symbols) {
-	NSCharacterSet *whiteSpaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
-	NSCharacterSet *nonWhiteSpaceCharacterSet = [whiteSpaceCharacterSet invertedSet];
+	NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	NSCharacterSet *nonWhiteSpace = [whiteSpace invertedSet];
 	NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
 	for (NSString *line in symbols) {
 		NSScanner *scanner = [NSScanner scannerWithString:line];
@@ -125,17 +125,22 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 		
 		// binary name
 		NSString *binary;
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:&binary];
+		[scanner scanCharactersFromSet:nonWhiteSpace intoString:&binary];
 
-		// eat that weird hex number
-		[scanner scanCharactersFromSet:nonWhiteSpaceCharacterSet intoString:NULL];
-		
 		// method
-		NSString *method;
-		NSUInteger startLocation = [scanner scanLocation] + 1;
-		NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
-		NSRange methodRange = NSMakeRange(startLocation, endLocation - startLocation);
-		method = [line substringWithRange:methodRange];
+        NSString *method = @"";
+        if ([[HTNotifier sharedNotifier] stripCallStack]) {
+            [scanner scanCharactersFromSet:nonWhiteSpace intoString:NULL];
+            NSUInteger startLocation = [scanner scanLocation];
+            NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
+            method = [line substringWithRange:NSMakeRange(startLocation, endLocation - startLocation)];
+            method = [method stringByTrimmingCharactersInSet:whiteSpace];
+        }
+        else {
+            NSUInteger location = [scanner scanLocation];
+            method = [line substringFromIndex:location];
+            method = [method stringByTrimmingCharactersInSet:whiteSpace];
+        }
 		
 		// add line
 		[parsed addObject:
