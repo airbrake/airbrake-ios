@@ -11,8 +11,9 @@
 // notice info
 typedef struct ht_notice_info_t {
 	
-	// crash file name
-	const char *file_name;
+	// file names
+	const char *exception_file;
+    const char *signal_file;
 	
 	// os version
 	const char *os_version;
