@@ -9,11 +9,16 @@
 #import <execinfo.h>
 #import <sys/types.h>
 #import <sys/sysctl.h>
+#import <fcntl.h>
+#import <unistd.h>
 
 #import "HTNotifier.h"
 
-static void HTHandleSignal(int signal) {
+#pragma mark - handlers
+void HTHandleSignal(int signal) {
 	
+#if 0    
+    
 	// stop handlers
 	HTStopHandler();
 	
@@ -35,27 +40,232 @@ static void HTHandleSignal(int signal) {
 	
 	// re raise
 	raise(signal);
+    
+#else
+    
+    // stop handlers
+    HTStopSignalHandler();
+    
+    // open file
+    NSLog(@"%s", ht_notice_info.signal_file);
+    int fd = open(ht_notice_info.signal_file, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
+    if (fd == -1) { NSLog(@"%d", errno); }
+    else {
+        // write signal
+        write(fd, &signal, sizeof(int));
+        // write os version
+        write(fd, &ht_notice_info.os_version_len, sizeof(int));
+        write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
+        // write platform
+        write(fd, &ht_notice_info.platform_len, sizeof(int));
+        write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
+        // write app version
+        write(fd, &ht_notice_info.app_version_len, sizeof(int));
+        write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
+        // write environment
+        write(fd, &ht_notice_info.env_name_len, sizeof(int));
+        write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
+        // close value
+        close(fd);
+    }
+    
+    // re-raise
+    //raise(signal);
+    
+#endif
 	
 }
-
-static void HTHandleException(NSException *e) {
-	
-	// stop handlers
-	HTStopHandler();
-	
-	// create notice and set properties
+void HTHandleException(NSException *e) {
+	HTStopHandlers();
 	HTNotice *notice = [HTNotice noticeWithException:e];
-	
-	// write notice
-	[notice writeToFile:[NSString stringWithUTF8String:ht_notice_info.file_name]];
-	
-	// delegate call
+	[notice writeToFile:[NSString stringWithUTF8String:ht_notice_info.exception_file]];
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
 		[delegate notifierDidHandleException:e];
 	}
-	
 }
+
+#pragma mark - modify handler state
+void HTStartHandlers() {
+    HTStartExceptionHandler();
+    HTStartSignalHandler();
+}
+void HTStartExceptionHandler() {
+    NSSetUncaughtExceptionHandler(&HTHandleException);
+}
+void HTStartSignalHandler() {
+    NSArray *signals = HTHandledSignals();
+	for (NSUInteger i = 0; i < [signals count]; i++) {
+		NSInteger signal = [[signals objectAtIndex:i] integerValue];
+		struct sigaction action;
+		sigemptyset(&action.sa_mask);
+		action.sa_handler = HTHandleSignal;
+		if (sigaction(signal, &action, NULL) != 0) {
+            HTLog(@"unable to register signal handler for %s", strsignal(signal));
+		}
+	}
+}
+void HTStopHandlers() {
+    HTStopExceptionHandler();
+    HTStopSignalHandler();
+}
+void HTStopExceptionHandler() {
+    NSSetUncaughtExceptionHandler(NULL);
+}
+void HTStopSignalHandler() {
+    NSArray *signals = HTHandledSignals();
+	for (NSUInteger i = 0; i < [signals count]; i++) {
+		NSInteger signal = [[signals objectAtIndex:i] integerValue];
+		struct sigaction action;
+		sigemptyset(&action.sa_mask);
+		action.sa_handler = SIG_DFL;
+		sigaction(signal, &action, NULL);
+	}
+}
+
+#pragma mark - Info.plist accessors
+id HTInfoPlistValueForKey(NSString *key) {
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
+}
+NSString * HTExecutableName() {
+	return HTInfoPlistValueForKey(@"CFBundleExecutable");
+}
+NSString * HTApplicationVersion() {
+	NSString *bundleVersion = HTInfoPlistValueForKey(@"CFBundleVersion");
+	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
+	if (bundleVersion != nil && versionString != nil) {
+		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
+	}
+	else if (bundleVersion != nil) { return bundleVersion; }
+	else if (versionString != nil) { return versionString; }
+	else { return nil; }
+}
+NSString * HTApplicationName() {
+	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
+	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
+	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
+	if (displayName != nil) { return displayName; }
+	else if (bundleName != nil) { return bundleName; }
+	else if (identifier != nil) { return identifier; }
+	else { return nil; }
+}
+
+#pragma mark - platform accessors
+NSString * HTOperatingSystemVersion() {
+#if TARGET_IPHONE_SIMULATOR
+	return [[UIDevice currentDevice] systemVersion];
+#else
+	return [[NSProcessInfo processInfo] operatingSystemVersionString];
+#endif
+}
+NSString * HTPlatform() {
+#if TARGET_IPHONE_SIMULATOR
+	return @"iPhone Simulator";
+#elif TARGET_OS_IPHONE
+	size_t size = 256;
+	char *machine = malloc(sizeof(char) * size);
+	sysctlbyname("hw.machine", machine, &size, NULL, 0);
+	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+	// iphone
+	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
+	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
+	else if ([platform isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
+	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4 (GSM)"; }
+    else if ([platform isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
+	// ipad
+	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
+	// ipod
+	else if ([platform isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
+	else if ([platform isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
+	else if ([platform isEqualToString:@"iPod3,1"]) { return @"iPod Touch 3rd Gen"; }
+	else if ([platform isEqualToString:@"iPod4,1"]) { return @"iPod Touch 4th Gen"; }
+	// unknown
+	else { return platform; }
+#else
+	size_t size = 256;
+	char *machine = malloc(sizeof(char) * size);
+	sysctlbyname("hw.model", machine, &size, NULL, 0);
+	return [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+#endif
+}
+
+#pragma mark - init notice info
+void HTInitNoticeInfo() {
+    
+    NSString *value;
+    char *value_str;
+    NSUInteger length;
+    
+    // file path stuff
+    NSString *directory = HTNoticesDirectory();
+    NSString *fileName = [NSString stringWithFormat:@"%d", time(NULL)];
+    
+    // exception file name
+    value = [directory stringByAppendingPathComponent:fileName];
+    value = [value stringByAppendingPathExtension:HTNotifierExceptionNoticeExtension];
+    length = [value length] * sizeof(char);
+    value_str = malloc(length);
+    memcpy(value_str, [value UTF8String], length);
+    ht_notice_info.exception_file = value_str;
+    
+    // signal file name
+    value = [directory stringByAppendingPathComponent:fileName];
+    value = [value stringByAppendingPathExtension:HTNotifierSignalNoticeExtension];
+    length = [value length] * sizeof(char);
+    value_str = malloc(length);
+    memcpy(value_str, [value UTF8String], length);
+    ht_notice_info.signal_file = value_str;
+    
+    // os version
+    value = HTOperatingSystemVersion();
+    length = [value length] * sizeof(char);
+    value_str = malloc(length);
+    memcpy(value_str, [value UTF8String], length);
+    ht_notice_info.os_version = value_str;
+    ht_notice_info.os_version_len = length;
+    
+    // app version
+    value = HTApplicationVersion();
+    length = [value length] * sizeof(char);
+    value_str = malloc(length);
+    memcpy(value_str, [value UTF8String], length);
+    ht_notice_info.app_version = value_str;
+    ht_notice_info.app_version_len = length;
+    
+    // platform
+    value = HTPlatform();
+    length = [value length] * sizeof(char);
+    value_str = malloc(length);
+    strcpy(value_str, [value UTF8String]);
+    ht_notice_info.app_version = value_str;
+    ht_notice_info.app_version_len = length;
+    
+    // environment name
+    value = [[HTNotifier sharedNotifier] environmentName];
+    length = [value length] * sizeof(char);
+    value_str = malloc(length);
+    memcpy(value_str, [value UTF8String], length);
+    ht_notice_info.env_name = value_str;
+    ht_notice_info.env_name_len = length;
+    
+}
+void HTReleaseNoticeInfo() {
+    free((void *)ht_notice_info.exception_file);
+    ht_notice_info.exception_file = NULL;
+    free((void *)ht_notice_info.signal_file);
+    ht_notice_info.signal_file = NULL;
+    free((void *)ht_notice_info.os_version);
+    ht_notice_info.os_version = NULL;
+    free((void *)ht_notice_info.app_version);
+    ht_notice_info.app_version = NULL;
+    free((void *)ht_notice_info.platform);
+    ht_notice_info.platform = NULL;
+    free((void *)ht_notice_info.env_name);
+    ht_notice_info.env_name = NULL;
+}
+
+
+
 
 NSArray * HTHandledSignals() {
 	return [NSArray arrayWithObjects:
@@ -66,32 +276,6 @@ NSArray * HTHandledSignals() {
 			[NSNumber numberWithInteger:SIGSEGV],
 			[NSNumber numberWithInteger:SIGTRAP],
 			nil];
-}
-
-void HTStartHandler() {
-	NSSetUncaughtExceptionHandler(&HTHandleException);
-	NSArray *signals = HTHandledSignals();
-	for (NSUInteger i = 0; i < [signals count]; i++) {
-		NSInteger signal = [[signals objectAtIndex:i] integerValue];
-		struct sigaction action;
-		sigemptyset(&action.sa_mask);
-		action.sa_handler = HTHandleSignal;
-		if (sigaction(signal, &action, NULL) != 0) {
-			NSLog(@"[Hoptoad] unable to register signal handler for %s", strsignal(signal));
-		}
-	}
-}
-
-void HTStopHandler() {
-	NSSetUncaughtExceptionHandler(NULL);
-	NSArray *signals = HTHandledSignals();
-	for (NSUInteger i = 0; i < [signals count]; i++) {
-		NSInteger signal = [[signals objectAtIndex:i] integerValue];
-		struct sigaction action;
-		sigemptyset(&action.sa_mask);
-		action.sa_handler = SIG_DFL;
-		sigaction(signal, &action, NULL);
-	}
 }
 
 NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
@@ -189,7 +373,9 @@ NSArray * HTNotices() {
 	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
 	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
 	for (NSString *file in directoryContents) {
-		if ([[file pathExtension] isEqualToString:HTNotifierPathExtension]) {
+        NSString *ext = [file pathExtension];
+		if ([ext isEqualToString:HTNotifierSignalNoticeExtension] ||
+            [ext isEqualToString:HTNotifierExceptionNoticeExtension]) {
 			NSString *crashPath = [directory stringByAppendingPathComponent:file];
 			[crashes addObject:crashPath];
 		}
@@ -197,83 +383,7 @@ NSArray * HTNotices() {
 	return crashes;
 }
 
-NSString * HTOperatingSystemVersion() {
-#if TARGET_IPHONE_SIMULATOR
-	return [[UIDevice currentDevice] systemVersion];
-#else
-	return [[NSProcessInfo processInfo] operatingSystemVersionString];
-#endif
-}
 
-id HTInfoPlistValueForKey(NSString *key) {
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
-}
-
-NSString * HTExecutableName() {
-	return HTInfoPlistValueForKey(@"CFBundleExecutable");
-}
-
-NSString * HTApplicationVersion() {
-	NSString *bundleVersion = HTInfoPlistValueForKey(@"CFBundleVersion");
-	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
-	if (bundleVersion != nil && versionString != nil) {
-		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
-	}
-	else if (bundleVersion != nil) { return bundleVersion; }
-	else if (versionString != nil) { return versionString; }
-	else { return nil; }
-}
-
-NSString * HTApplicationName() {
-	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
-	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
-	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
-	if (displayName != nil) { return displayName; }
-	else if (bundleName != nil) { return bundleName; }
-	else if (identifier != nil) { return identifier; }
-	else { return nil; }
-}
-
-NSString * HTPlatform() {
-#if TARGET_IPHONE_SIMULATOR
-	return @"iPhone Simulator";
-#elif TARGET_OS_IPHONE
-	size_t size = 256;
-	char *machine = malloc(sizeof(char) * size);
-	sysctlbyname("hw.machine", machine, &size, NULL, 0);
-	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-	// iphone
-	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
-	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
-	else if ([platform isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
-	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4 (GSM)"; }
-        else if ([platform isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
-	// ipad
-	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
-	// ipod
-	else if ([platform isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
-	else if ([platform isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
-	else if ([platform isEqualToString:@"iPod3,1"]) { return @"iPod Touch 3rd Gen"; }
-	else if ([platform isEqualToString:@"iPod4,1"]) { return @"iPod Touch 4th Gen"; }
-	// unknown
-	else { return platform; }
-#else
-	size_t size = 256;
-	char *machine = malloc(sizeof(char) * size);
-	sysctlbyname("hw.model", machine, &size, NULL, 0);
-	return [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-#endif
-}
-
-NSString * HTPathForNewNoticeWithName(NSString *name) {
-	NSString *path = [HTNoticesDirectory() stringByAppendingPathComponent:name];
-	return [path stringByAppendingPathExtension:HTNotifierPathExtension];
-}
-
-NSString * HTPathForNextNotice() {
-	NSString *name = [NSString stringWithFormat:@"%d.notice", time(NULL)];
-	return [HTNoticesDirectory() stringByAppendingPathComponent:name];
-}
 
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
 	NSMutableString *mutable = [string mutableCopy];

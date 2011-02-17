@@ -35,7 +35,8 @@ NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
 NSString * const HTNotifierAppStoreEnvironment = @"App Store";
 NSString * const HTNotifierReleaseEnvironment = @"Release";
 NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
-NSString * const HTNotifierPathExtension = @"notice";
+NSString * const HTNotifierSignalNoticeExtension = @"signal";
+NSString * const HTNotifierExceptionNoticeExtension = @"exception";
 NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -
@@ -61,6 +62,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	self = [super init];
 	if (self) {
+        
+        // start
+		HTStartHandlers();
 		
 		// create folder
 		NSString *directory = HTNoticesDirectory();
@@ -72,24 +76,13 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			 error:nil];
 		}
 		
-		kqueue();
-		
 		// setup values
 		apiKey = [key copy];
 		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
 		environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
-		
-		// set notice info values
-		ht_notice_info.file_name = [HTPathForNextNotice() UTF8String];
-		ht_notice_info.os_version = [HTOperatingSystemVersion() UTF8String];
-		ht_notice_info.os_version_len = strlen(ht_notice_info.os_version);
-		ht_notice_info.app_version = [HTApplicationVersion() UTF8String];
-		ht_notice_info.app_version_len = strlen(ht_notice_info.app_version);
-		ht_notice_info.platform = [HTPlatform() UTF8String];
-		ht_notice_info.platform_len = strlen(ht_notice_info.platform);
-		ht_notice_info.env_name = [self.environmentName UTF8String];
-		ht_notice_info.env_name_len = strlen(ht_notice_info.env_name);
+        self.stripCallStack = NO;
+        HTInitNoticeInfo();
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -120,6 +113,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			}
 		}
 	}
+    
+    HTLog(@"%s", __PRETTY_FUNCTION__);
 	
 	[pool drain];
 }
@@ -260,9 +255,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
 #endif
 		
-		// start
-		HTStartHandler();
-		
 		// log
 		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
 		HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
@@ -299,17 +291,17 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)dealloc {
 	[self unregisterNotifications];
-	HTStopHandler();
-	
 	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
 	[apiKey release];apiKey = nil;
 	[environmentName release];environmentName = nil;
 	[environmentInfo release];environmentInfo = nil;
-	
+    HTStopHandlers();
+    HTReleaseNoticeInfo();
 	[super dealloc];
 }
 - (void)writeTestNotice {
-	NSString *noticePath = HTPathForNewNoticeWithName(@"TEST");
+    NSString *noticePath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
+    noticePath = [noticePath stringByAppendingPathExtension:HTNotifierExceptionNoticeExtension];
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) {
 		return;
