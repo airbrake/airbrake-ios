@@ -130,4 +130,5 @@ extern NSString * const HTNotifierReleaseEnvironment;
 extern NSString * const HTNotifierDirectoryName;
 extern NSString * const HTNotifierSignalNoticeExtension;
 extern NSString * const HTNotifierExceptionNoticeExtension;
+extern NSString * const HTNotifierNoticePathExtension;
 extern NSString * const HTNotifierAlwaysSendKey;

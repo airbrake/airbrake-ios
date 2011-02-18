@@ -8,6 +8,8 @@
 
 #import "CAAppDelegate.h"
 
+void ht_handle_signal(int);
+
 @implementation CAAppDelegate
 
 @synthesize window;
@@ -15,10 +17,17 @@
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	[HTNotifier startNotifierWithAPIKey:@""
+#if 1
+	[HTNotifier startNotifierWithAPIKey:@"a"
 						environmentName:HTNotifierAppStoreEnvironment];
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
+#else
+    for (int i = 0; i < 100; i++) {
+        HTInitNoticeInfo();
+        HTReleaseNoticeInfo();
+    }
+#endif
     //[[HTNotifier sharedNotifier] setStripCallStack:YES];
 	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
@@ -32,7 +41,8 @@
 	[NSException raise:NSInvalidArgumentException format:@"test exception"];
 }
 - (IBAction)signal:(id)sender {
-	raise(SIGSEGV);
+	//raise(SIGSEGV);
+    ht_handle_signal(SIGSEGV);
 }
 
 #pragma mark -

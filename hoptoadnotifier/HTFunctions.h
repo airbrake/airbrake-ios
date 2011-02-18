@@ -19,7 +19,7 @@ void HTStopExceptionHandler();
 void HTStopSignalHandler();
 
 // get values from Info.plist
-id HTInfoPlistValueForKey(NSString *key);
+id HTInfoPlistValueForKey(NSString *);
 NSString * HTExecutableName();
 NSString * HTApplicationVersion();
 NSString * HTApplicationName();
@@ -32,6 +32,14 @@ NSString * HTPlatform();
 void HTInitNoticeInfo();
 void HTReleaseNoticeInfo();
 
+// deal with notice information on disk
+void HTReadNoticeInfoAtPath(NSString *);
+NSString * HTNoticesDirectory();
+NSArray * HTNotices();
+
+
+
+
 // get a list of all handled signals
 NSArray * HTHandledSignals();
 
@@ -43,16 +51,6 @@ NSArray * HTParseCallstack(NSArray *symbols);
 
 // get action from callstack
 NSString * HTActionFromCallstack(NSArray *callStack);
-
-// get folder where notices are stored
-NSString * HTNoticesDirectory();
-
-// get a list of all notices saved on disk
-NSArray * HTNotices();
-
-// get the operating system version
-
-
 
 
 /*

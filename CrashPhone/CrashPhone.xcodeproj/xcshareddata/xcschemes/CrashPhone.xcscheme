@@ -28,6 +28,12 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "NSZombieEnabled=YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
@@ -46,6 +52,12 @@
             ReferencedContainer = "container:CrashPhone.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "NSZombieEnabled=YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -65,6 +77,12 @@
             ReferencedContainer = "container:CrashPhone.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "NSZombieEnabled=YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
