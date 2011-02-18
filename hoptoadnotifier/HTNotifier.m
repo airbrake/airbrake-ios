@@ -37,6 +37,7 @@ NSString * const HTNotifierReleaseEnvironment = @"Release";
 NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
 NSString * const HTNotifierSignalNoticeExtension = @"signal";
 NSString * const HTNotifierExceptionNoticeExtension = @"exception";
+NSString * const HTNotifierNoticePathExtension = @"htnotice";
 NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -
@@ -120,10 +121,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)postAllNoticesWithAutoreleasePool {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
 	NSArray *paths = HTNotices();
 	[self postNoticesWithPaths:paths];
-	
 	[pool drain];
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
@@ -169,6 +168,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)postNoticeWithPath:(NSString *)path {
 	
+#if 0
+    
 	// get notice payload
 	HTNotice *notice = [HTNotice readFromFile:path];
 	NSData *xmlData = [notice hoptoadXMLData];
@@ -211,6 +212,13 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			  responseString);
 		[responseString release];
 	}
+    
+#else
+    
+    HTReadNoticeInfoAtPath(path);
+    
+#endif
+    
 }
 - (BOOL)isHoptoadReachable {
 	SCNetworkReachabilityFlags flags;

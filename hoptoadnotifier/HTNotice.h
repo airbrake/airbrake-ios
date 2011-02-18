@@ -12,8 +12,7 @@
 typedef struct ht_notice_info_t {
 	
 	// file names
-	const char *exception_file;
-    const char *signal_file;
+	const char *notice_path;
 	
 	// os version
 	const char *os_version;

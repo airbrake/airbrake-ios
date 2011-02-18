@@ -14,75 +14,77 @@
 
 #import "HTNotifier.h"
 
-#pragma mark - handlers
-void HTHandleSignal(int signal) {
-	
-#if 0    
-    
-	// stop handlers
-	HTStopHandler();
-	
-	// create notice and set properties
-	NSArray *addresses = [NSThread callStackReturnAddresses];
-	HTNotice *notice = [HTNotice notice];
-	notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
-	notice.exceptionReason = @"Application received signal";
-	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
-	
-	// write notice
-	[notice writeToFile:[NSString stringWithUTF8String:ht_notice_info.file_name]];
-	
-	// delegate call
-	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
-	if ([delegate respondsToSelector:@selector(notifierDidHandleSignal:)]) {
-		[delegate notifierDidHandleSignal:signal];
-	}
-	
-	// re raise
-	raise(signal);
-    
-#else
-    
-    // stop handlers
+// file flags
+static int HTNoticeFileVersion = 1;
+static int HTSignalNoticeType = 1;
+static int HTExceptionNoticeType = 2;
+
+// internal function prototypes
+void ht_handle_signal(int);
+void ht_handle_exception(NSException *);
+int ht_open_file(int);
+
+#pragma mark crash time methods
+void ht_handle_signal(int signal) {
     HTStopSignalHandler();
-    
-    // open file
-    NSLog(@"%s", ht_notice_info.signal_file);
-    int fd = open(ht_notice_info.signal_file, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
-    if (fd == -1) { NSLog(@"%d", errno); }
-    else {
-        // write signal
+    int fd = ht_open_file(HTSignalNoticeType);
+    if (fd > -1) {
         write(fd, &signal, sizeof(int));
-        // write os version
-        write(fd, &ht_notice_info.os_version_len, sizeof(int));
-        write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
-        // write platform
-        write(fd, &ht_notice_info.platform_len, sizeof(int));
-        write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
-        // write app version
-        write(fd, &ht_notice_info.app_version_len, sizeof(int));
-        write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
-        // write environment
-        write(fd, &ht_notice_info.env_name_len, sizeof(int));
-        write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
-        // close value
         close(fd);
     }
-    
-    // re-raise
-    //raise(signal);
-    
-#endif
-	
 }
-void HTHandleException(NSException *e) {
-	HTStopHandlers();
-	HTNotice *notice = [HTNotice noticeWithException:e];
-	[notice writeToFile:[NSString stringWithUTF8String:ht_notice_info.exception_file]];
+void ht_handle_exception(NSException *exception) {
+    HTStopHandlers();
+    int fd = ht_open_file(HTExceptionNoticeType);
+    if (fd > -1) {
+        
+        const char * value_str;
+        int length;
+        
+        // addresses
+        NSArray *addresses = [exception callStackReturnAddresses];
+        length = [addresses count];
+        write(fd, &length, sizeof(int));
+        for (int i = 0; i < length; i++) {
+            unsigned long addr = [[addresses objectAtIndex:i] unsignedIntegerValue];
+            write(fd, &addr, sizeof(unsigned long));
+        }
+        
+        // exception name
+        value_str = [[exception name] UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        write(fd, &length, sizeof(int));
+        write(fd, value_str, length);
+        
+        // exception reason
+        value_str = [[exception reason] UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        write(fd, &length, sizeof(int));
+        write(fd, value_str, length);
+        
+        // close file
+        close(fd);
+    }
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
-		[delegate notifierDidHandleException:e];
+		[delegate notifierDidHandleException:exception];
 	}
+}
+int ht_open_file(int type) {
+    int fd = open(ht_notice_info.notice_path, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
+    if (fd > -1) {
+        write(fd, &HTNoticeFileVersion, sizeof(int));
+        write(fd, &type, sizeof(int));
+        write(fd, &ht_notice_info.os_version_len, sizeof(int));
+        write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
+        write(fd, &ht_notice_info.platform_len, sizeof(int));
+        write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
+        write(fd, &ht_notice_info.app_version_len, sizeof(int));
+        write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
+        write(fd, &ht_notice_info.env_name_len, sizeof(int));
+        write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
+    }
+    return fd;
 }
 
 #pragma mark - modify handler state
@@ -91,7 +93,7 @@ void HTStartHandlers() {
     HTStartSignalHandler();
 }
 void HTStartExceptionHandler() {
-    NSSetUncaughtExceptionHandler(&HTHandleException);
+    NSSetUncaughtExceptionHandler(&ht_handle_exception);
 }
 void HTStartSignalHandler() {
     NSArray *signals = HTHandledSignals();
@@ -99,7 +101,7 @@ void HTStartSignalHandler() {
 		NSInteger signal = [[signals objectAtIndex:i] integerValue];
 		struct sigaction action;
 		sigemptyset(&action.sa_mask);
-		action.sa_handler = HTHandleSignal;
+		action.sa_handler = ht_handle_signal;
 		if (sigaction(signal, &action, NULL) != 0) {
             HTLog(@"unable to register signal handler for %s", strsignal(signal));
 		}
@@ -193,7 +195,7 @@ NSString * HTPlatform() {
 void HTInitNoticeInfo() {
     
     NSString *value;
-    char *value_str;
+    const char *value_str;
     NSUInteger length;
     
     // file path stuff
@@ -202,58 +204,48 @@ void HTInitNoticeInfo() {
     
     // exception file name
     value = [directory stringByAppendingPathComponent:fileName];
-    value = [value stringByAppendingPathExtension:HTNotifierExceptionNoticeExtension];
-    length = [value length] * sizeof(char);
-    value_str = malloc(length);
-    memcpy(value_str, [value UTF8String], length);
-    ht_notice_info.exception_file = value_str;
-    
-    // signal file name
-    value = [directory stringByAppendingPathComponent:fileName];
-    value = [value stringByAppendingPathExtension:HTNotifierSignalNoticeExtension];
-    length = [value length] * sizeof(char);
-    value_str = malloc(length);
-    memcpy(value_str, [value UTF8String], length);
-    ht_notice_info.signal_file = value_str;
+    value = [value stringByAppendingPathExtension:HTNotifierNoticePathExtension];
+    value_str = [value UTF8String];
+    length = (strlen(value_str) + 1) * sizeof(char);
+    ht_notice_info.notice_path = malloc(length);
+    memcpy((void *)ht_notice_info.notice_path, value_str, length);
     
     // os version
     value = HTOperatingSystemVersion();
-    length = [value length] * sizeof(char);
-    value_str = malloc(length);
-    memcpy(value_str, [value UTF8String], length);
-    ht_notice_info.os_version = value_str;
+    value_str = [value UTF8String];
+    length = (strlen(value_str) + 1) * sizeof(char);
+    ht_notice_info.os_version = malloc(length);
     ht_notice_info.os_version_len = length;
+    memcpy((void *)ht_notice_info.os_version, value_str, length);
     
     // app version
     value = HTApplicationVersion();
-    length = [value length] * sizeof(char);
-    value_str = malloc(length);
-    memcpy(value_str, [value UTF8String], length);
-    ht_notice_info.app_version = value_str;
+    value_str = [value UTF8String];
+    length = (strlen(value_str) + 1) * sizeof(char);
+    ht_notice_info.app_version = malloc(length);
     ht_notice_info.app_version_len = length;
+    memcpy((void *)ht_notice_info.app_version, value_str, length);
     
     // platform
     value = HTPlatform();
-    length = [value length] * sizeof(char);
-    value_str = malloc(length);
-    strcpy(value_str, [value UTF8String]);
-    ht_notice_info.app_version = value_str;
-    ht_notice_info.app_version_len = length;
+    value_str = [value UTF8String];
+    length = (strlen(value_str) + 1) * sizeof(char);
+    ht_notice_info.platform = malloc(length);
+    ht_notice_info.platform_len = length;
+    memcpy((void *)ht_notice_info.platform, value_str, length);
     
-    // environment name
+    // environment
     value = [[HTNotifier sharedNotifier] environmentName];
-    length = [value length] * sizeof(char);
-    value_str = malloc(length);
-    memcpy(value_str, [value UTF8String], length);
-    ht_notice_info.env_name = value_str;
+    value_str = [value UTF8String];
+    length = (strlen(value_str) + 1) * sizeof(char);
+    ht_notice_info.env_name = malloc(length);
     ht_notice_info.env_name_len = length;
+    memcpy((void *)ht_notice_info.env_name, value_str, length);
     
 }
 void HTReleaseNoticeInfo() {
-    free((void *)ht_notice_info.exception_file);
-    ht_notice_info.exception_file = NULL;
-    free((void *)ht_notice_info.signal_file);
-    ht_notice_info.signal_file = NULL;
+    free((void *)ht_notice_info.notice_path);
+    ht_notice_info.notice_path = NULL;
     free((void *)ht_notice_info.os_version);
     ht_notice_info.os_version = NULL;
     free((void *)ht_notice_info.app_version);
@@ -263,6 +255,147 @@ void HTReleaseNoticeInfo() {
     free((void *)ht_notice_info.env_name);
     ht_notice_info.env_name = NULL;
 }
+
+#pragma mark - notice information on disk
+void HTReadNoticeInfoAtPath(NSString *path) {
+    NSString *extension = [path pathExtension];
+    if (![extension isEqualToString:HTNotifierNoticePathExtension]) {
+        return;
+    }
+    
+    // get file data
+    NSUInteger location = 0;
+    NSUInteger length = 0;
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    
+    // get version
+    int version;
+    [data getBytes:&version range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    HTLog(@"version:%d", version);
+    
+    // get type
+    int type;
+    [data getBytes:&type range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    HTLog(@"type:%d", type);
+    
+    // os version
+    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    char * os_version = malloc(length * sizeof(char));
+    [data getBytes:os_version range:NSMakeRange(location, length)];
+    location += length;
+    NSString *OSVersion = [NSString stringWithUTF8String:os_version];
+    free(os_version);
+    HTLog(@"os:%@", OSVersion);
+    
+    // platform
+    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    char * _platform = malloc(length * sizeof(char));
+    [data getBytes:_platform range:NSMakeRange(location, length)];
+    location += length;
+    NSString *platform = [NSString stringWithUTF8String:_platform];
+    free(_platform);
+    HTLog(@"platform:%@", platform);
+    
+    // app version
+    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    char * app_version = malloc(length * sizeof(char));
+    [data getBytes:app_version range:NSMakeRange(location, length)];
+    location += length;
+    NSString *appVersion = [NSString stringWithUTF8String:app_version];
+    free(app_version);
+    HTLog(@"app:%@", appVersion);
+    
+    // environment
+    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    char * _environment = malloc(length * sizeof(char));
+    [data getBytes:_environment range:NSMakeRange(location, length)];
+    location += length;
+    NSString *environment = [NSString stringWithUTF8String:_environment];
+    free(_environment);
+    HTLog(@"environment:%@", environment);
+    
+    if (type == HTSignalNoticeType) {
+        int signal;
+        [data getBytes:&signal range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        HTLog(@"signal:%d", signal);
+    }
+    else if (type == HTExceptionNoticeType) {
+        
+        // call stack
+        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+        NSMutableArray *addresses = [NSMutableArray arrayWithCapacity:length];
+        location += sizeof(int);
+        unsigned long _address;
+        for (int i = 0; i < length; i++) {
+            [data getBytes:&_address range:NSMakeRange(location, sizeof(unsigned long))];
+            location += sizeof(unsigned long);
+            NSNumber *address = [NSNumber numberWithUnsignedInteger:_address];
+            [addresses addObject:address];
+        }
+        NSArray *symbols = HTCallStackSymbolsFromReturnAddresses(addresses);
+        HTLog(@"addresses:%@", addresses);
+        HTLog(@"symbols:%@", symbols);
+        
+        // exception name
+        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        char * exception_name = malloc(length * sizeof(char));
+        [data getBytes:exception_name range:NSMakeRange(location, length)];
+        location += length;
+        NSString *exceptionName = [NSString stringWithUTF8String:exception_name];
+        free(exception_name);
+        HTLog(@"exception name:%@", exceptionName);
+        
+        // environment
+        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        char * exception_reason = malloc(length * sizeof(char));
+        [data getBytes:exception_reason range:NSMakeRange(location, length)];
+        location += length;
+        NSString *exceptionReason = [NSString stringWithUTF8String:exception_reason];
+        free(exception_reason);
+        HTLog(@"environment:%@", exceptionReason);
+        
+    }
+    
+}
+NSString * HTNoticesDirectory() {
+#if TARGET_OS_IPHONE
+	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	NSString *path = [folders objectAtIndex:0];
+	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
+#else
+	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString *path = [folders objectAtIndex:0];
+	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+	path = [path stringByAppendingPathComponent:HTApplicationName()];
+	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
+#endif
+}
+NSArray * HTNotices() {
+	NSString *directory = HTNoticesDirectory();
+	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
+	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
+	for (NSString *file in directoryContents) {
+        NSString *ext = [file pathExtension];
+		if ([ext isEqualToString:HTNotifierNoticePathExtension]) {
+			NSString *crashPath = [directory stringByAppendingPathComponent:file];
+			[crashes addObject:crashPath];
+		}
+	}
+	return crashes;
+}
+
+
+
 
 
 
@@ -353,35 +486,7 @@ NSString * HTActionFromCallstack(NSArray *callStack) {
 	return @"";
 }
 
-NSString * HTNoticesDirectory() {
-#if TARGET_OS_IPHONE
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-	NSString *path = [folders objectAtIndex:0];
-	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
-#else
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *path = [folders objectAtIndex:0];
-	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	path = [path stringByAppendingPathComponent:HTApplicationName()];
-	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
-#endif
-}
 
-NSArray * HTNotices() {
-	NSString *directory = HTNoticesDirectory();
-	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
-	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
-	for (NSString *file in directoryContents) {
-        NSString *ext = [file pathExtension];
-		if ([ext isEqualToString:HTNotifierSignalNoticeExtension] ||
-            [ext isEqualToString:HTNotifierExceptionNoticeExtension]) {
-			NSString *crashPath = [directory stringByAppendingPathComponent:file];
-			[crashes addObject:crashPath];
-		}
-	}
-	return crashes;
-}
 
 
 
