@@ -63,9 +63,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	self = [super init];
 	if (self) {
-        
-        // start
-		HTStartHandlers();
 		
 		// create folder
 		NSString *directory = HTNoticesDirectory();
@@ -94,6 +91,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		
 		// notifications
 		[self registerNotifications];
+        
+        // start
+		HTStartHandlers();
 		
 	}
 	return self;

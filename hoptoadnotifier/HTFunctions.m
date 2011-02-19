@@ -107,13 +107,21 @@ int ht_open_file(int type) {
         write(fd, &HTNoticeFileVersion, sizeof(int));
         write(fd, &type, sizeof(int));
         write(fd, &ht_notice_info.os_version_len, sizeof(int));
-        write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
+        if (ht_notice_info.os_version_len > 0) {
+            write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
+        }
         write(fd, &ht_notice_info.platform_len, sizeof(int));
-        write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
+        if (ht_notice_info.platform_len > 0) {
+            write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
+        }
         write(fd, &ht_notice_info.app_version_len, sizeof(int));
-        write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
+        if (ht_notice_info.app_version_len > 0) {
+            write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
+        }
         write(fd, &ht_notice_info.env_name_len, sizeof(int));
-        write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
+        if (ht_notice_info.env_name_len > 0) {
+            write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
+        }
     }
     return fd;
 }
@@ -243,35 +251,47 @@ void HTInitNoticeInfo() {
     
     // os version
     value = HTOperatingSystemVersion();
-    value_str = [value UTF8String];
-    length = (strlen(value_str) + 1) * sizeof(char);
-    ht_notice_info.os_version = malloc(length);
-    ht_notice_info.os_version_len = length;
-    memcpy((void *)ht_notice_info.os_version, value_str, length);
+    if (value == nil) { HTLog(@"unable to cache operating system version"); }
+    else {
+        value_str = [value UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        ht_notice_info.os_version = malloc(length);
+        ht_notice_info.os_version_len = length;
+        memcpy((void *)ht_notice_info.os_version, value_str, length);
+    }
     
     // app version
     value = HTApplicationVersion();
-    value_str = [value UTF8String];
-    length = (strlen(value_str) + 1) * sizeof(char);
-    ht_notice_info.app_version = malloc(length);
-    ht_notice_info.app_version_len = length;
-    memcpy((void *)ht_notice_info.app_version, value_str, length);
+    if (value == nil) { HTLog(@"unable to cache app version"); }
+    else {
+        value_str = [value UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        ht_notice_info.app_version = malloc(length);
+        ht_notice_info.app_version_len = length;
+        memcpy((void *)ht_notice_info.app_version, value_str, length);
+    }
     
     // platform
     value = HTPlatform();
-    value_str = [value UTF8String];
-    length = (strlen(value_str) + 1) * sizeof(char);
-    ht_notice_info.platform = malloc(length);
-    ht_notice_info.platform_len = length;
-    memcpy((void *)ht_notice_info.platform, value_str, length);
+    if (value == nil) { HTLog(@"unable to cache platform"); }
+    else {
+        value_str = [value UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        ht_notice_info.platform = malloc(length);
+        ht_notice_info.platform_len = length;
+        memcpy((void *)ht_notice_info.platform, value_str, length);
+    }
     
     // environment
     value = [[HTNotifier sharedNotifier] environmentName];
-    value_str = [value UTF8String];
-    length = (strlen(value_str) + 1) * sizeof(char);
-    ht_notice_info.env_name = malloc(length);
-    ht_notice_info.env_name_len = length;
-    memcpy((void *)ht_notice_info.env_name, value_str, length);
+    if (value == nil) { HTLog(@"unable to cach environment name"); }
+    else {
+        value_str = [value UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        ht_notice_info.env_name = malloc(length);
+        ht_notice_info.env_name_len = length;
+        memcpy((void *)ht_notice_info.env_name, value_str, length);
+    }
     
 }
 void HTReleaseNoticeInfo() {
