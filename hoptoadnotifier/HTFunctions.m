@@ -62,6 +62,19 @@ void ht_handle_exception(NSException *exception) {
         write(fd, &length, sizeof(int));
         write(fd, value_str, length);
         
+        // view controller name
+        value_str = [HTCurrentViewController() UTF8String];
+        length = (strlen(value_str) + 1) * sizeof(char);
+        write(fd, &length, sizeof(int));
+        write(fd, value_str, length);
+        
+        // environment info
+        NSDictionary *info = [[HTNotifier sharedNotifier] environmentInfo];
+        NSData *data = [NSArchiver archivedDataWithRootObject:info];
+        length = [data length];
+        write(fd, &length, sizeof(int));
+        write(fd, [data bytes], length);
+        
         // close file
         close(fd);
     }
@@ -362,6 +375,16 @@ void HTReadNoticeInfoAtPath(NSString *path) {
         NSString *exceptionReason = [NSString stringWithUTF8String:exception_reason];
         free(exception_reason);
         HTLog(@"environment:%@", exceptionReason);
+        
+        // view controller
+        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        char * view_controller = malloc(length * sizeof(char));
+        [data getBytes:view_controller range:NSMakeRange(location, length)];
+        location += length;
+        NSString *viewController = [NSString stringWithUTF8String:view_controller];
+        free(view_controller);
+        HTLog(@"view controller:%@", viewController);
         
     }
     
