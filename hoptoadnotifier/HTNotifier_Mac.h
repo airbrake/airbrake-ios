@@ -6,7 +6,7 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+#if !TARGET_OS_IPHONE
 
 #import <Cocoa/Cocoa.h>
 
