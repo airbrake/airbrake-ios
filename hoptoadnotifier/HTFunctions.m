@@ -52,25 +52,43 @@ void ht_handle_exception(NSException *exception) {
         
         // exception name
         value_str = [[exception name] UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
-        write(fd, &length, sizeof(int));
-        write(fd, value_str, length);
+        if (value_str == NULL) {
+            length = 0;
+            write(fd, &length, sizeof(int));
+        }
+        else {
+            length = (strlen(value_str) + 1) * sizeof(char);
+            write(fd, &length, sizeof(int));
+            write(fd, value_str, length);
+        }
         
         // exception reason
         value_str = [[exception reason] UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
-        write(fd, &length, sizeof(int));
-        write(fd, value_str, length);
+        if (value_str == NULL) {
+            length = 0;
+            write(fd, &length, sizeof(int));
+        }
+        else {
+            length = (strlen(value_str) + 1) * sizeof(char);
+            write(fd, &length, sizeof(int));
+            write(fd, value_str, length);
+        }
         
         // view controller name
         value_str = [HTCurrentViewController() UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
-        write(fd, &length, sizeof(int));
-        write(fd, value_str, length);
+        if (value_str == NULL) {
+            length = 0;
+            write(fd, &length, sizeof(int));
+        }
+        else {
+            length = (strlen(value_str) + 1) * sizeof(char);
+            write(fd, &length, sizeof(int));
+            write(fd, value_str, length);
+        }
         
         // environment info
         NSDictionary *info = [[HTNotifier sharedNotifier] environmentInfo];
-        NSData *data = [NSArchiver archivedDataWithRootObject:info];
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:info];
         length = [data length];
         write(fd, &length, sizeof(int));
         write(fd, [data bytes], length);
@@ -385,6 +403,13 @@ void HTReadNoticeInfoAtPath(NSString *path) {
         NSString *viewController = [NSString stringWithUTF8String:view_controller];
         free(view_controller);
         HTLog(@"view controller:%@", viewController);
+        
+        // environment info
+        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        NSData *env_info = [data subdataWithRange:NSMakeRange(location, length)];
+        NSDictionary *environmentInfo = [NSKeyedUnarchiver unarchiveObjectWithData:env_info];
+        HTLog(@"environment:%@", environmentInfo);
         
     }
     
