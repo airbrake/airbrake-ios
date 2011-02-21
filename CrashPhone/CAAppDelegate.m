@@ -17,7 +17,7 @@ void ht_handle_signal(int);
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	[HTNotifier startNotifierWithAPIKey:@"a"
+	[HTNotifier startNotifierWithAPIKey:@"efafdebc912d6a0ec83d8ef4867af1ec"
 						environmentName:HTNotifierAppStoreEnvironment];
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];

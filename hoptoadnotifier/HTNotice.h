@@ -33,6 +33,11 @@ typedef struct ht_notice_info_t {
 } ht_notice_info_t;
 ht_notice_info_t ht_notice_info;
 
+// file flags
+extern int HTNoticeFileVersion;
+extern int HTSignalNoticeType;
+extern int HTExceptionNoticeType;
+
 /*
  Instances of the HTNotice class represent a single crash
  report. It holds all of the properties that get posted to
@@ -47,23 +52,21 @@ ht_notice_info_t ht_notice_info;
  that are not are pulled from the HTNotifier at runtime
  (primarily the API key).
  */
-@interface HTNotice : NSObject <NSCoding> {
+@interface HTNotice : NSObject {
 @private
-	NSString *operatingSystemVersion;
-	NSString *applicationVersion;
-	NSString *executableName;
-	NSString *exceptionName;
-	NSString *exceptionReason;
-	NSString *platform;
-	NSString *environmentName;
-	NSString *viewControllerName;
-	NSDictionary *environmentInfo;
-	NSArray *callStack;
+	NSString *_operatingSystem;
+	NSString *_applicationVersion;
+	NSString *_exceptionName;
+	NSString *_exceptionReason;
+	NSString *_platform;
+	NSString *_environmentName;
+	NSString *_viewControllerName;
+	NSDictionary *_environmentInfo;
+	NSArray *_callStack;
 }
 
-@property (nonatomic, copy) NSString *operatingSystemVersion;
+@property (nonatomic, copy) NSString *operatingSystem;
 @property (nonatomic, copy) NSString *applicationVersion;
-@property (nonatomic, copy) NSString *executableName;
 @property (nonatomic, copy) NSString *exceptionName;
 @property (nonatomic, copy) NSString *exceptionReason;
 @property (nonatomic, copy) NSString *platform;
@@ -72,11 +75,8 @@ ht_notice_info_t ht_notice_info;
 @property (nonatomic, retain) NSDictionary *environmentInfo;
 @property (nonatomic, retain) NSArray *callStack;
 
-// create a notice with a few base properties set
-+ (HTNotice *)notice;
-
-// create a notice and set the exception information
-+ (HTNotice *)noticeWithException:(NSException *)exception;
+// create an object representation of notice data
++ (HTNotice *)noticeWithContentsOfFile:(NSString *)path;
 
 // create a test notice
 + (HTNotice *)testNotice;
@@ -89,8 +89,5 @@ ht_notice_info_t ht_notice_info;
 
 // get a data representation of the hoptoad xml payload
 - (NSData *)hoptoadXMLData;
-
-// write a notice to a given path
-- (void)writeToFile:(NSString *)file;
 
 @end

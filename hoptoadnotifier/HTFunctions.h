@@ -33,7 +33,6 @@ void HTInitNoticeInfo();
 void HTReleaseNoticeInfo();
 
 // deal with notice information on disk
-void HTReadNoticeInfoAtPath(NSString *);
 NSString * HTNoticesDirectory();
 NSArray * HTNotices();
 

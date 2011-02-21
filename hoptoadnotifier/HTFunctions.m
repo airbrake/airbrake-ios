@@ -14,6 +14,9 @@
 
 #import "HTNotifier.h"
 
+#import "DDXML.h"
+
+// handled signals
 int ht_signals_count = 6;
 int ht_signals[] = {
 	SIGABRT,
@@ -23,11 +26,6 @@ int ht_signals[] = {
 	SIGSEGV,
 	SIGTRAP
 };
-
-// file flags
-static int HTNoticeFileVersion = 1;
-static int HTSignalNoticeType = 1;
-static int HTExceptionNoticeType = 2;
 
 // internal function prototypes
 void ht_handle_signal(int, siginfo_t *, void *);
@@ -61,32 +59,34 @@ void ht_handle_exception(NSException *exception) {
     int fd = ht_open_file(HTExceptionNoticeType);
     if (fd > -1) {
         
-		// container
-		NSMutableDictionary *crashInfo = [NSMutableDictionary dictionaryWithCapacity:5];
+		// crash info
+		NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:5];
 		
 		// addresses
         NSArray *addresses = [exception callStackReturnAddresses];
 		NSArray *symbols = HTCallStackSymbolsFromReturnAddresses(addresses);
-		[crashInfo setObject:symbols forKey:@"symbols"];
+		[dictionary setObject:symbols forKey:@"call stack"];
 		
-		// exception name
-		[crashInfo setObject:[exception name] forKey:@"name"];
+		// exception name and reason
+		[dictionary setObject:[exception name] forKey:@"exception name"];
+		[dictionary setObject:[exception reason] forKey:@"exception reason"];
 		
-		// exception reason
-		[crashInfo setObject:[exception reason] forKey:@"reason"];
+#if TARGET_OS_IPHONE
 		
 		// view controller
 		NSString *viewController = HTCurrentViewController();
 		if (viewController != nil) {
-			[crashInfo setObject:viewController forKey:@"view controller"];
+			[dictionary setObject:viewController forKey:@"view controller"];
 		}
+		
+#endif
 		
 		// environment info
 		NSDictionary *environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
-		[crashInfo setObject:environmentInfo forKey:@"info"];
+		[dictionary setObject:environmentInfo forKey:@"environment info"];
 		
         // write data
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:crashInfo];
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
         NSUInteger length = [data length];
         write(fd, &length, sizeof(unsigned long));
         write(fd, [data bytes], length);
@@ -104,7 +104,6 @@ int ht_open_file(int type) {
     if (fd > -1) {
         write(fd, &HTNoticeFileVersion, sizeof(int));
         write(fd, &type, sizeof(int));
-		ht_notice_info.os_version_len = 0;
         write(fd, &ht_notice_info.os_version_len, sizeof(unsigned long));
         if (ht_notice_info.os_version_len > 0) {
             write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
@@ -306,139 +305,6 @@ void HTReleaseNoticeInfo() {
 }
 
 #pragma mark - notice information on disk
-void HTReadNoticeInfoAtPath(NSString *path) {
-    NSString *extension = [path pathExtension];
-    if (![extension isEqualToString:HTNotifierNoticePathExtension]) {
-        return;
-    }
-    
-    // get file data
-    NSUInteger location = 0;
-    NSUInteger length = 0;
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    
-    // get version
-    int version;
-    [data getBytes:&version range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
-    HTLog(@"version:%d", version);
-    
-    // get type
-    int type;
-    [data getBytes:&type range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
-    HTLog(@"type:%d", type);
-    
-    // os version
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	NSString *OSVersion = nil;
-	if (length > 0) {
-		char * os_version = malloc(length * sizeof(char));
-		[data getBytes:os_version range:NSMakeRange(location, length)];
-		location += length;
-		OSVersion = [NSString stringWithUTF8String:os_version];
-		free(os_version);
-	}
-	HTLog(@"os:%@", OSVersion);
-    
-    // platform
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	NSString *platform = nil;
-	if (length > 0) {
-		char * _platform = malloc(length * sizeof(char));
-		[data getBytes:_platform range:NSMakeRange(location, length)];
-		location += length;
-		platform = [NSString stringWithUTF8String:_platform];
-		free(_platform);
-	}
-    HTLog(@"platform:%@", platform);
-    
-    // app version
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	NSString *appVersion = nil;
-	if (length > 0) {
-		char * app_version = malloc(length * sizeof(char));
-		[data getBytes:app_version range:NSMakeRange(location, length)];
-		location += length;
-		appVersion = [NSString stringWithUTF8String:app_version];
-		free(app_version);
-	}
-    HTLog(@"app:%@", appVersion);
-    
-    // environment
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	NSString *environment = nil;
-	if (length > 0) {
-		char * _environment = malloc(length * sizeof(char));
-		[data getBytes:_environment range:NSMakeRange(location, length)];
-		location += length;
-		environment = [NSString stringWithUTF8String:_environment];
-		free(_environment);
-	}
-    HTLog(@"environment:%@", environment);
-    
-    if (type == HTSignalNoticeType) {
-		
-		// signal
-        int signal;
-        [data getBytes:&signal range:NSMakeRange(location, sizeof(int))];
-        location += sizeof(int);
-        HTLog(@"signal:%d", signal);
-		
-		// call stack
-		NSUInteger i = location;
-		length = [data length];
-		const char * bytes = [data bytes];
-		NSMutableArray *callStack = [NSMutableArray array];
-		while (i < length) {
-			if (bytes[i] == '\0') {
-				NSData *line = [data subdataWithRange:NSMakeRange(location, i - location)];
-				NSString *lineString = [[NSString alloc]
-										initWithBytes:[line bytes]
-										length:[line length]
-										encoding:NSUTF8StringEncoding];
-				[callStack addObject:lineString];
-				[lineString release];
-				if (i + 1 < length && bytes[i + 1] == '\n') { i += 2; }
-				else { i++; }
-				location = i;
-			}
-			else { i++; }
-		}
-		HTLog(@"call stack:%@", callStack);
-		
-    }
-    else if (type == HTExceptionNoticeType) {
-        
-		// get dictionary
-		[data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-		location += sizeof(unsigned long);
-		NSData *crashInfo = [data subdataWithRange:NSMakeRange(location, length)];
-		location += length;
-		NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:crashInfo];
-		
-		// call stack
-		HTLog(@"call stack:\n%@", [dictionary objectForKey:@"symbols"]);
-		
-		// exception name
-		HTLog(@"exception name:%@", [dictionary objectForKey:@"name"]);
-		
-		// exception reason
-		HTLog(@"exception reason:%@", [dictionary objectForKey:@"reason"]);
-		
-		// call stack
-		HTLog(@"view controller:%@", [dictionary objectForKey:@"view controller"]);
-
-		// environment info
-		HTLog(@"environment info:\n%@", [dictionary objectForKey:@"info"]);
-        
-    }
-    
-}
 NSString * HTNoticesDirectory() {
 #if TARGET_OS_IPHONE
 	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);

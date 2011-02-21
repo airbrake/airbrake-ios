@@ -10,81 +10,144 @@
 
 #import "DDXML.h"
 
+int HTNoticeFileVersion = 1;
+int HTSignalNoticeType = 1;
+int HTExceptionNoticeType = 2;
+
 @implementation HTNotice
 
-@synthesize operatingSystemVersion;
-@synthesize applicationVersion;
-@synthesize executableName;
-@synthesize exceptionName;
-@synthesize exceptionReason;
-@synthesize platform;
-@synthesize environmentName;
-@synthesize environmentInfo;
-@synthesize callStack;
-@synthesize viewControllerName;
+@synthesize operatingSystem=_operatingSystem;
+@synthesize applicationVersion=_applicationVersion;
+@synthesize exceptionName=_exceptionName;
+@synthesize exceptionReason=_exceptionReason;
+@synthesize platform=_platform;
+@synthesize environmentName=_environmentName;
+@synthesize environmentInfo=_environmentInfo;
+@synthesize callStack=_callStack;
+@synthesize viewControllerName=_viewControllerName;
 
-#pragma mark -
-#pragma mark NSCoder
-- (id)initWithCoder:(NSCoder *)decoder {
-    self = [super init];
-	if (self) {
-		NSInteger version = [decoder decodeInt32ForKey:@"archive_version"];
-		if (version >= 1) {
-			self.operatingSystemVersion = [decoder decodeObjectForKey:@"os_version"];
-			self.applicationVersion = [decoder decodeObjectForKey:@"app_version"];
-			self.exceptionName = [decoder decodeObjectForKey:@"exc_name"];
-			self.exceptionReason = [decoder decodeObjectForKey:@"exc_reason"];
-			self.platform = [decoder decodeObjectForKey:@"platform"];
-			self.callStack = [decoder decodeObjectForKey:@"backtrace"];
-			self.environmentName = [decoder decodeObjectForKey:@"env_name"];
-			self.environmentInfo = [decoder decodeObjectForKey:@"env_info"];
-			self.viewControllerName = [decoder decodeObjectForKey:@"view_controller"];
-		}
-		if (version >= 2) {
-			self.executableName = [decoder decodeObjectForKey:@"executable"];
-		}
-	}
-	return self;
-}
-- (void)encodeWithCoder:(NSCoder *)encoder {
-	[encoder encodeInt32:2 forKey:@"archive_version"];
-	[encoder encodeObject:self.operatingSystemVersion forKey:@"os_version"];
-	[encoder encodeObject:self.applicationVersion forKey:@"app_version"];
-	[encoder encodeObject:self.exceptionName forKey:@"exc_name"];
-	[encoder encodeObject:self.exceptionReason forKey:@"exc_reason"];
-	[encoder encodeObject:self.platform forKey:@"platform"];
-	[encoder encodeObject:self.callStack forKey:@"backtrace"];
-	[encoder encodeObject:self.environmentName forKey:@"env_name"];
-	[encoder encodeObject:self.environmentInfo forKey:@"env_info"];
-	[encoder encodeObject:self.viewControllerName forKey:@"view_controller"];
-	[encoder encodeObject:self.executableName forKey:@"executable"];
-}
-
-#pragma mark -
-#pragma mark class methods
-+ (HTNotice *)notice {
+#pragma mark - factory method to create notice
++ (HTNotice *)noticeWithContentsOfFile:(NSString *)path {
+	NSString *extension = [path pathExtension];
+    if (![extension isEqualToString:HTNotifierNoticePathExtension]) {
+        return nil;
+    }
+	
 	HTNotice *notice = [[HTNotice alloc] init];
 	
-	notice.operatingSystemVersion = [NSString stringWithUTF8String:ht_notice_info.os_version];
-	notice.platform = [NSString stringWithUTF8String:ht_notice_info.platform];
-	notice.applicationVersion = [NSString stringWithUTF8String:ht_notice_info.app_version];
-	notice.environmentName = [NSString stringWithUTF8String:ht_notice_info.env_name];
+	// stuff
+	NSData *data = [NSData dataWithContentsOfFile:path];
+	NSUInteger location = 0;
+	NSUInteger length = 0;
 	
-	notice.executableName = HTExecutableName();
-#if TARGET_OS_IPHONE
-	notice.viewControllerName = HTCurrentViewController();
-#endif
-	notice.environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
+	// get version
+    int version;
+    [data getBytes:&version range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    
+    // get type
+    int type;
+    [data getBytes:&type range:NSMakeRange(location, sizeof(int))];
+    location += sizeof(int);
+    
+    // os version
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
+	if (length > 0) {
+		char * value_str = malloc(length * sizeof(char));
+		[data getBytes:value_str range:NSMakeRange(location, length)];
+		location += length;
+		notice.operatingSystem = [NSString stringWithUTF8String:value_str];
+		free(value_str);
+	}
+    
+    // platform
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
+	if (length > 0) {
+		char * value_str = malloc(length * sizeof(char));
+		[data getBytes:value_str range:NSMakeRange(location, length)];
+		location += length;
+		notice.platform = [NSString stringWithUTF8String:value_str];
+		free(value_str);
+	}
+    
+    // app version
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
+	if (length > 0) {
+		char * value_str = malloc(length * sizeof(char));
+		[data getBytes:value_str range:NSMakeRange(location, length)];
+		location += length;
+		notice.applicationVersion = [NSString stringWithUTF8String:value_str];
+		free(value_str);
+	}
+    
+    // environment
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
+	if (length > 0) {
+		char * value_str = malloc(length * sizeof(char));
+		[data getBytes:value_str range:NSMakeRange(location, length)];
+		location += length;
+		notice.environmentName = [NSString stringWithUTF8String:value_str];
+		free(value_str);
+	}
+	
+	if (type == HTSignalNoticeType) {
+		
+		// signal
+        int signal;
+        [data getBytes:&signal range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+		
+		// exception name and reason
+		notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
+		notice.exceptionReason = @"Application recieved signal";
+		
+		// call stack
+		NSUInteger i = location;
+		length = [data length];
+		const char * bytes = [data bytes];
+		NSMutableArray *array = [NSMutableArray array];
+		while (i < length) {
+			if (bytes[i] == '\0') {
+				NSData *line = [data subdataWithRange:NSMakeRange(location, i - location)];
+				NSString *lineString = [[NSString alloc]
+										initWithBytes:[line bytes]
+										length:[line length]
+										encoding:NSUTF8StringEncoding];
+				[array addObject:lineString];
+				[lineString release];
+				if (i + 1 < length && bytes[i + 1] == '\n') { i += 2; }
+				else { i++; }
+				location = i;
+			}
+			else { i++; }
+		}
+		notice.callStack = array;
+		
+    }
+	else if (type == HTExceptionNoticeType) {
+        
+		// get dictionary
+		[data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+		location += sizeof(unsigned long);
+		NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
+		location += length;
+		NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
+		notice.environmentInfo = [dictionary objectForKey:@"environment info"];
+		notice.exceptionName = [dictionary objectForKey:@"exception name"];
+		notice.exceptionReason = [dictionary objectForKey:@"exception reason"];
+		notice.callStack = [dictionary objectForKey:@"call stack"];
+		notice.viewControllerName = [dictionary objectForKey:@"view controller"];
+        
+    }
+	
 	return [notice autorelease];
 }
-+ (HTNotice *)noticeWithException:(NSException *)exception {
-	HTNotice *notice = [HTNotice notice];
-	notice.exceptionName = [exception name];
-	notice.exceptionReason = [exception reason];
-	NSArray *addresses = [exception callStackReturnAddresses];
-	notice.callStack = HTCallStackSymbolsFromReturnAddresses(addresses);
-	return notice;
-}
+
+#pragma mark - class methods
 + (HTNotice *)testNotice {
 	HTNotice *notice = [HTNotice notice];
 	notice.exceptionName = @"Test Crash Report";
@@ -121,57 +184,54 @@
 	return [NSKeyedUnarchiver unarchiveObjectWithFile:file];
 }
 
-#pragma mark -
-#pragma mark object methods
+#pragma mark - object methods
 - (NSString *)hoptoadXMLString {
+	
+	// setup elements
 	DDXMLElement *e1;
 	DDXMLElement *e2;
 	DDXMLElement *e3;
-	
-	// setup payload
-	DDXMLElement *payload;
-	payload = [DDXMLElement elementWithName:@"notice"];
-	[payload addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.0"]];
+	DDXMLElement *root = [DDXMLElement elementWithName:@"notice"];;
+	[root addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.0"]];
 	
 	// set api key
 	NSString *apiKey = [[HTNotifier sharedNotifier] apiKey];
 	e1 = [DDXMLElement elementWithName:@"api-key" stringValue:(apiKey == nil) ? @"" : apiKey];
-	[payload addChild:e1];
+	[root addChild:e1];
 	
 	// set notifier information
 	e1 = [DDXMLElement elementWithName:@"notifier"];
 #if TARGET_OS_IPHONE
 	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
-	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
 #else
 	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad Mac Notifier"]];
-	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
 #endif
+	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
 	[e1 addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
-	[payload addChild:e1];
+	[root addChild:e1];
 	
 	// set error information
+	NSString *message = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
 	e1 = [DDXMLElement elementWithName:@"error"];
 	[e1 addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
-	NSString *reason = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
-	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:reason]];
+	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
 	e2 = [DDXMLElement elementWithName:@"backtrace"];
-	NSArray *parsedStack = HTParseCallstack(self.callStack);
-	for (NSDictionary *line in parsedStack) {
-		DDXMLElement *lineElement = [DDXMLElement elementWithName:@"line"];
-		[lineElement addAttribute:
+	NSArray *stack = HTParseCallstack(self.callStack);
+	for (NSDictionary *line in stack) {
+		e3 = [DDXMLElement elementWithName:@"line"];
+		[e3 addAttribute:
 		 [DDXMLElement attributeWithName:@"number" stringValue:
 		  [[line objectForKey:@"number"] stringValue]]];
-		[lineElement addAttribute:
+		[e3 addAttribute:
 		 [DDXMLElement attributeWithName:@"file" stringValue:
 		  [line objectForKey:@"file"]]];
-		[lineElement addAttribute:
+		[e3 addAttribute:
 		 [DDXMLElement attributeWithName:@"method" stringValue:
 		  [line objectForKey:@"method"]]];
-		[e2 addChild:lineElement];
+		[e2 addChild:e3];
 	}
 	[e1 addChild:e2];
-	[payload addChild:e1];
+	[root addChild:e1];
 	
 	// set request info
 	e1 = [DDXMLElement elementWithName:@"request"];
@@ -180,40 +240,32 @@
 	[e2 setStringValue:self.viewControllerName];
 	[e1 addChild:e2];
 	e2 = [DDXMLElement elementWithName:@"action"];
-	[e2 setStringValue:HTActionFromCallstack(parsedStack)];
+	[e2 setStringValue:HTActionFromCallstack(stack)];
 	[e1 addChild:e2];
 	e2 = [DDXMLElement elementWithName:@"cgi-data"];
-	NSMutableDictionary *cgi = [NSMutableDictionary dictionaryWithDictionary:self.environmentInfo];
-	if (self.platform != nil) { [cgi setObject:self.platform forKey:@"Device"]; }
-	if (self.applicationVersion != nil) { [cgi setObject:self.applicationVersion forKey:@"App Version"]; }
-	if (self.operatingSystemVersion != nil) { [cgi setObject:self.operatingSystemVersion forKey:@"Operating System"]; }
-	for (id key in [cgi allKeys]) {
-		id var = [cgi objectForKey:key];
+	for (id key in [self.environmentInfo allKeys]) {
+		id var = [self.environmentInfo objectForKey:key];
 		e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
 		[e3 addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:[key description]]];
 		[e2 addChild:e3];
 	}
 	[e1 addChild:e2];
-	[payload addChild:e1];
+	[root addChild:e1];
 	
 	// set server environment
 	e1 = [DDXMLElement elementWithName:@"server-environment"];
 	[e1 addChild:[DDXMLElement elementWithName:@"environment-name" stringValue:self.environmentName]];
-	[payload addChild:e1];
+	[root addChild:e1];
 	
 	// return
-	return [payload XMLString];
+	return [root XMLString];
 }
 - (NSData *)hoptoadXMLData {
 	return [[self hoptoadXMLString] dataUsingEncoding:NSUTF8StringEncoding];
 }
-- (void)writeToFile:(NSString *)file {
-	[NSKeyedArchiver archiveRootObject:self toFile:file];
-}
 - (void)dealloc {
-	self.operatingSystemVersion = nil;
+	self.operatingSystem = nil;
 	self.applicationVersion = nil;
-	self.executableName = nil;
 	self.exceptionName = nil;
 	self.exceptionReason = nil;
 	self.platform = nil;
@@ -221,7 +273,6 @@
 	self.environmentInfo = nil;
 	self.callStack = nil;
 	self.viewControllerName = nil;
-	
 	[super dealloc];
 }
 

@@ -163,19 +163,17 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	
 }
 - (void)postNoticeWithPath:(NSString *)path {
-	
-#if 0
     
 	// get notice payload
-	HTNotice *notice = [HTNotice readFromFile:path];
-	NSData *xmlData = [notice hoptoadXMLData];
+	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+	NSData *data = [notice hoptoadXMLData];
 	
 	// create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
 	[request setTimeoutInterval:10.0];
 	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
-	[request setHTTPBody:xmlData];
+	[request setHTTPBody:data];
 	
 	// perform request
 	NSHTTPURLResponse *response = nil;
@@ -208,12 +206,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			  responseString);
 		[responseString release];
 	}
-    
-#else
-    
-    HTReadNoticeInfoAtPath(path);
-    
-#endif
     
 }
 - (BOOL)isHoptoadReachable {
