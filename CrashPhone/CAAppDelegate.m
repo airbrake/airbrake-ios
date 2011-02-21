@@ -17,17 +17,10 @@ void ht_handle_signal(int);
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-#if 1
-	[HTNotifier startNotifierWithAPIKey:@"a"
+	[HTNotifier startNotifierWithAPIKey:@""
 						environmentName:HTNotifierAppStoreEnvironment];
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
-#else
-    for (int i = 0; i < 100; i++) {
-        HTInitNoticeInfo();
-        HTReleaseNoticeInfo();
-    }
-#endif
     //[[HTNotifier sharedNotifier] setStripCallStack:YES];
 	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
@@ -41,15 +34,13 @@ void ht_handle_signal(int);
 	[NSException raise:NSInvalidArgumentException format:@"test exception"];
 }
 - (IBAction)signal:(id)sender {
-	//raise(SIGSEGV);
-    ht_handle_signal(SIGSEGV);
+	raise(SIGSEGV);
 }
 
 #pragma mark -
 #pragma mark memory management
 - (void)dealloc {
 	self.window = nil;
-	
     [super dealloc];
 }
 
@@ -61,9 +52,6 @@ void ht_handle_signal(int);
 }
 - (void)notifierDidHandleException:(NSException *)exc {
 	NSLog(@"%s %@", __PRETTY_FUNCTION__, exc);
-}
-- (void)notifierDidHandleSignal:(NSInteger)signal {
-	NSLog(@"%s %d", __PRETTY_FUNCTION__, signal);
 }
 - (void)notifierWillDisplayAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);

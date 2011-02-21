@@ -16,19 +16,19 @@ typedef struct ht_notice_info_t {
 	
 	// os version
 	const char *os_version;
-	int os_version_len;
+	unsigned long os_version_len;
 	
 	// platform
 	const char *platform;
-	int platform_len;
+	unsigned long platform_len;
 	
 	// app version
 	const char *app_version;
-	int app_version_len;
+	unsigned long app_version_len;
 	
 	// environment name
 	const char *env_name;
-	int env_name_len;
+	unsigned long env_name_len;
 	
 } ht_notice_info_t;
 ht_notice_info_t ht_notice_info;

@@ -37,21 +37,10 @@ void HTReadNoticeInfoAtPath(NSString *);
 NSString * HTNoticesDirectory();
 NSArray * HTNotices();
 
-
-
-
-// get a list of all handled signals
-NSArray * HTHandledSignals();
-
-// get symbolicated call stack given return addresses
+// callstack utilities
 NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *);
-
-// parse callstack
-NSArray * HTParseCallstack(NSArray *symbols);
-
-// get action from callstack
-NSString * HTActionFromCallstack(NSArray *callStack);
-
+NSArray * HTParseCallstack(NSArray *);
+NSString * HTActionFromCallstack(NSArray *);
 
 /*
  returns a string with all of the hoptoad variables

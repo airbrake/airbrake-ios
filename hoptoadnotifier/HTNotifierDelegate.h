@@ -52,7 +52,6 @@
  
  */
 - (void)notifierDidHandleException:(NSException *)exc;
-- (void)notifierDidHandleSignal:(NSInteger)signal;
 
 #if TARGET_OS_IPHONE
 /*

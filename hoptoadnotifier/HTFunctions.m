@@ -14,51 +14,74 @@
 
 #import "HTNotifier.h"
 
+int ht_signals_count = 6;
+int ht_signals[] = {
+	SIGABRT,
+	SIGBUS,
+	SIGFPE,
+	SIGILL,
+	SIGSEGV,
+	SIGTRAP
+};
+
 // file flags
 static int HTNoticeFileVersion = 1;
 static int HTSignalNoticeType = 1;
 static int HTExceptionNoticeType = 2;
 
 // internal function prototypes
-void ht_handle_signal(int);
+void ht_handle_signal(int, siginfo_t *, void *);
 void ht_handle_exception(NSException *);
 int ht_open_file(int);
 
 #pragma mark crash time methods
-void ht_handle_signal(int signal) {
+void ht_handle_signal(int signal, siginfo_t *info, void *context) {
     HTStopSignalHandler();
     int fd = ht_open_file(HTSignalNoticeType);
     if (fd > -1) {
+		
+		// signal
         write(fd, &signal, sizeof(int));
+		
+		// backtraces
+		int count = 128;
+		void *frames[count];
+		count = backtrace(frames, count);
+		backtrace_symbols_fd(frames, count, fd);
+		
+		// close
         close(fd);
     }
+	
+	// re raise
+	raise(signal);
 }
 void ht_handle_exception(NSException *exception) {
     HTStopHandlers();
     int fd = ht_open_file(HTExceptionNoticeType);
     if (fd > -1) {
         
+		NSData *data;
         const char * value_str;
-        int length;
+        unsigned long length;
         
         // addresses
         NSArray *addresses = [exception callStackReturnAddresses];
-        length = [addresses count];
-        write(fd, &length, sizeof(int));
-        for (int i = 0; i < length; i++) {
-            unsigned long addr = [[addresses objectAtIndex:i] unsignedIntegerValue];
-            write(fd, &addr, sizeof(unsigned long));
-        }
+		NSArray *symbols = HTCallStackSymbolsFromReturnAddresses(addresses);
+		data = [NSKeyedArchiver archivedDataWithRootObject:symbols];
+        length = [data length];
+        write(fd, &length, sizeof(unsigned long));
+        write(fd, [data bytes], length);
         
         // exception name
         value_str = [[exception name] UTF8String];
         if (value_str == NULL) {
             length = 0;
-            write(fd, &length, sizeof(int));
+            write(fd, &length, sizeof(unsigned long));
         }
         else {
             length = (strlen(value_str) + 1) * sizeof(char);
-            write(fd, &length, sizeof(int));
+            write(fd, &length, sizeof(unsigned long));
             write(fd, value_str, length);
         }
         
@@ -66,11 +89,11 @@ void ht_handle_exception(NSException *exception) {
         value_str = [[exception reason] UTF8String];
         if (value_str == NULL) {
             length = 0;
-            write(fd, &length, sizeof(int));
+            write(fd, &length, sizeof(unsigned long));
         }
         else {
             length = (strlen(value_str) + 1) * sizeof(char);
-            write(fd, &length, sizeof(int));
+            write(fd, &length, sizeof(unsigned long));
             write(fd, value_str, length);
         }
         
@@ -78,19 +101,19 @@ void ht_handle_exception(NSException *exception) {
         value_str = [HTCurrentViewController() UTF8String];
         if (value_str == NULL) {
             length = 0;
-            write(fd, &length, sizeof(int));
+            write(fd, &length, sizeof(unsigned long));
         }
         else {
             length = (strlen(value_str) + 1) * sizeof(char);
-            write(fd, &length, sizeof(int));
+            write(fd, &length, sizeof(unsigned long));
             write(fd, value_str, length);
         }
         
         // environment info
         NSDictionary *info = [[HTNotifier sharedNotifier] environmentInfo];
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:info];
+        data = [NSKeyedArchiver archivedDataWithRootObject:info];
         length = [data length];
-        write(fd, &length, sizeof(int));
+        write(fd, &length, sizeof(unsigned long));
         write(fd, [data bytes], length);
         
         // close file
@@ -106,19 +129,19 @@ int ht_open_file(int type) {
     if (fd > -1) {
         write(fd, &HTNoticeFileVersion, sizeof(int));
         write(fd, &type, sizeof(int));
-        write(fd, &ht_notice_info.os_version_len, sizeof(int));
+        write(fd, &ht_notice_info.os_version_len, sizeof(unsigned long));
         if (ht_notice_info.os_version_len > 0) {
             write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
         }
-        write(fd, &ht_notice_info.platform_len, sizeof(int));
+        write(fd, &ht_notice_info.platform_len, sizeof(unsigned long));
         if (ht_notice_info.platform_len > 0) {
             write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
         }
-        write(fd, &ht_notice_info.app_version_len, sizeof(int));
+        write(fd, &ht_notice_info.app_version_len, sizeof(unsigned long));
         if (ht_notice_info.app_version_len > 0) {
             write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
         }
-        write(fd, &ht_notice_info.env_name_len, sizeof(int));
+        write(fd, &ht_notice_info.env_name_len, sizeof(unsigned long));
         if (ht_notice_info.env_name_len > 0) {
             write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
         }
@@ -135,12 +158,12 @@ void HTStartExceptionHandler() {
     NSSetUncaughtExceptionHandler(&ht_handle_exception);
 }
 void HTStartSignalHandler() {
-    NSArray *signals = HTHandledSignals();
-	for (NSUInteger i = 0; i < [signals count]; i++) {
-		NSInteger signal = [[signals objectAtIndex:i] integerValue];
+	for (NSUInteger i = 0; i < ht_signals_count; i++) {
+		int signal = ht_signals[i];
 		struct sigaction action;
 		sigemptyset(&action.sa_mask);
-		action.sa_handler = ht_handle_signal;
+		action.sa_flags = SA_SIGINFO;
+		action.sa_sigaction = ht_handle_signal;
 		if (sigaction(signal, &action, NULL) != 0) {
             HTLog(@"unable to register signal handler for %s", strsignal(signal));
 		}
@@ -154,9 +177,8 @@ void HTStopExceptionHandler() {
     NSSetUncaughtExceptionHandler(NULL);
 }
 void HTStopSignalHandler() {
-    NSArray *signals = HTHandledSignals();
-	for (NSUInteger i = 0; i < [signals count]; i++) {
-		NSInteger signal = [[signals objectAtIndex:i] integerValue];
+	for (NSUInteger i = 0; i < ht_signals_count; i++) {
+		int signal = ht_signals[i];
 		struct sigaction action;
 		sigemptyset(&action.sa_mask);
 		action.sa_handler = SIG_DFL;
@@ -332,8 +354,8 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     HTLog(@"type:%d", type);
     
     // os version
-    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
     char * os_version = malloc(length * sizeof(char));
     [data getBytes:os_version range:NSMakeRange(location, length)];
     location += length;
@@ -342,8 +364,8 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     HTLog(@"os:%@", OSVersion);
     
     // platform
-    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
     char * _platform = malloc(length * sizeof(char));
     [data getBytes:_platform range:NSMakeRange(location, length)];
     location += length;
@@ -352,8 +374,8 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     HTLog(@"platform:%@", platform);
     
     // app version
-    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
     char * app_version = malloc(length * sizeof(char));
     [data getBytes:app_version range:NSMakeRange(location, length)];
     location += length;
@@ -362,8 +384,8 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     HTLog(@"app:%@", appVersion);
     
     // environment
-    [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
+    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+    location += sizeof(unsigned long);
     char * _environment = malloc(length * sizeof(char));
     [data getBytes:_environment range:NSMakeRange(location, length)];
     location += length;
@@ -372,31 +394,49 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     HTLog(@"environment:%@", environment);
     
     if (type == HTSignalNoticeType) {
+		
+		// signal
         int signal;
         [data getBytes:&signal range:NSMakeRange(location, sizeof(int))];
         location += sizeof(int);
         HTLog(@"signal:%d", signal);
+		
+		// call stack
+		NSUInteger i = location;
+		length = [data length];
+		const char * bytes = [data bytes];
+		NSMutableArray *callStack = [NSMutableArray array];
+		while (i < length) {
+			if (bytes[i] == '\0') {
+				NSData *line = [data subdataWithRange:NSMakeRange(location, i - location)];
+				NSString *lineString = [[NSString alloc]
+										initWithBytes:[line bytes]
+										length:[line length]
+										encoding:NSUTF8StringEncoding];
+				[callStack addObject:lineString];
+				[lineString release];
+				if (i + 1 < length && bytes[i + 1] == '\n') { i += 2; }
+				else { i++; }
+				location = i;
+			}
+			else { i++; }
+		}
+		HTLog(@"call stack:%@", callStack);
+		
     }
     else if (type == HTExceptionNoticeType) {
         
         // call stack
-        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-        NSMutableArray *addresses = [NSMutableArray arrayWithCapacity:length];
-        location += sizeof(int);
-        unsigned long _address;
-        for (int i = 0; i < length; i++) {
-            [data getBytes:&_address range:NSMakeRange(location, sizeof(unsigned long))];
-            location += sizeof(unsigned long);
-            NSNumber *address = [NSNumber numberWithUnsignedInteger:_address];
-            [addresses addObject:address];
-        }
-        NSArray *symbols = HTCallStackSymbolsFromReturnAddresses(addresses);
-        HTLog(@"addresses:%@", addresses);
-        HTLog(@"symbols:%@", symbols);
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+		location += sizeof(unsigned long);
+		NSData *symbols = [data subdataWithRange:NSMakeRange(location, length)];
+		location += length;
+        NSArray *callStack = [NSKeyedUnarchiver unarchiveObjectWithData:symbols];
+        HTLog(@"call stack:%@", callStack);
         
         // exception name
-        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-        location += sizeof(int);
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
         char * exception_name = malloc(length * sizeof(char));
         [data getBytes:exception_name range:NSMakeRange(location, length)];
         location += length;
@@ -405,8 +445,8 @@ void HTReadNoticeInfoAtPath(NSString *path) {
         HTLog(@"exception name:%@", exceptionName);
         
         // environment
-        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-        location += sizeof(int);
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
         char * exception_reason = malloc(length * sizeof(char));
         [data getBytes:exception_reason range:NSMakeRange(location, length)];
         location += length;
@@ -415,8 +455,8 @@ void HTReadNoticeInfoAtPath(NSString *path) {
         HTLog(@"environment:%@", exceptionReason);
         
         // view controller
-        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-        location += sizeof(int);
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
         char * view_controller = malloc(length * sizeof(char));
         [data getBytes:view_controller range:NSMakeRange(location, length)];
         location += length;
@@ -425,9 +465,10 @@ void HTReadNoticeInfoAtPath(NSString *path) {
         HTLog(@"view controller:%@", viewController);
         
         // environment info
-        [data getBytes:&length range:NSMakeRange(location, sizeof(int))];
-        location += sizeof(int);
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
         NSData *env_info = [data subdataWithRange:NSMakeRange(location, length)];
+		location += length;
         NSDictionary *environmentInfo = [NSKeyedUnarchiver unarchiveObjectWithData:env_info];
         HTLog(@"environment:%@", environmentInfo);
         
@@ -462,23 +503,7 @@ NSArray * HTNotices() {
 	return crashes;
 }
 
-
-
-
-
-
-
-NSArray * HTHandledSignals() {
-	return [NSArray arrayWithObjects:
-			[NSNumber numberWithInteger:SIGABRT],
-			[NSNumber numberWithInteger:SIGBUS],
-			[NSNumber numberWithInteger:SIGFPE],
-			[NSNumber numberWithInteger:SIGILL],
-			[NSNumber numberWithInteger:SIGSEGV],
-			[NSNumber numberWithInteger:SIGTRAP],
-			nil];
-}
-
+#pragma mark - callstack functions
 NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	int frames = [addresses count];
 	void *stack[frames];
@@ -494,12 +519,14 @@ NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	free(strs);
 	return backtrace;
 }
-
 NSArray * HTParseCallstack(NSArray *symbols) {
 	NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 	NSCharacterSet *nonWhiteSpace = [whiteSpace invertedSet];
 	NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
+	BOOL strip = [[HTNotifier sharedNotifier] stripCallStack];
 	for (NSString *line in symbols) {
+		
+		// create scanner
 		NSScanner *scanner = [NSScanner scannerWithString:line];
 		
 		// line number
@@ -509,10 +536,10 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 		// binary name
 		NSString *binary;
 		[scanner scanCharactersFromSet:nonWhiteSpace intoString:&binary];
-
+		
 		// method
         NSString *method = @"";
-        if ([[HTNotifier sharedNotifier] stripCallStack]) {
+        if (strip) {
             [scanner scanCharactersFromSet:nonWhiteSpace intoString:NULL];
             NSUInteger startLocation = [scanner scanLocation];
             NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
@@ -532,10 +559,10 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 		  binary, @"file",
 		  method, @"method",
 		  nil]];
+		
 	}
 	return parsed;
 }
-
 NSString * HTActionFromCallstack(NSArray *callStack) {
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"file like %@", HTExecutableName()];
 	NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"number" ascending:YES];
@@ -544,7 +571,7 @@ NSString * HTActionFromCallstack(NSArray *callStack) {
 	matching = [matching valueForKey:@"method"];
 	[sort release];
 	for (NSString *file in matching) {
-		if ([file isEqualToString:@"HTHandleSignal"]) {
+		if ([file isEqualToString:@"ht_handle_signal"]) {
 			continue;
 		}
 		else {
@@ -554,28 +581,22 @@ NSString * HTActionFromCallstack(NSArray *callStack) {
 	return @"";
 }
 
-
-
-
-
+#pragma mark - string substitution
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
-	NSMutableString *mutable = [string mutableCopy];
 	
-	[mutable replaceOccurrencesOfString:HTNotifierBundleName
-							 withString:HTApplicationName()
-								options:0
-								  range:NSMakeRange(0, [mutable length])];
+	NSString *toReturn = string;
 	
-	[mutable replaceOccurrencesOfString:HTNotifierBundleVersion
-							 withString:HTApplicationVersion()
-								options:0
-								  range:NSMakeRange(0, [mutable length])];
+	toReturn = [toReturn
+				stringByReplacingOccurrencesOfString:HTNotifierBundleName
+				withString:HTApplicationName()];
+	toReturn = [toReturn
+				stringByReplacingOccurrencesOfString:HTNotifierBundleVersion
+				withString:HTApplicationVersion()];
 	
-	NSString *toReturn = [NSString stringWithString:mutable];
-	[mutable release];
 	return toReturn;
 }
 
+#pragma mark - get view controller
 #if TARGET_OS_IPHONE
 NSString * HTCurrentViewController() {
 	// view controller to inspect
