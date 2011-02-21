@@ -298,11 +298,13 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	[super dealloc];
 }
 - (void)writeTestNotice {
-    NSString *noticePath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
-    noticePath = [noticePath stringByAppendingPathExtension:HTNotifierNoticePathExtension];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) { return; }
+    NSString *testPath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
+    testPath = [testPath stringByAppendingPathExtension:HTNotifierNoticePathExtension];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:testPath]) { return; }
 	@try { [NSException raise:NSInvalidArgumentException format:@"This is a test exception"]; }
 	@catch (NSException * e) { ht_handle_exception(e); }
+	NSString *noticePath = [NSString stringWithUTF8String:ht_notice_info.notice_path];
+	[[NSFileManager defaultManager] moveItemAtPath:noticePath toPath:testPath error:nil];
 }
 
 @end
