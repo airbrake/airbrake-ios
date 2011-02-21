@@ -34,9 +34,9 @@ typedef struct ht_notice_info_t {
 ht_notice_info_t ht_notice_info;
 
 // file flags
-extern int HTNoticeFileVersion;
-extern int HTSignalNoticeType;
-extern int HTExceptionNoticeType;
+extern const int HTNoticeFileVersion;
+extern const int HTSignalNoticeType;
+extern const int HTExceptionNoticeType;
 
 /*
  Instances of the HTNotice class represent a single crash

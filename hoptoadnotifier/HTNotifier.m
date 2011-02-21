@@ -180,9 +180,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	// perform request
 	NSHTTPURLResponse *response = nil;
 	NSError *error = nil;
-	NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
-												 returningResponse:&response
-															 error:&error];
+	NSData *responseBody = [NSURLConnection
+							sendSynchronousRequest:request
+							returningResponse:&response
+							error:&error];
 	
 	// error checking
 	if (error == nil) {

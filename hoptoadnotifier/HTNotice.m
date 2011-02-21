@@ -12,9 +12,9 @@
 
 #import "DDXML.h"
 
-int HTNoticeFileVersion = 1;
-int HTSignalNoticeType = 1;
-int HTExceptionNoticeType = 2;
+const int HTNoticeFileVersion = 1;
+const int HTSignalNoticeType = 1;
+const int HTExceptionNoticeType = 2;
 
 @implementation HTNotice
 
