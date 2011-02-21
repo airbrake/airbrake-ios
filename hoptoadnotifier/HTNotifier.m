@@ -112,9 +112,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			}
 		}
 	}
-    
-    HTLog(@"%s", __PRETTY_FUNCTION__);
-	
+    	
 	[pool drain];
 }
 - (void)postAllNoticesWithAutoreleasePool {

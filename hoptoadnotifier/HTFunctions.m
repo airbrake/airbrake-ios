@@ -61,58 +61,33 @@ void ht_handle_exception(NSException *exception) {
     int fd = ht_open_file(HTExceptionNoticeType);
     if (fd > -1) {
         
-		NSData *data;
-        const char * value_str;
-        unsigned long length;
-        
-        // addresses
+		// container
+		NSMutableDictionary *crashInfo = [NSMutableDictionary dictionaryWithCapacity:5];
+		
+		// addresses
         NSArray *addresses = [exception callStackReturnAddresses];
 		NSArray *symbols = HTCallStackSymbolsFromReturnAddresses(addresses);
-		data = [NSKeyedArchiver archivedDataWithRootObject:symbols];
-        length = [data length];
-        write(fd, &length, sizeof(unsigned long));
-        write(fd, [data bytes], length);
-        
-        // exception name
-        value_str = [[exception name] UTF8String];
-        if (value_str == NULL) {
-            length = 0;
-            write(fd, &length, sizeof(unsigned long));
-        }
-        else {
-            length = (strlen(value_str) + 1) * sizeof(char);
-            write(fd, &length, sizeof(unsigned long));
-            write(fd, value_str, length);
-        }
-        
-        // exception reason
-        value_str = [[exception reason] UTF8String];
-        if (value_str == NULL) {
-            length = 0;
-            write(fd, &length, sizeof(unsigned long));
-        }
-        else {
-            length = (strlen(value_str) + 1) * sizeof(char);
-            write(fd, &length, sizeof(unsigned long));
-            write(fd, value_str, length);
-        }
-        
-        // view controller name
-        value_str = [HTCurrentViewController() UTF8String];
-        if (value_str == NULL) {
-            length = 0;
-            write(fd, &length, sizeof(unsigned long));
-        }
-        else {
-            length = (strlen(value_str) + 1) * sizeof(char);
-            write(fd, &length, sizeof(unsigned long));
-            write(fd, value_str, length);
-        }
-        
-        // environment info
-        NSDictionary *info = [[HTNotifier sharedNotifier] environmentInfo];
-        data = [NSKeyedArchiver archivedDataWithRootObject:info];
-        length = [data length];
+		[crashInfo setObject:symbols forKey:@"symbols"];
+		
+		// exception name
+		[crashInfo setObject:[exception name] forKey:@"name"];
+		
+		// exception reason
+		[crashInfo setObject:[exception reason] forKey:@"reason"];
+		
+		// view controller
+		NSString *viewController = HTCurrentViewController();
+		if (viewController != nil) {
+			[crashInfo setObject:viewController forKey:@"view controller"];
+		}
+		
+		// environment info
+		NSDictionary *environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
+		[crashInfo setObject:environmentInfo forKey:@"info"];
+		
+        // write data
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:crashInfo];
+        NSUInteger length = [data length];
         write(fd, &length, sizeof(unsigned long));
         write(fd, [data bytes], length);
         
@@ -129,6 +104,7 @@ int ht_open_file(int type) {
     if (fd > -1) {
         write(fd, &HTNoticeFileVersion, sizeof(int));
         write(fd, &type, sizeof(int));
+		ht_notice_info.os_version_len = 0;
         write(fd, &ht_notice_info.os_version_len, sizeof(unsigned long));
         if (ht_notice_info.os_version_len > 0) {
             write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
@@ -356,41 +332,53 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     // os version
     [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
     location += sizeof(unsigned long);
-    char * os_version = malloc(length * sizeof(char));
-    [data getBytes:os_version range:NSMakeRange(location, length)];
-    location += length;
-    NSString *OSVersion = [NSString stringWithUTF8String:os_version];
-    free(os_version);
-    HTLog(@"os:%@", OSVersion);
+	NSString *OSVersion = nil;
+	if (length > 0) {
+		char * os_version = malloc(length * sizeof(char));
+		[data getBytes:os_version range:NSMakeRange(location, length)];
+		location += length;
+		OSVersion = [NSString stringWithUTF8String:os_version];
+		free(os_version);
+	}
+	HTLog(@"os:%@", OSVersion);
     
     // platform
     [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
     location += sizeof(unsigned long);
-    char * _platform = malloc(length * sizeof(char));
-    [data getBytes:_platform range:NSMakeRange(location, length)];
-    location += length;
-    NSString *platform = [NSString stringWithUTF8String:_platform];
-    free(_platform);
+	NSString *platform = nil;
+	if (length > 0) {
+		char * _platform = malloc(length * sizeof(char));
+		[data getBytes:_platform range:NSMakeRange(location, length)];
+		location += length;
+		platform = [NSString stringWithUTF8String:_platform];
+		free(_platform);
+	}
     HTLog(@"platform:%@", platform);
     
     // app version
     [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
     location += sizeof(unsigned long);
-    char * app_version = malloc(length * sizeof(char));
-    [data getBytes:app_version range:NSMakeRange(location, length)];
-    location += length;
-    NSString *appVersion = [NSString stringWithUTF8String:app_version];
-    free(app_version);
+	NSString *appVersion = nil;
+	if (length > 0) {
+		char * app_version = malloc(length * sizeof(char));
+		[data getBytes:app_version range:NSMakeRange(location, length)];
+		location += length;
+		appVersion = [NSString stringWithUTF8String:app_version];
+		free(app_version);
+	}
     HTLog(@"app:%@", appVersion);
     
     // environment
     [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
     location += sizeof(unsigned long);
-    char * _environment = malloc(length * sizeof(char));
-    [data getBytes:_environment range:NSMakeRange(location, length)];
-    location += length;
-    NSString *environment = [NSString stringWithUTF8String:_environment];
-    free(_environment);
+	NSString *environment = nil;
+	if (length > 0) {
+		char * _environment = malloc(length * sizeof(char));
+		[data getBytes:_environment range:NSMakeRange(location, length)];
+		location += length;
+		environment = [NSString stringWithUTF8String:_environment];
+		free(_environment);
+	}
     HTLog(@"environment:%@", environment);
     
     if (type == HTSignalNoticeType) {
@@ -426,51 +414,27 @@ void HTReadNoticeInfoAtPath(NSString *path) {
     }
     else if (type == HTExceptionNoticeType) {
         
-        // call stack
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+		// get dictionary
+		[data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
 		location += sizeof(unsigned long);
-		NSData *symbols = [data subdataWithRange:NSMakeRange(location, length)];
+		NSData *crashInfo = [data subdataWithRange:NSMakeRange(location, length)];
 		location += length;
-        NSArray *callStack = [NSKeyedUnarchiver unarchiveObjectWithData:symbols];
-        HTLog(@"call stack:%@", callStack);
-        
-        // exception name
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-        location += sizeof(unsigned long);
-        char * exception_name = malloc(length * sizeof(char));
-        [data getBytes:exception_name range:NSMakeRange(location, length)];
-        location += length;
-        NSString *exceptionName = [NSString stringWithUTF8String:exception_name];
-        free(exception_name);
-        HTLog(@"exception name:%@", exceptionName);
-        
-        // environment
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-        location += sizeof(unsigned long);
-        char * exception_reason = malloc(length * sizeof(char));
-        [data getBytes:exception_reason range:NSMakeRange(location, length)];
-        location += length;
-        NSString *exceptionReason = [NSString stringWithUTF8String:exception_reason];
-        free(exception_reason);
-        HTLog(@"environment:%@", exceptionReason);
-        
-        // view controller
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-        location += sizeof(unsigned long);
-        char * view_controller = malloc(length * sizeof(char));
-        [data getBytes:view_controller range:NSMakeRange(location, length)];
-        location += length;
-        NSString *viewController = [NSString stringWithUTF8String:view_controller];
-        free(view_controller);
-        HTLog(@"view controller:%@", viewController);
-        
-        // environment info
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-        location += sizeof(unsigned long);
-        NSData *env_info = [data subdataWithRange:NSMakeRange(location, length)];
-		location += length;
-        NSDictionary *environmentInfo = [NSKeyedUnarchiver unarchiveObjectWithData:env_info];
-        HTLog(@"environment:%@", environmentInfo);
+		NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:crashInfo];
+		
+		// call stack
+		HTLog(@"call stack:\n%@", [dictionary objectForKey:@"symbols"]);
+		
+		// exception name
+		HTLog(@"exception name:%@", [dictionary objectForKey:@"name"]);
+		
+		// exception reason
+		HTLog(@"exception reason:%@", [dictionary objectForKey:@"reason"]);
+		
+		// call stack
+		HTLog(@"view controller:%@", [dictionary objectForKey:@"view controller"]);
+
+		// environment info
+		HTLog(@"environment info:\n%@", [dictionary objectForKey:@"info"]);
         
     }
     
@@ -583,7 +547,6 @@ NSString * HTActionFromCallstack(NSArray *callStack) {
 
 #pragma mark - string substitution
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
-	
 	NSString *toReturn = string;
 	
 	toReturn = [toReturn

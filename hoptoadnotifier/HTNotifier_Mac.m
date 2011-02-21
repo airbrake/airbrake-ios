@@ -12,8 +12,7 @@
 
 @implementation HTNotifier_Mac
 
-#pragma mark -
-#pragma mark object methods
+#pragma mark - object methods
 - (void)registerNotifications {
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self

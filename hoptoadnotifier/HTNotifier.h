@@ -75,8 +75,8 @@ extern NSString * const HTNotifierReleaseEnvironment;
 @property (nonatomic, readonly) NSMutableDictionary *environmentInfo;
 /*
  
- control whether notices are posted using SSL. your account must support this
- feature
+ control whether notices are posted using SSL. your account
+ must support this feature
  
  default:NO
  
@@ -84,7 +84,8 @@ extern NSString * const HTNotifierReleaseEnvironment;
 @property (nonatomic, assign) BOOL useSSL;
 /*
  
- control wheter the notifier strips hex information from posted callstacks
+ control wheter the notifier strips hex information from
+ posted callstacks
  
  default:NO
  
