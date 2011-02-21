@@ -78,12 +78,6 @@ extern int HTExceptionNoticeType;
 // create an object representation of notice data
 + (HTNotice *)noticeWithContentsOfFile:(NSString *)path;
 
-// create a test notice
-+ (HTNotice *)testNotice;
-
-// read a notice from given path
-+ (HTNotice *)readFromFile:(NSString *)file;
-
 // get a string representation of the hoptoad xml payload
 - (NSString *)hoptoadXMLString;
 
