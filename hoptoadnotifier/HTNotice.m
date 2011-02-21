@@ -6,6 +6,8 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import <objc/runtime.h>
+
 #import "HTNotifier.h"
 
 #import "DDXML.h"
@@ -147,43 +149,6 @@ int HTExceptionNoticeType = 2;
 	return [notice autorelease];
 }
 
-#pragma mark - class methods
-+ (HTNotice *)testNotice {
-	HTNotice *notice = [HTNotice notice];
-	notice.exceptionName = @"Test Crash Report";
-	notice.exceptionReason = @"-[HTNotifier crash]: unrecognized selector sent to instance 0x59476f0";
-	notice.callStack = [NSArray arrayWithObjects:
-						@"0   CoreFoundation                      0x024f98fc __exceptionPreprocess + 156",
-						@"1   libobjc.A.dylib                     0x0230e5de objc_exception_throw + 47",
-						@"2   CoreFoundation                      0x024fb42b -[NSObject(NSObject) doesNotRecognizeSelector:] + 187",
-						@"3   CoreFoundation                      0x0246b116 ___forwarding___ + 966",
-						@"4   CoreFoundation                      0x0246acd2 _CF_forwarding_prep_0 + 50",
-						@"5   CrashPhone                          0x000021ba -[HTNotifier crash] + 48",
-						@"6   UIKit                               0x002bee14 -[UIApplication sendAction:to:from:forEvent:] + 119",
-						@"7   UIKit                               0x003486c8 -[UIControl sendAction:to:forEvent:] + 67",
-						@"8   UIKit                               0x0034ab4a -[UIControl(Internal) _sendActionsForEvents:withEvent:] + 527",
-						@"9   UIKit                               0x003496f7 -[UIControl touchesEnded:withEvent:] + 458",
-						@"10  UIKit                               0x002e22ff -[UIWindow _sendTouchesForEvent:] + 567",
-						@"11  UIKit                               0x002c41ec -[UIApplication sendEvent:] + 447",
-						@"12  UIKit                               0x002c8ac4 _UIApplicationHandleEvent + 7495",
-						@"13  GraphicsServices                    0x02c00afa PurpleEventCallback + 1578",
-						@"14  CoreFoundation                      0x024dadc4 __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__ + 52",
-						@"15  CoreFoundation                      0x0243b737 __CFRunLoopDoSource1 + 215",
-						@"16  CoreFoundation                      0x024389c3 __CFRunLoopRun + 979",
-						@"17  CoreFoundation                      0x02438280 CFRunLoopRunSpecific + 208",
-						@"18  CoreFoundation                      0x024381a1 CFRunLoopRunInMode + 97",
-						@"19  GraphicsServices                    0x02bff2c8 GSEventRunModal + 217",
-						@"20  GraphicsServices                    0x02bff38d GSEventRun + 115",
-						@"21  UIKit                               0x002ccb58 UIApplicationMain + 1160",
-						@"22  CrashPhone                          0x000020a0 main + 102",
-						@"23  CrashPhone                          0x00002031 start + 53",
-						nil];
-	return notice;
-}
-+ (HTNotice *)readFromFile:(NSString *)file {
-	return [NSKeyedUnarchiver unarchiveObjectWithFile:file];
-}
-
 #pragma mark - object methods
 - (NSString *)hoptoadXMLString {
 	
@@ -262,6 +227,19 @@ int HTExceptionNoticeType = 2;
 }
 - (NSData *)hoptoadXMLData {
 	return [[self hoptoadXMLString] dataUsingEncoding:NSUTF8StringEncoding];
+}
+- (NSString *)description {
+	unsigned int count;
+	objc_property_t *properties = class_copyPropertyList([self class], &count);
+	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:count];
+	for (unsigned int i = 0; i < count; i++) {
+		NSString *name = [NSString stringWithUTF8String:property_getName(properties[i])];
+		NSString *value = [self valueForKey:name];
+		if (value != nil) {
+			[dictionary setObject:value forKey:name];
+		}
+	}
+	return [dictionary description];
 }
 - (void)dealloc {
 	self.operatingSystem = nil;

@@ -14,6 +14,7 @@
 #import <sys/event.h>
 
 // internal
+void ht_handle_exception(NSException *);
 static HTNotifier * sharedNotifier = nil;
 static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 #define HTNotifierURL [NSURL URLWithString: \
@@ -166,6 +167,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     
 	// get notice payload
 	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+	HTLog(@"%@", notice);
 	NSData *data = [notice hoptoadXMLData];
 	
 	// create url request
@@ -298,13 +300,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)writeTestNotice {
     NSString *noticePath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
     noticePath = [noticePath stringByAppendingPathExtension:HTNotifierNoticePathExtension];
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) {
-		return;
-	}
-	
-	HTNotice *notice = [HTNotice testNotice];
-	[notice writeToFile:noticePath];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) { return; }
+	@try { [NSException raise:NSInvalidArgumentException format:@"This is a test exception"]; }
+	@catch (NSException * e) { ht_handle_exception(e); }
 }
 
 @end
