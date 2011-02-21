@@ -54,22 +54,16 @@ extern int HTExceptionNoticeType;
  */
 @interface HTNotice : NSObject {
 @private
-	NSString *_operatingSystem;
-	NSString *_applicationVersion;
 	NSString *_exceptionName;
 	NSString *_exceptionReason;
-	NSString *_platform;
 	NSString *_environmentName;
 	NSString *_viewControllerName;
 	NSDictionary *_environmentInfo;
 	NSArray *_callStack;
 }
 
-@property (nonatomic, copy) NSString *operatingSystem;
-@property (nonatomic, copy) NSString *applicationVersion;
 @property (nonatomic, copy) NSString *exceptionName;
 @property (nonatomic, copy) NSString *exceptionReason;
-@property (nonatomic, copy) NSString *platform;
 @property (nonatomic, copy) NSString *environmentName;
 @property (nonatomic, copy) NSString *viewControllerName;
 @property (nonatomic, retain) NSDictionary *environmentInfo;

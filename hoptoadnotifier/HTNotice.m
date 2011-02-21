@@ -18,11 +18,8 @@ int HTExceptionNoticeType = 2;
 
 @implementation HTNotice
 
-@synthesize operatingSystem=_operatingSystem;
-@synthesize applicationVersion=_applicationVersion;
 @synthesize exceptionName=_exceptionName;
 @synthesize exceptionReason=_exceptionReason;
-@synthesize platform=_platform;
 @synthesize environmentName=_environmentName;
 @synthesize environmentInfo=_environmentInfo;
 @synthesize callStack=_callStack;
@@ -36,6 +33,7 @@ int HTExceptionNoticeType = 2;
     }
 	
 	HTNotice *notice = [[HTNotice alloc] init];
+	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:3];
 	
 	// stuff
 	NSData *data = [NSData dataWithContentsOfFile:path];
@@ -59,7 +57,8 @@ int HTExceptionNoticeType = 2;
 		char * value_str = malloc(length * sizeof(char));
 		[data getBytes:value_str range:NSMakeRange(location, length)];
 		location += length;
-		notice.operatingSystem = [NSString stringWithUTF8String:value_str];
+		[info setObject:[NSString stringWithUTF8String:value_str]
+				 forKey:@"Operating System"];
 		free(value_str);
 	}
     
@@ -70,7 +69,8 @@ int HTExceptionNoticeType = 2;
 		char * value_str = malloc(length * sizeof(char));
 		[data getBytes:value_str range:NSMakeRange(location, length)];
 		location += length;
-		notice.platform = [NSString stringWithUTF8String:value_str];
+		[info setObject:[NSString stringWithUTF8String:value_str]
+				 forKey:@"Device"];
 		free(value_str);
 	}
     
@@ -81,7 +81,8 @@ int HTExceptionNoticeType = 2;
 		char * value_str = malloc(length * sizeof(char));
 		[data getBytes:value_str range:NSMakeRange(location, length)];
 		location += length;
-		notice.applicationVersion = [NSString stringWithUTF8String:value_str];
+		[info setObject:[NSString stringWithUTF8String:value_str]
+				 forKey:@"App Version"];
 		free(value_str);
 	}
     
@@ -138,7 +139,7 @@ int HTExceptionNoticeType = 2;
 		NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
 		location += length;
 		NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
-		notice.environmentInfo = [dictionary objectForKey:@"environment info"];
+		[info addEntriesFromDictionary:[dictionary objectForKey:@"environment info"]];
 		notice.exceptionName = [dictionary objectForKey:@"exception name"];
 		notice.exceptionReason = [dictionary objectForKey:@"exception reason"];
 		notice.callStack = [dictionary objectForKey:@"call stack"];
@@ -146,6 +147,7 @@ int HTExceptionNoticeType = 2;
         
     }
 	
+	notice.environmentInfo = info;
 	return [notice autorelease];
 }
 
@@ -242,11 +244,8 @@ int HTExceptionNoticeType = 2;
 	return [dictionary description];
 }
 - (void)dealloc {
-	self.operatingSystem = nil;
-	self.applicationVersion = nil;
 	self.exceptionName = nil;
 	self.exceptionReason = nil;
-	self.platform = nil;
 	self.environmentName = nil;
 	self.environmentInfo = nil;
 	self.callStack = nil;
