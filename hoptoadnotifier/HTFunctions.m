@@ -7,14 +7,10 @@
 //
 
 #import <execinfo.h>
-#import <sys/types.h>
-#import <sys/sysctl.h>
 #import <fcntl.h>
 #import <unistd.h>
 
 #import "HTNotifier.h"
-
-#import "DDXML.h"
 
 // handled signals
 int ht_signals_count = 6;

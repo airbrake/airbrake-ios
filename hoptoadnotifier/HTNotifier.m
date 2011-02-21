@@ -10,9 +10,6 @@
 #import "HTNotifier_iOS.h"
 #import "HTNotifier_Mac.h"
 
-#import <sys/types.h>
-#import <sys/event.h>
-
 // internal
 void ht_handle_exception(NSException *);
 static HTNotifier * sharedNotifier = nil;
