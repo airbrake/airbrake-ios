@@ -62,10 +62,7 @@ used to categorize received crash reports in the Hoptoad web interface. The noti
 
 #Testing
 
-To test that the notifier is working inside your application, a simple test method is provided. This
-method creates a notice with all of the parameters filled out as if a method, `crash`, was called on
-the shared HTNotifier object. That notice will be picked up by the notifier and reported just like an
-actual crash. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
+To test that the notifier is working inside your application, a simple test method is provided. This method raises and catches an `HTTestException` instance that is logged and reported through the normal crash reporting mechanism. Call this method right after you initialize the notifier in your `application:didFinishLaunchingWithOptions:`:
 
      [[HTNotifier sharedNotifier] writeTestNotice];
 
