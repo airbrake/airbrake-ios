@@ -299,7 +299,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     NSString *testPath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
     testPath = [testPath stringByAppendingPathExtension:HTNotifierNoticePathExtension];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:testPath]) { return; }
-	@try { [NSException raise:NSInvalidArgumentException format:@"This is a test exception"]; }
+	@try { [NSException raise:@"HTTestException" format:@"This is a test exception"]; }
 	@catch (NSException * e) { ht_handle_exception(e); }
 	NSString *noticePath = [NSString stringWithUTF8String:ht_notice_info.notice_path];
 	[[NSFileManager defaultManager] moveItemAtPath:noticePath toPath:testPath error:nil];
