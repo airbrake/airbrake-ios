@@ -1,10 +1,6 @@
 #About
 
-The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur
-in their apps. With just a few lines of code and a few extra files in your project, your app will
-automatically phone home whenever a crash or exception is encountered. These reports go straight to
-Hoptoad ([http://hoptoadapp.com](http://hoptoadapp.com)) where you can see information like backtrace,
-device type, app version, and more.
+The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to Hoptoad ([http://hoptoadapp.com](http://hoptoadapp.com)) where you can see information like backtrace, device type, app version, and more.
 
 To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
 
@@ -21,10 +17,7 @@ The notifier handles all unhanded exceptions, and a select list of Unix signals:
 - SIGSEGV
 - SIGTRAP
 
-The HTNotifier class is the primary class you will interact with while using the notifier. All of its
-methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h.
-Please read through the header file for a complete reference of the library. For quick reference and
-examples, read the sections below.
+The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h. Please read through the header file for a complete reference of the library. For quick reference and examples, read the sections below.
 
 #Installation
 
@@ -42,8 +35,7 @@ examples, read the sections below.
     
 #Running The Notifier
 
-To run the notifier you only need to complete two steps. First, import the HTNotifier header file in
-your app delegate
+To run the notifier you only need to complete two steps. First, import the HTNotifier header file in your app delegate
 
     #import "HTNotifier.h"
     
@@ -52,8 +44,7 @@ Next, call the main notifier method at the very beginning of your `application:d
     [HTNotifier startNotifierWithAPIKey:<# api key #>
                         environmentName:<# environment #>];
 
-The API key argument expects your Hoptoad project API key. The environment name you provide will be
-used to categorize received crash reports in the Hoptoad web interface. The notifier provides several factory environment names that you are free to use.
+The API key argument expects your Hoptoad project API key. The environment name you provide will be used to categorize received crash reports in the Hoptoad web interface. The notifier provides several factory environment names that you are free to use.
 
   - `HTNotifierDevelopmentEnvironment`
   - `HTNotifierAdHocEnvironment`
@@ -68,11 +59,9 @@ To test that the notifier is working inside your application, a simple test meth
 
 #Implementing the HTNotifierDelegate Protocol
 
-The HTNotifierDelegate protocol allows you to respond to actions going on inside the notifier as well
-as provide runtime customizations.
+The HTNotifierDelegate protocol allows you to respond to actions going on inside the notifier as well as provide runtime customizations.
 
-All of the delegate methods in the HTNotifierDelegate protocol are documented in the HTNotifier header
-file. Here are just a few of those methods:
+All of the delegate methods in the HTNotifierDelegate protocol are documented in the HTNotifier header file. Here are just a few of those methods:
 
 MyAppDelegate.h
 
