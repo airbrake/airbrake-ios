@@ -241,6 +241,7 @@ const int HTExceptionNoticeType = 2;
 			[dictionary setObject:value forKey:name];
 		}
 	}
+	free(properties);
 	return [dictionary description];
 }
 - (void)dealloc {
