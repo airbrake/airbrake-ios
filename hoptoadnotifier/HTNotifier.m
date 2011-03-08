@@ -75,7 +75,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
 		environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
-        self.stripCallStack = NO;
         HTInitNoticeInfo();
 		
 		// register defaults
@@ -229,7 +228,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 @synthesize useSSL;
 @synthesize environmentInfo;
 @synthesize delegate;
-@synthesize stripCallStack;
 
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {

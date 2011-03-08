@@ -57,8 +57,7 @@ const int HTExceptionNoticeType = 2;
 		char * value_str = malloc(length * sizeof(char));
 		[data getBytes:value_str range:NSMakeRange(location, length)];
 		location += length;
-		[info setObject:[NSString stringWithUTF8String:value_str]
-				 forKey:@"Operating System"];
+		[info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Operating System"];
 		free(value_str);
 	}
     
@@ -69,8 +68,7 @@ const int HTExceptionNoticeType = 2;
 		char * value_str = malloc(length * sizeof(char));
 		[data getBytes:value_str range:NSMakeRange(location, length)];
 		location += length;
-		[info setObject:[NSString stringWithUTF8String:value_str]
-				 forKey:@"Device"];
+		[info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Device"];
 		free(value_str);
 	}
     
@@ -81,8 +79,7 @@ const int HTExceptionNoticeType = 2;
 		char * value_str = malloc(length * sizeof(char));
 		[data getBytes:value_str range:NSMakeRange(location, length)];
 		location += length;
-		[info setObject:[NSString stringWithUTF8String:value_str]
-				 forKey:@"App Version"];
+		[info setObject:[NSString stringWithUTF8String:value_str] forKey:@"App Version"];
 		free(value_str);
 	}
     

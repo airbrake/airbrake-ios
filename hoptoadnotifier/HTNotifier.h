@@ -6,6 +6,10 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
+#if !TARGET_OS_MAC
+#error [Hoptoad] unsupported platform
+#endif
+
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
@@ -56,7 +60,6 @@ extern NSString * const HTNotifierReleaseEnvironment;
 	SCNetworkReachabilityRef reachability;
 	id<HTNotifierDelegate> delegate;
 	BOOL useSSL;
-    BOOL stripCallStack;
 }
 
 @property (nonatomic, readonly) NSString *apiKey;
@@ -82,15 +85,6 @@ extern NSString * const HTNotifierReleaseEnvironment;
  
  */
 @property (nonatomic, assign) BOOL useSSL;
-/*
- 
- control wheter the notifier strips hex information from
- posted callstacks
- 
- default:NO
- 
- */
-@property (nonatomic, assign) BOOL stripCallStack;
 
 /*
  
