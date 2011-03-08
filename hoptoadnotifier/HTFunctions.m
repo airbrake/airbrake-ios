@@ -9,6 +9,7 @@
 #import <execinfo.h>
 #import <fcntl.h>
 #import <unistd.h>
+#import <sys/sysctl.h>
 
 #import "HTNotifier.h"
 

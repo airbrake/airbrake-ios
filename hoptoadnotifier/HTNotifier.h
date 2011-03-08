@@ -6,10 +6,6 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-#if !TARGET_OS_MAC
-#error [Hoptoad] unsupported platform
-#endif
-
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
