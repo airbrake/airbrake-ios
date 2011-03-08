@@ -12,6 +12,7 @@
 
 #import "DDXML.h"
 
+NSString * const HTNoticePathExtension = @"htnotice";
 const int HTNoticeFileVersion = 1;
 const int HTSignalNoticeType = 1;
 const int HTExceptionNoticeType = 2;
@@ -28,7 +29,7 @@ const int HTExceptionNoticeType = 2;
 #pragma mark - factory method to create notice
 + (HTNotice *)noticeWithContentsOfFile:(NSString *)path {
 	NSString *extension = [path pathExtension];
-    if (![extension isEqualToString:HTNotifierNoticePathExtension]) {
+    if (![extension isEqualToString:HTNoticePathExtension]) {
         return nil;
     }
 	

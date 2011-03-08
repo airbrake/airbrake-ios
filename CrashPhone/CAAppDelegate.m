@@ -21,7 +21,6 @@ void ht_handle_signal(int);
 						environmentName:HTNotifierAppStoreEnvironment];
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
-    //[[HTNotifier sharedNotifier] setStripCallStack:YES];
 	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];

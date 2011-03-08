@@ -13,6 +13,8 @@
 
 #import "HTNotifier.h"
 
+static NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
+
 // handled signals
 int ht_signals_count = 6;
 int ht_signals[] = {
@@ -237,7 +239,7 @@ void HTInitNoticeInfo() {
     
     // exception file name
     value = [directory stringByAppendingPathComponent:fileName];
-    value = [value stringByAppendingPathExtension:HTNotifierNoticePathExtension];
+    value = [value stringByAppendingPathExtension:HTNoticePathExtension];
     value_str = [value UTF8String];
     length = (strlen(value_str) + 1) * sizeof(char);
     ht_notice_info.notice_path = malloc(length);
@@ -322,7 +324,7 @@ NSArray * HTNotices() {
 	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
 	for (NSString *file in directoryContents) {
         NSString *ext = [file pathExtension];
-		if ([ext isEqualToString:HTNotifierNoticePathExtension]) {
+		if ([ext isEqualToString:HTNoticePathExtension]) {
 			NSString *crashPath = [directory stringByAppendingPathComponent:file];
 			[crashes addObject:crashPath];
 		}

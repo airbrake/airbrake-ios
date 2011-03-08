@@ -16,6 +16,9 @@
 // notifier version
 extern NSString * const HTNotifierVersion;
 
+// internal
+extern NSString * const HTNotifierAlwaysSendKey;
+
 /*
  
  use these variables in your alert title, alert body, and
@@ -116,8 +119,3 @@ extern NSString * const HTNotifierReleaseEnvironment;
 - (void)writeTestNotice;
 
 @end
-
-// internal
-extern NSString * const HTNotifierDirectoryName;
-extern NSString * const HTNotifierNoticePathExtension;
-extern NSString * const HTNotifierAlwaysSendKey;

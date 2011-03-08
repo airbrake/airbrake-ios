@@ -32,8 +32,6 @@ NSString * const HTNotifierDevelopmentEnvironment = @"Development";
 NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
 NSString * const HTNotifierAppStoreEnvironment = @"App Store";
 NSString * const HTNotifierReleaseEnvironment = @"Release";
-NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
-NSString * const HTNotifierNoticePathExtension = @"htnotice";
 NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -
@@ -295,7 +293,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)writeTestNotice {
     NSString *testPath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
-    testPath = [testPath stringByAppendingPathExtension:HTNotifierNoticePathExtension];
+    testPath = [testPath stringByAppendingPathExtension:HTNoticePathExtension];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:testPath]) { return; }
 	@try { [NSException raise:@"HTTestException" format:@"This is a test exception"]; }
 	@catch (NSException * e) { ht_handle_exception(e); }
