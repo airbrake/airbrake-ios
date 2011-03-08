@@ -22,7 +22,7 @@ void ht_handle_signal(int);
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
     //[[HTNotifier sharedNotifier] setStripCallStack:YES];
-	[[HTNotifier sharedNotifier] writeTestNotice];
+	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
 	return YES;

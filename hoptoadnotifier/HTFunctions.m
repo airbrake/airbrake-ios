@@ -349,7 +349,6 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 	NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 	NSCharacterSet *nonWhiteSpace = [whiteSpace invertedSet];
 	NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
-	BOOL strip = [[HTNotifier sharedNotifier] stripCallStack];
 	for (NSString *line in symbols) {
 		
 		// create scanner
@@ -364,19 +363,9 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 		[scanner scanCharactersFromSet:nonWhiteSpace intoString:&binary];
 		
 		// method
-        NSString *method = @"";
-        if (strip) {
-            [scanner scanCharactersFromSet:nonWhiteSpace intoString:NULL];
-            NSUInteger startLocation = [scanner scanLocation];
-            NSUInteger endLocation = [line rangeOfString:@" +" options:NSBackwardsSearch].location;
-            method = [line substringWithRange:NSMakeRange(startLocation, endLocation - startLocation)];
-            method = [method stringByTrimmingCharactersInSet:whiteSpace];
-        }
-        else {
-            NSUInteger location = [scanner scanLocation];
-            method = [line substringFromIndex:location];
-            method = [method stringByTrimmingCharactersInSet:whiteSpace];
-        }
+        NSUInteger location = [scanner scanLocation];
+		NSString *method = [line substringFromIndex:location];
+		method = [method stringByTrimmingCharactersInSet:whiteSpace];
 		
 		// add line
 		[parsed addObject:
@@ -390,18 +379,14 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 	return parsed;
 }
 NSString * HTActionFromCallstack(NSArray *callStack) {
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"file like %@", HTExecutableName()];
-	NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"number" ascending:YES];
-	NSArray *matching = [callStack filteredArrayUsingPredicate:predicate];
-	matching = [matching sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
-	matching = [matching valueForKey:@"method"];
-	[sort release];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"file matches %@", HTExecutableName()];
+	NSArray *matching = [[callStack filteredArrayUsingPredicate:predicate] valueForKey:@"method"];
 	for (NSString *file in matching) {
-		if ([file isEqualToString:@"ht_handle_signal"]) {
-			continue;
+		if ([file rangeOfString:@"ht_handle_signal"].location == NSNotFound) {
+			return file;
 		}
 		else {
-			return file;
+			continue;
 		}
 	}
 	return @"";
