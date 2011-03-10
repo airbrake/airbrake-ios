@@ -6,16 +6,10 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
-#if TARGET_OS_IPHONE
-
-#import <UIKit/UIKit.h>
-
 #import "HTNotifier.h"
 
-@interface HTNotifier_iOS : HTNotifier <UIAlertViewDelegate> {
-
-}
-
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+@interface HTNotifier_iOS : HTNotifier <UIAlertViewDelegate> {}
 @end
-
 #endif

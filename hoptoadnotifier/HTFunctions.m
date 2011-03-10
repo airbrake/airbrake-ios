@@ -10,8 +10,11 @@
 #import <fcntl.h>
 #import <unistd.h>
 #import <sys/sysctl.h>
+#import <TargetConditionals.h>
 
+#import "HTFunctions.h"
 #import "HTNotifier.h"
+#import "HTNotice.h"
 
 static NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
 

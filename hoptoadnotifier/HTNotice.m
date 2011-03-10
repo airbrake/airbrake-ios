@@ -7,8 +7,11 @@
 //
 
 #import <objc/runtime.h>
+#import <TargetConditionals.h>
 
+#import "HTNotice.h"
 #import "HTNotifier.h"
+#import "HTFunctions.h"
 
 #import "DDXML.h"
 

@@ -6,12 +6,11 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import <TargetConditionals.h>
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "HTNotifierDelegate.h"
-#import "HTNotice.h"
-#import "HTFunctions.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;

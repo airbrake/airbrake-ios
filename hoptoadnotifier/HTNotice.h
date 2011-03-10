@@ -44,10 +44,6 @@ extern const int HTExceptionNoticeType;
  report. It holds all of the properties that get posted to
  Hoptoad.
  
- This class conforms to NSCoding and instances are
- responsible for transfering themselves to and from their
- file representations.
- 
  All of the properties represented as instance variables are
  persisted in the file representation of the object. Those
  that are not are pulled from the HTNotifier at runtime

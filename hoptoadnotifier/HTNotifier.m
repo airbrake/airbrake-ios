@@ -9,6 +9,8 @@
 #import "HTNotifier.h"
 #import "HTNotifier_iOS.h"
 #import "HTNotifier_Mac.h"
+#import "HTNotice.h"
+#import "HTFunctions.h"
 
 // internal
 void ht_handle_exception(NSException *);
@@ -239,17 +241,21 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			HTLog(@"The provided environment name is not valid");
 			return;
 		}
-		
-		// create
+        
+        // create
 #if TARGET_OS_IPHONE
-		sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
+        sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
+#elif TARGET_OS_MAC
+        sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
 #else
-		sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
+#error [Hoptoad] unsupported platform
 #endif
 		
 		// log
-		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-		HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
+        if (sharedNotifier != nil) {
+            HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+            HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
+        }
 	}
 }
 + (HTNotifier *)sharedNotifier {

@@ -6,9 +6,11 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import "HTNotifier_iOS.h"
+
 #if TARGET_OS_IPHONE
 
-#import "HTNotifier_iOS.h"
+#import "HTFunctions.h"
 
 @implementation HTNotifier_iOS
 
