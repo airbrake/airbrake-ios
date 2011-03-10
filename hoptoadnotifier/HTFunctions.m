@@ -211,6 +211,9 @@ NSString * HTPlatform() {
     else if ([platform isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
 	// ipad
 	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
+    else if ([platform isEqualToString:@"iPad2,1"]) { return @"iPad 2 (WiFi)"; }
+    else if ([platform isEqualToString:@"iPad2,2"]) { return @"iPad 2 (GSM)"; }
+    else if ([platform isEqualToString:@"iPad2,3"]) { return @"iPad 2 (CDMA)"; }
 	// ipod
 	else if ([platform isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
 	else if ([platform isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
