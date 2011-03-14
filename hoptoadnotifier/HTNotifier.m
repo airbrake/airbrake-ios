@@ -163,7 +163,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     
 	// get notice payload
 	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+#ifdef DEBUG
 	HTLog(@"%@", notice);
+#endif
 	NSData *data = [notice hoptoadXMLData];
 	
 	// create url request
