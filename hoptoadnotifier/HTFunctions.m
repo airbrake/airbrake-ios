@@ -206,6 +206,7 @@ NSString * HTPlatform() {
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.machine", machine, &size, NULL, 0);
 	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+    free(machine);
 	// iphone
 	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
 	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
@@ -228,7 +229,9 @@ NSString * HTPlatform() {
 	size_t size = 256;
 	char *machine = malloc(sizeof(char) * size);
 	sysctlbyname("hw.model", machine, &size, NULL, 0);
-	return [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+    free(machine);
+	return platform;
 #endif
 }
 
