@@ -8,6 +8,8 @@
 
 #import "CAAppDelegate.h"
 
+static NSString * CAHoptoadAPIKey = @"";
+
 @implementation CAAppDelegate
 
 @synthesize window;
@@ -15,11 +17,15 @@
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	[HTNotifier startNotifierWithAPIKey:@""
+#ifdef DEBUG
+	[HTNotifier startNotifierWithAPIKey:CAHoptoadAPIKey
+						environmentName:HTNotifierDevelopmentEnvironment];
+#else
+    [HTNotifier startNotifierWithAPIKey:CAHoptoadAPIKey
 						environmentName:HTNotifierAppStoreEnvironment];
+#endif
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
-    //[[HTNotifier sharedNotifier] setStripCallStack:YES];
 	//[[HTNotifier sharedNotifier] writeTestNotice];
 	
     [window makeKeyAndVisible];
@@ -39,7 +45,6 @@
 #pragma mark memory management
 - (void)dealloc {
 	self.window = nil;
-	
     [super dealloc];
 }
 
@@ -51,9 +56,6 @@
 }
 - (void)notifierDidHandleException:(NSException *)exc {
 	NSLog(@"%s %@", __PRETTY_FUNCTION__, exc);
-}
-- (void)notifierDidHandleSignal:(NSInteger)signal {
-	NSLog(@"%s %d", __PRETTY_FUNCTION__, signal);
 }
 - (void)notifierWillDisplayAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);

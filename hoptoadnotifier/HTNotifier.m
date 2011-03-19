@@ -109,15 +109,14 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)postAllNoticesWithAutoreleasePool {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
 	NSArray *paths = HTNotices();
 	[self postNoticesWithPaths:paths];
-	
 	[pool drain];
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
 
-    if (nil != paths && [paths count] > 0) {
+    // notify delegate
+    if ([paths count] > 0) {
         if ([self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
             [self.delegate notifierWillPostNotices];
         }
@@ -161,7 +160,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	
 #endif
     
-    if (nil != paths && [paths count] > 0) {
+    // notify delegate
+    if ([paths count] > 0) {
         if ([self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
             [self.delegate notifierDidPostNotices];
         }
