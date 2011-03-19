@@ -8,7 +8,7 @@
 
 #import "CAAppDelegate.h"
 
-void ht_handle_signal(int);
+static NSString * CAHoptoadAPIKey = @"";
 
 @implementation CAAppDelegate
 
@@ -17,8 +17,13 @@ void ht_handle_signal(int);
 #pragma mark -
 #pragma mark application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	[HTNotifier startNotifierWithAPIKey:@"efafdebc912d6a0ec83d8ef4867af1ec"
+#ifdef DEBUG
+	[HTNotifier startNotifierWithAPIKey:CAHoptoadAPIKey
+						environmentName:HTNotifierDevelopmentEnvironment];
+#else
+    [HTNotifier startNotifierWithAPIKey:CAHoptoadAPIKey
 						environmentName:HTNotifierAppStoreEnvironment];
+#endif
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES];
 	//[[HTNotifier sharedNotifier] writeTestNotice];
@@ -57,6 +62,12 @@ void ht_handle_signal(int);
 }
 - (void)notifierDidDismissAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+- (void)notifierWillPostNotices {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+- (void)notifierDidPostNotices {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 - (NSString *)titleForNoticeAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
