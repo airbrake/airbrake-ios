@@ -42,6 +42,14 @@
 - (NSString *)titleForNoticeAlert;
 - (NSString *)bodyForNoticeAlert;
 
+
+/*
+ These methods allow your application to perform actions
+ before and after notices are posted to the server.
+ */
+- (void)notifierWillPostNotices;
+- (void)notifierDidPostNotices;
+
 /*
  
  This lets the app delegate know that an event causing a
