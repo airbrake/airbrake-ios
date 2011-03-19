@@ -61,6 +61,12 @@
 - (void)notifierDidDismissAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 }
+- (void)notifierWillPostNotices {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+- (void)notifierDidPostNotices {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
 - (NSString *)titleForNoticeAlert {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 	return nil;

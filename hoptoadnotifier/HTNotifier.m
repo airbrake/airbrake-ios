@@ -117,6 +117,12 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
 
+    if (nil != paths && [paths count] > 0) {
+        if ([self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
+            [self.delegate notifierWillPostNotices];
+        }
+    }
+    
 #if HT_IOS_SDK_4
 	
 	if (HTIsMultitaskingSupported) {
@@ -154,6 +160,12 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	}
 	
 #endif
+    
+    if (nil != paths && [paths count] > 0) {
+        if ([self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
+            [self.delegate notifierDidPostNotices];
+        }
+    }
 	
 }
 - (void)postNoticeWithPath:(NSString *)path {
