@@ -12,12 +12,6 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
-		3B179234130ADE8700E77731 /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B179216130ADE8700E77731 /* HTNotifier.strings */; };
-		3B179235130ADE8700E77731 /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17921B130ADE8700E77731 /* HTFunctions.m */; };
-		3B179236130ADE8700E77731 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17921D130ADE8700E77731 /* HTNotice.m */; };
-		3B179237130ADE8700E77731 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17921F130ADE8700E77731 /* HTNotifier.m */; };
-		3B179238130ADE8700E77731 /* HTNotifier_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B179221130ADE8700E77731 /* HTNotifier_iOS.m */; };
-		3B179239130ADE8700E77731 /* HTNotifier_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B179223130ADE8700E77731 /* HTNotifier_Mac.m */; };
 		3B17923A130ADE8700E77731 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17922A130ADE8700E77731 /* DDXMLDocument.m */; };
 		3B17923B130ADE8700E77731 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17922C130ADE8700E77731 /* DDXMLElement.m */; };
 		3B17923C130ADE8700E77731 /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17922E130ADE8700E77731 /* DDXMLElementAdditions.m */; };
@@ -26,6 +20,12 @@
 		3B17924D130AE19A00E77731 /* CAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B17924C130AE19A00E77731 /* CAAppDelegate.m */; };
 		3B54C29A1257D72100089639 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B54C2991257D72100089639 /* libxml2.dylib */; };
 		3B54C29C1257D72600089639 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B54C29B1257D72600089639 /* SystemConfiguration.framework */; };
+		3BC21052133A6C2800BACB39 /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3BC21040133A6C2800BACB39 /* HTNotifier.strings */; };
+		3BC21053133A6C2800BACB39 /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC21046133A6C2800BACB39 /* HTFunctions.m */; };
+		3BC21054133A6C2800BACB39 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC21048133A6C2800BACB39 /* HTNotice.m */; };
+		3BC21055133A6C2800BACB39 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2104A133A6C2800BACB39 /* HTNotifier.m */; };
+		3BC21056133A6C2800BACB39 /* HTNotifier_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2104C133A6C2800BACB39 /* HTNotifier_iOS.m */; };
+		3BC21057133A6C2800BACB39 /* HTNotifier_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2104E133A6C2800BACB39 /* HTNotifier_Mac.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,17 +36,6 @@
 		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* CrashPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashPhone_Prefix.pch; sourceTree = "<group>"; };
-		3B17921A130ADE8700E77731 /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
-		3B17921B130ADE8700E77731 /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
-		3B17921C130ADE8700E77731 /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
-		3B17921D130ADE8700E77731 /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
-		3B17921E130ADE8700E77731 /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
-		3B17921F130ADE8700E77731 /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
-		3B179220130ADE8700E77731 /* HTNotifier_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_iOS.h; sourceTree = "<group>"; };
-		3B179221130ADE8700E77731 /* HTNotifier_iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_iOS.m; sourceTree = "<group>"; };
-		3B179222130ADE8700E77731 /* HTNotifier_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_Mac.h; sourceTree = "<group>"; };
-		3B179223130ADE8700E77731 /* HTNotifier_Mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_Mac.m; sourceTree = "<group>"; };
-		3B179224130ADE8700E77731 /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
 		3B179228130ADE8700E77731 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		3B179229130ADE8700E77731 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		3B17922A130ADE8700E77731 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -63,12 +52,24 @@
 		3B17924C130AE19A00E77731 /* CAAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAAppDelegate.m; sourceTree = "<group>"; };
 		3B54C2991257D72100089639 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		3B54C29B1257D72600089639 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		3BC21041133A6C2800BACB39 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3BC21042133A6C2800BACB39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3BC21043133A6C2800BACB39 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3BC21044133A6C2800BACB39 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3BC21045133A6C2800BACB39 /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
+		3BC21046133A6C2800BACB39 /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
+		3BC21047133A6C2800BACB39 /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
+		3BC21048133A6C2800BACB39 /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
+		3BC21049133A6C2800BACB39 /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
+		3BC2104A133A6C2800BACB39 /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
+		3BC2104B133A6C2800BACB39 /* HTNotifier_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_iOS.h; sourceTree = "<group>"; };
+		3BC2104C133A6C2800BACB39 /* HTNotifier_iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_iOS.m; sourceTree = "<group>"; };
+		3BC2104D133A6C2800BACB39 /* HTNotifier_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_Mac.h; sourceTree = "<group>"; };
+		3BC2104E133A6C2800BACB39 /* HTNotifier_Mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_Mac.m; sourceTree = "<group>"; };
+		3BC2104F133A6C2800BACB39 /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
+		3BC21050133A6C2800BACB39 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3BC21051133A6C2800BACB39 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* CrashPhone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CrashPhone-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
-		940BC9DE128B248100ECE9AD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		AC7D014B130DC8440077E03F /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		DD9EBE32128B87D800202A63 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		DD9EBE4B128C6E1E00202A63 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		DD9EBE52128DA14600202A63 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +99,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				3B179215130ADE8700E77731 /* hoptoadnotifier */,
+				3BC2103F133A6C2800BACB39 /* hoptoadnotifier */,
 				3B179227130ADE8700E77731 /* kissxml */,
 				3B814760130202E700CE33FE /* Files */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -117,26 +118,6 @@
 				3B54C29B1257D72600089639 /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3B179215130ADE8700E77731 /* hoptoadnotifier */ = {
-			isa = PBXGroup;
-			children = (
-				3B179216130ADE8700E77731 /* HTNotifier.strings */,
-				3B17921A130ADE8700E77731 /* HTFunctions.h */,
-				3B17921B130ADE8700E77731 /* HTFunctions.m */,
-				3B17921C130ADE8700E77731 /* HTNotice.h */,
-				3B17921D130ADE8700E77731 /* HTNotice.m */,
-				3B17921E130ADE8700E77731 /* HTNotifier.h */,
-				3B17921F130ADE8700E77731 /* HTNotifier.m */,
-				3B179220130ADE8700E77731 /* HTNotifier_iOS.h */,
-				3B179221130ADE8700E77731 /* HTNotifier_iOS.m */,
-				3B179222130ADE8700E77731 /* HTNotifier_Mac.h */,
-				3B179223130ADE8700E77731 /* HTNotifier_Mac.m */,
-				3B179224130ADE8700E77731 /* HTNotifierDelegate.h */,
-			);
-			name = hoptoadnotifier;
-			path = ../hoptoadnotifier;
 			sourceTree = "<group>";
 		};
 		3B179227130ADE8700E77731 /* kissxml */ = {
@@ -170,6 +151,26 @@
 				8D1107310486CEB800E47090 /* CrashPhone-Info.plist */,
 			);
 			name = Files;
+			sourceTree = "<group>";
+		};
+		3BC2103F133A6C2800BACB39 /* hoptoadnotifier */ = {
+			isa = PBXGroup;
+			children = (
+				3BC21040133A6C2800BACB39 /* HTNotifier.strings */,
+				3BC21045133A6C2800BACB39 /* HTFunctions.h */,
+				3BC21046133A6C2800BACB39 /* HTFunctions.m */,
+				3BC21047133A6C2800BACB39 /* HTNotice.h */,
+				3BC21048133A6C2800BACB39 /* HTNotice.m */,
+				3BC21049133A6C2800BACB39 /* HTNotifier.h */,
+				3BC2104A133A6C2800BACB39 /* HTNotifier.m */,
+				3BC2104B133A6C2800BACB39 /* HTNotifier_iOS.h */,
+				3BC2104C133A6C2800BACB39 /* HTNotifier_iOS.m */,
+				3BC2104D133A6C2800BACB39 /* HTNotifier_Mac.h */,
+				3BC2104E133A6C2800BACB39 /* HTNotifier_Mac.m */,
+				3BC2104F133A6C2800BACB39 /* HTNotifierDelegate.h */,
+			);
+			name = hoptoadnotifier;
+			path = ../hoptoadnotifier;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,7 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
-				3B179234130ADE8700E77731 /* HTNotifier.strings in Resources */,
+				3BC21052133A6C2800BACB39 /* HTNotifier.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,35 +259,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
-				3B179235130ADE8700E77731 /* HTFunctions.m in Sources */,
-				3B179236130ADE8700E77731 /* HTNotice.m in Sources */,
-				3B179237130ADE8700E77731 /* HTNotifier.m in Sources */,
-				3B179238130ADE8700E77731 /* HTNotifier_iOS.m in Sources */,
-				3B179239130ADE8700E77731 /* HTNotifier_Mac.m in Sources */,
 				3B17923A130ADE8700E77731 /* DDXMLDocument.m in Sources */,
 				3B17923B130ADE8700E77731 /* DDXMLElement.m in Sources */,
 				3B17923C130ADE8700E77731 /* DDXMLElementAdditions.m in Sources */,
 				3B17923D130ADE8700E77731 /* DDXMLNode.m in Sources */,
 				3B17923E130ADE8700E77731 /* NSStringAdditions.m in Sources */,
 				3B17924D130AE19A00E77731 /* CAAppDelegate.m in Sources */,
+				3BC21053133A6C2800BACB39 /* HTFunctions.m in Sources */,
+				3BC21054133A6C2800BACB39 /* HTNotice.m in Sources */,
+				3BC21055133A6C2800BACB39 /* HTNotifier.m in Sources */,
+				3BC21056133A6C2800BACB39 /* HTNotifier_iOS.m in Sources */,
+				3BC21057133A6C2800BACB39 /* HTNotifier_Mac.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		3B179216130ADE8700E77731 /* HTNotifier.strings */ = {
+		3BC21040133A6C2800BACB39 /* HTNotifier.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				940BC9DE128B248100ECE9AD /* de */,
-				DD9EBE32128B87D800202A63 /* es */,
-				DD9EBE4B128C6E1E00202A63 /* ru */,
-				DD9EBE52128DA14600202A63 /* ro */,
-				AC7D014B130DC8440077E03F /* fr */,
+				3BC21041133A6C2800BACB39 /* de */,
+				3BC21042133A6C2800BACB39 /* en */,
+				3BC21043133A6C2800BACB39 /* es */,
+				3BC21044133A6C2800BACB39 /* fr */,
+				3BC21050133A6C2800BACB39 /* ro */,
+				3BC21051133A6C2800BACB39 /* ru */,
 			);
 			name = HTNotifier.strings;
-			path = ../hoptoadnotifier;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
 
