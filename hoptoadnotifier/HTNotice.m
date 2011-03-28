@@ -15,10 +15,10 @@
 
 #import "DDXML.h"
 
-NSString * const HTNoticePathExtension = @"htnotice";
-const int HTNoticeFileVersion = 1;
-const int HTSignalNoticeType = 1;
-const int HTExceptionNoticeType = 2;
+NSString * HTNoticePathExtension = @"htnotice";
+int HTNoticeFileVersion = 2;
+int HTSignalNoticeType = 1;
+int HTExceptionNoticeType = 2;
 
 @implementation HTNotice
 
@@ -97,6 +97,19 @@ const int HTExceptionNoticeType = 2;
 		notice.environmentName = [NSString stringWithUTF8String:value_str];
 		free(value_str);
 	}
+    
+    // git hash
+    if (version >= 2) {
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
+        if (length > 0) {
+            char * value_str = malloc(length * sizeof(char));
+            [data getBytes:value_str range:NSMakeRange(location, length)];
+            location += length;
+            [info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Git Commit"];
+            free(value_str);
+        }
+    }
 	
 	if (type == HTSignalNoticeType) {
 		

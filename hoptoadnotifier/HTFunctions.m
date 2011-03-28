@@ -122,6 +122,10 @@ int ht_open_file(int type) {
         if (ht_notice_info.env_name_len > 0) {
             write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
         }
+        write(fd, &ht_notice_info.git_hash_len, sizeof(unsigned long));
+        if (ht_notice_info.git_hash_len > 0) {
+            write(fd, ht_notice_info.git_hash, ht_notice_info.git_hash_len);
+        }
     }
     return fd;
 }
@@ -242,15 +246,13 @@ void HTInitNoticeInfo() {
     const char *value_str;
     NSUInteger length;
     
-    // file path stuff
+    // exception file name
     NSString *directory = HTNoticesDirectory();
     NSString *fileName = [NSString stringWithFormat:@"%d", time(NULL)];
-    
-    // exception file name
     value = [directory stringByAppendingPathComponent:fileName];
     value = [value stringByAppendingPathExtension:HTNoticePathExtension];
     value_str = [value UTF8String];
-    length = (strlen(value_str) + 1) * sizeof(char);
+    length = (strlen(value_str) + 1);
     ht_notice_info.notice_path = malloc(length);
     memcpy((void *)ht_notice_info.notice_path, value_str, length);
     
@@ -259,7 +261,7 @@ void HTInitNoticeInfo() {
     if (value == nil) { HTLog(@"unable to cache operating system version"); }
     else {
         value_str = [value UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
+        length = (strlen(value_str) + 1);
         ht_notice_info.os_version = malloc(length);
         ht_notice_info.os_version_len = length;
         memcpy((void *)ht_notice_info.os_version, value_str, length);
@@ -270,7 +272,7 @@ void HTInitNoticeInfo() {
     if (value == nil) { HTLog(@"unable to cache app version"); }
     else {
         value_str = [value UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
+        length = (strlen(value_str) + 1);
         ht_notice_info.app_version = malloc(length);
         ht_notice_info.app_version_len = length;
         memcpy((void *)ht_notice_info.app_version, value_str, length);
@@ -281,7 +283,7 @@ void HTInitNoticeInfo() {
     if (value == nil) { HTLog(@"unable to cache platform"); }
     else {
         value_str = [value UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
+        length = (strlen(value_str) + 1);
         ht_notice_info.platform = malloc(length);
         ht_notice_info.platform_len = length;
         memcpy((void *)ht_notice_info.platform, value_str, length);
@@ -289,13 +291,24 @@ void HTInitNoticeInfo() {
     
     // environment
     value = [[HTNotifier sharedNotifier] environmentName];
-    if (value == nil) { HTLog(@"unable to cach environment name"); }
+    if (value == nil) { HTLog(@"unable to cache environment name"); }
     else {
         value_str = [value UTF8String];
-        length = (strlen(value_str) + 1) * sizeof(char);
+        length = (strlen(value_str) + 1);
         ht_notice_info.env_name = malloc(length);
         ht_notice_info.env_name_len = length;
         memcpy((void *)ht_notice_info.env_name, value_str, length);
+    }
+    
+    // git hash
+    value = HTInfoPlistValueForKey(@"GCGitCommitHash");
+    if (value == nil) { HTLog(@"unable to cache git commit hash"); }
+    else {
+        value_str = [value UTF8String];
+        length = (strlen(value_str) + 1);
+        ht_notice_info.git_hash = malloc(length);
+        ht_notice_info.git_hash_len = length;
+        memcpy((void *)ht_notice_info.git_hash, value_str, length);
     }
     
 }
@@ -304,12 +317,19 @@ void HTReleaseNoticeInfo() {
     ht_notice_info.notice_path = NULL;
     free((void *)ht_notice_info.os_version);
     ht_notice_info.os_version = NULL;
+    ht_notice_info.os_version_len = 0;
     free((void *)ht_notice_info.app_version);
     ht_notice_info.app_version = NULL;
+    ht_notice_info.app_version_len = 0;
     free((void *)ht_notice_info.platform);
     ht_notice_info.platform = NULL;
+    ht_notice_info.platform_len = 0;
     free((void *)ht_notice_info.env_name);
     ht_notice_info.env_name = NULL;
+    ht_notice_info.env_name_len = 0;
+    free((void *)ht_notice_info.git_hash);
+    ht_notice_info.git_hash = NULL;
+    ht_notice_info.git_hash_len = 0;
 }
 
 #pragma mark - notice information on disk

@@ -29,15 +29,19 @@ typedef struct ht_notice_info_t {
 	// environment name
 	const char *env_name;
 	unsigned long env_name_len;
+    
+    // git hash
+    const char *git_hash;
+    unsigned long git_hash_len;
 	
 } ht_notice_info_t;
 ht_notice_info_t ht_notice_info;
 
 // file flags
-extern NSString * const HTNoticePathExtension;
-extern const int HTNoticeFileVersion;
-extern const int HTSignalNoticeType;
-extern const int HTExceptionNoticeType;
+extern NSString * HTNoticePathExtension;
+extern int HTNoticeFileVersion;
+extern int HTSignalNoticeType;
+extern int HTExceptionNoticeType;
 
 /*
  Instances of the HTNotice class represent a single crash
