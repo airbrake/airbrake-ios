@@ -7,10 +7,9 @@
 //
 
 #import "HTNotifier_iOS.h"
+#import "HTFunctions.h"
 
 #if TARGET_OS_IPHONE
-
-#import "HTFunctions.h"
 
 @implementation HTNotifier_iOS
 

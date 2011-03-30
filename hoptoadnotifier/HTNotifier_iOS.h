@@ -6,6 +6,8 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import <TargetConditionals.h>
+
 #import "HTNotifier.h"
 
 #if TARGET_OS_IPHONE

@@ -6,17 +6,16 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-#import <TargetConditionals.h>
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "HTNotifierDelegate.h"
 
 // notifier version
-extern NSString * const HTNotifierVersion;
+extern NSString *HTNotifierVersion;
 
 // internal
-extern NSString * const HTNotifierAlwaysSendKey;
+extern NSString *HTNotifierAlwaysSendKey;
 
 /*
  
@@ -25,9 +24,9 @@ extern NSString * const HTNotifierAlwaysSendKey;
  
  */
 // bundle name of the app
-extern NSString * const HTNotifierBundleName;
+extern NSString *HTNotifierBundleName;
 // bundle version of the app
-extern NSString * const HTNotifierBundleVersion;
+extern NSString *HTNotifierBundleVersion;
 
 /*
  
@@ -35,10 +34,10 @@ extern NSString * const HTNotifierBundleVersion;
  values provided to hoptoad
  
  */
-extern NSString * const HTNotifierDevelopmentEnvironment;
-extern NSString * const HTNotifierAdHocEnvironment;
-extern NSString * const HTNotifierAppStoreEnvironment;
-extern NSString * const HTNotifierReleaseEnvironment;
+extern NSString *HTNotifierDevelopmentEnvironment;
+extern NSString *HTNotifierAdHocEnvironment;
+extern NSString *HTNotifierAppStoreEnvironment;
+extern NSString *HTNotifierReleaseEnvironment;
 
 /*
  

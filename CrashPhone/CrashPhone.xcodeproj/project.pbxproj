@@ -156,18 +156,18 @@
 		3BC21020133A6B9D00BACB39 /* hoptoadnotifier */ = {
 			isa = PBXGroup;
 			children = (
+				3BC2102A133A6B9D00BACB39 /* HTNotifier.h */,
+				3BC2102B133A6B9D00BACB39 /* HTNotifier.m */,
+				3BC21030133A6B9D00BACB39 /* HTNotifierDelegate.h */,
 				3BC21021133A6B9D00BACB39 /* HTNotifier.strings */,
 				3BC21026133A6B9D00BACB39 /* HTFunctions.h */,
 				3BC21027133A6B9D00BACB39 /* HTFunctions.m */,
 				3BC21028133A6B9D00BACB39 /* HTNotice.h */,
 				3BC21029133A6B9D00BACB39 /* HTNotice.m */,
-				3BC2102A133A6B9D00BACB39 /* HTNotifier.h */,
-				3BC2102B133A6B9D00BACB39 /* HTNotifier.m */,
 				3BC2102C133A6B9D00BACB39 /* HTNotifier_iOS.h */,
 				3BC2102D133A6B9D00BACB39 /* HTNotifier_iOS.m */,
 				3BC2102E133A6B9D00BACB39 /* HTNotifier_Mac.h */,
 				3BC2102F133A6B9D00BACB39 /* HTNotifier_Mac.m */,
-				3BC21030133A6B9D00BACB39 /* HTNotifierDelegate.h */,
 			);
 			name = hoptoadnotifier;
 			path = ../hoptoadnotifier;

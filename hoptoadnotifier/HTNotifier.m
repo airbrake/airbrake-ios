@@ -14,8 +14,8 @@
 
 // internal
 void ht_handle_exception(NSException *);
-static HTNotifier * sharedNotifier = nil;
-static NSString * const HTNotifierHostName = @"hoptoadapp.com";
+static HTNotifier *sharedNotifier = nil;
+static NSString *HTNotifierHostName = @"hoptoadapp.com";
 #define HTNotifierURL [NSURL URLWithString: \
 	[NSString stringWithFormat: \
 	@"%@://%@%/notifier_api/v2/notices", \
@@ -27,14 +27,14 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString * const HTNotifierVersion = @"2.0";
-NSString * const HTNotifierBundleName = @"${BUNDLE}";
-NSString * const HTNotifierBundleVersion  = @"${VERSION}";
-NSString * const HTNotifierDevelopmentEnvironment = @"Development";
-NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
-NSString * const HTNotifierAppStoreEnvironment = @"App Store";
-NSString * const HTNotifierReleaseEnvironment = @"Release";
-NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
+NSString *HTNotifierVersion = @"2.0";
+NSString *HTNotifierBundleName = @"${BUNDLE}";
+NSString *HTNotifierBundleVersion  = @"${VERSION}";
+NSString *HTNotifierDevelopmentEnvironment = @"Development";
+NSString *HTNotifierAdHocEnvironment = @"Ad Hoc";
+NSString *HTNotifierAppStoreEnvironment = @"App Store";
+NSString *HTNotifierReleaseEnvironment = @"Release";
+NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -
 #pragma mark private methods

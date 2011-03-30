@@ -15,7 +15,7 @@
 
 #import "DDXML.h"
 
-NSString * HTNoticePathExtension = @"htnotice";
+NSString *HTNoticePathExtension = @"htnotice";
 int HTNoticeFileVersion = 2;
 int HTSignalNoticeType = 1;
 int HTExceptionNoticeType = 2;
