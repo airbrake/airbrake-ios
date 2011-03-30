@@ -9,8 +9,11 @@
 #import "HTNotifier.h"
 #import "HTNotifier_iOS.h"
 #import "HTNotifier_Mac.h"
+#import "HTNotice.h"
+#import "HTFunctions.h"
 
 // internal
+void ht_handle_exception(NSException *);
 static HTNotifier * sharedNotifier = nil;
 static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 #define HTNotifierURL [NSURL URLWithString: \
@@ -24,15 +27,13 @@ static NSString * const HTNotifierHostName = @"hoptoadapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString * const HTNotifierVersion = @"1.4";
+NSString * const HTNotifierVersion = @"2.0";
 NSString * const HTNotifierBundleName = @"${BUNDLE}";
 NSString * const HTNotifierBundleVersion  = @"${VERSION}";
 NSString * const HTNotifierDevelopmentEnvironment = @"Development";
 NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
 NSString * const HTNotifierAppStoreEnvironment = @"App Store";
 NSString * const HTNotifierReleaseEnvironment = @"Release";
-NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
-NSString * const HTNotifierPathExtension = @"notice";
 NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark -
@@ -74,6 +75,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
 		environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
+        HTInitNoticeInfo();
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -84,6 +86,9 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		
 		// notifications
 		[self registerNotifications];
+        
+        // start
+		HTStartHandlers();
 		
 	}
 	return self;
@@ -104,7 +109,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			}
 		}
 	}
-	
+    	
 	[pool drain];
 }
 - (void)postAllNoticesWithAutoreleasePool {
@@ -169,24 +174,28 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	
 }
 - (void)postNoticeWithPath:(NSString *)path {
-	
+    
 	// get notice payload
-	HTNotice *notice = [HTNotice readFromFile:path];
-	NSData *xmlData = [notice hoptoadXMLData];
+	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+#ifdef DEBUG
+	HTLog(@"%@", notice);
+#endif
+	NSData *data = [notice hoptoadXMLData];
 	
 	// create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
 	[request setTimeoutInterval:10.0];
 	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
-	[request setHTTPBody:xmlData];
+	[request setHTTPBody:data];
 	
 	// perform request
 	NSHTTPURLResponse *response = nil;
 	NSError *error = nil;
-	NSData *responseBody = [NSURLConnection sendSynchronousRequest:request
-												 returningResponse:&response
-															 error:&error];
+	NSData *responseBody = [NSURLConnection
+							sendSynchronousRequest:request
+							returningResponse:&response
+							error:&error];
 	
 	// error checking
 	if (error == nil) {
@@ -212,6 +221,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			  responseString);
 		[responseString release];
 	}
+    
 }
 - (BOOL)isHoptoadReachable {
 	SCNetworkReachabilityFlags flags;
@@ -234,7 +244,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 @synthesize useSSL;
 @synthesize environmentInfo;
 @synthesize delegate;
-@synthesize stripCallStack;
 
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {
@@ -248,20 +257,21 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 			HTLog(@"The provided environment name is not valid");
 			return;
 		}
-		
-		// create
+        
+        // create
 #if TARGET_OS_IPHONE
-		sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
+        sharedNotifier = [[HTNotifier_iOS alloc] initWithAPIKey:key environmentName:name];
+#elif TARGET_OS_MAC
+        sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
 #else
-		sharedNotifier = [[HTNotifier_Mac alloc] initWithAPIKey:key environmentName:name];
+#error [Hoptoad] unsupported platform
 #endif
 		
-		// start
-		HTStartHandler();
-		
 		// log
-		HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-		HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
+        if (sharedNotifier != nil) {
+            HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+            HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
+        }
 	}
 }
 + (HTNotifier *)sharedNotifier {
@@ -295,24 +305,22 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)dealloc {
 	[self unregisterNotifications];
-	HTStopHandler();
-	
 	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
 	[apiKey release];apiKey = nil;
 	[environmentName release];environmentName = nil;
 	[environmentInfo release];environmentInfo = nil;
-	
+    HTStopHandlers();
+    HTReleaseNoticeInfo();
 	[super dealloc];
 }
 - (void)writeTestNotice {
-	NSString *noticePath = HTPathForNewNoticeWithName(@"TEST");
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:noticePath]) {
-		return;
-	}
-	
-	HTNotice *notice = [HTNotice testNotice];
-	[notice writeToFile:noticePath];
+    NSString *testPath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
+    testPath = [testPath stringByAppendingPathExtension:HTNoticePathExtension];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:testPath]) { return; }
+	@try { [NSException raise:@"HTTestException" format:@"This is a test exception"]; }
+	@catch (NSException * e) { ht_handle_exception(e); }
+	NSString *noticePath = [NSString stringWithUTF8String:ht_notice_info.notice_path];
+	[[NSFileManager defaultManager] moveItemAtPath:noticePath toPath:testPath error:nil];
 }
 
 @end

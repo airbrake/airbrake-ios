@@ -8,75 +8,38 @@
 
 #import <Foundation/Foundation.h>
 
-// get a list of all handled signals
-NSArray * HTHandledSignals();
+// start handlers
+void HTStartHandlers();
+void HTStartExceptionHandler();
+void HTStartSignalHandler();
 
-// start signal and exception handlers
-void HTStartHandler();
+// stop handlers
+void HTStopHandlers();
+void HTStopExceptionHandler();
+void HTStopSignalHandler();
 
-// stop signal and exception handlers
-void HTStopHandler();
-
-// get symbolicated call stack given return addresses
-NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *);
-
-// parse callstack
-NSArray * HTParseCallstack(NSArray *symbols);
-
-// get action from callstack
-NSString * HTActionFromCallstack(NSArray *callStack);
-
-// get folder where notices are stored
-NSString * HTNoticesDirectory();
-
-// get a list of all notices saved on disk
-NSArray * HTNotices();
-
-// get the operating system version
-NSString * HTOperatingSystemVersion();
-
-// utility method for getting a value from info.plist
-id HTInfoPlistValueForKey(NSString *key);
-
-// get the executable name
+// get values from Info.plist
+id HTInfoPlistValueForKey(NSString *);
 NSString * HTExecutableName();
-
-/*
- get the application version
- 
- the value returned is a combination of the CFBundleVersion
- and CFBundleShortVersionString
- */
 NSString * HTApplicationVersion();
-
-/*
- get a string that can be shown to the user that represents
- the application name
- 
- a name is searched for in this order:
-	- CFBundleDisplayName
-	- CFBundleName
-	- CFBundleIdentifier
- */
 NSString * HTApplicationName();
 
-/*
- get the current platform
- 
- if the app is running on an iOS device, a common string
- like "iPhone 3G" or "iPad" is returned.
- 
- if the app is running on a Mac OS device an identifier
- is returned like "MacBookPro7,1"
- */
+// get platform values
+NSString * HTOperatingSystemVersion();
 NSString * HTPlatform();
 
-/*
- get the path to a notice given a file name
- 
- the file name should not contain a path extension
- */
-NSString * HTPathForNewNoticeWithName(NSString *);
+// deal with notice information
+void HTInitNoticeInfo();
+void HTReleaseNoticeInfo();
+
+// deal with notice information on disk
+NSString * HTNoticesDirectory();
+NSArray * HTNotices();
+
+// callstack utilities
+NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *);
+NSArray * HTParseCallstack(NSArray *);
+NSString * HTActionFromCallstack(NSArray *);
 
 /*
  returns a string with all of the hoptoad variables

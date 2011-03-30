@@ -6,14 +6,15 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import "HTNotifier_iOS.h"
+
 #if TARGET_OS_IPHONE
 
-#import "HTNotifier_iOS.h"
+#import "HTFunctions.h"
 
 @implementation HTNotifier_iOS
 
-#pragma mark -
-#pragma mark object methods
+#pragma mark - object methods
 - (void)registerNotifications {
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self
@@ -51,17 +52,17 @@
 		}
 	}
 	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
-													message:HTStringByReplacingHoptoadVariablesInString(body)
-												   delegate:self
-										  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
-										  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
+	UIAlertView *alert = [[UIAlertView alloc]
+						  initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
+						  message:HTStringByReplacingHoptoadVariablesInString(body)
+						  delegate:self
+						  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
+						  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
 	[alert show];
 	[alert release];
 }
 
-#pragma mark -
-#pragma mark UIAlertViewDelegate
+#pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
 		[self.delegate notifierDidDismissAlert];

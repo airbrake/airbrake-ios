@@ -6,14 +6,15 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
-#if !TARGET_OS_IPHONE
-
 #import "HTNotifier_Mac.h"
+
+#if TARGET_OS_MAC && !(TARGET_OS_IPHONE)
+
+#import "HTFunctions.h"
 
 @implementation HTNotifier_Mac
 
-#pragma mark -
-#pragma mark object methods
+#pragma mark - object methods
 - (void)registerNotifications {
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self

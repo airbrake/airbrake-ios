@@ -6,15 +6,17 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import <TargetConditionals.h>
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "HTNotifierDelegate.h"
-#import "HTFunctions.h"
-#import "HTNotice.h"
 
 // notifier version
 extern NSString * const HTNotifierVersion;
+
+// internal
+extern NSString * const HTNotifierAlwaysSendKey;
 
 /*
  
@@ -56,7 +58,6 @@ extern NSString * const HTNotifierReleaseEnvironment;
 	SCNetworkReachabilityRef reachability;
 	id<HTNotifierDelegate> delegate;
 	BOOL useSSL;
-    BOOL stripCallStack;
 }
 
 @property (nonatomic, readonly) NSString *apiKey;
@@ -75,21 +76,13 @@ extern NSString * const HTNotifierReleaseEnvironment;
 @property (nonatomic, readonly) NSMutableDictionary *environmentInfo;
 /*
  
- control whether notices are posted using SSL. your account must support this
- feature
+ control whether notices are posted using SSL. your account
+ must support this feature
  
  default:NO
  
  */
 @property (nonatomic, assign) BOOL useSSL;
-/*
- 
- control wheter the notifier strips hex information from posted callstacks
- 
- default:NO
- 
- */
-@property (nonatomic, assign) BOOL stripCallStack;
 
 /*
  
@@ -125,8 +118,3 @@ extern NSString * const HTNotifierReleaseEnvironment;
 - (void)writeTestNotice;
 
 @end
-
-// internal
-extern NSString * const HTNotifierDirectoryName;
-extern NSString * const HTNotifierPathExtension;
-extern NSString * const HTNotifierAlwaysSendKey;
