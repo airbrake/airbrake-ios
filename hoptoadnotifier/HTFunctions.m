@@ -12,6 +12,10 @@
 #import <sys/sysctl.h>
 #import <TargetConditionals.h>
 
+#import <mach/task.h>
+#import <mach/task_info.h>
+#import <mach/mach_init.h>
+
 #import "HTFunctions.h"
 #import "HTNotifier.h"
 #import "HTNotice.h"
@@ -57,6 +61,11 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 	raise(signal);
 }
 void ht_handle_exception(NSException *exception) {
+
+#if TARGET_OS_IPHONE
+    HTSetEnvironmentMemoryInfo();
+#endif
+    
     HTStopHandlers();
     int fd = ht_open_file(HTExceptionNoticeType);
     if (fd > -1) {
@@ -167,31 +176,72 @@ void HTStopSignalHandler() {
 	}
 }
 
+#if TARGET_OS_IPHONE
+
+#pragma mark - 
+#pragma mark Memory Handling
+
+#define BYTES_PER_MB 1048576
+
+ht_memory_result_t HTMemoryUsedInMB(ht_memory_t *mb) {
+    
+    struct task_basic_info basic;
+    mach_msg_type_number_t count = TASK_BASIC_INFO_COUNT;
+    kern_return_t result = task_info(mach_task_self(), TASK_BASIC_INFO , (task_info_t)&basic , &count );
+    
+    if(result == KERN_SUCCESS){
+        vm_size_t totalBytes = basic.resident_size;
+        *mb = (float)totalBytes/BYTES_PER_MB;
+        return HT_MEMORY_SUCCESS;
+    }
+    
+    return HT_MEMORY_INVALID;
+}
+
+void HTSetEnvironmentMemoryInfo() {
+    
+    ht_memory_t mem;
+    ht_memory_result_t result = HTMemoryUsedInMB(&mem);
+    
+    NSString *memory= @"";
+    
+    if(result == HT_MEMORY_SUCCESS){
+        memory = [NSString stringWithFormat:@"%0.2f MB",mem];
+    }else{
+        memory = @"invalid";
+    }
+    
+    [[HTNotifier sharedNotifier].environmentInfo setObject:memory forKey:@"Used Memory"];
+}
+
+#endif
+
 #pragma mark - Info.plist accessors
+
 id HTInfoPlistValueForKey(NSString *key) {
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
 }
 NSString * HTExecutableName() {
-	return HTInfoPlistValueForKey(@"CFBundleExecutable");
+    return HTInfoPlistValueForKey(@"CFBundleExecutable");
 }
 NSString * HTApplicationVersion() {
-	NSString *bundleVersion = HTInfoPlistValueForKey(@"CFBundleVersion");
-	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
-	if (bundleVersion != nil && versionString != nil) {
-		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
-	}
-	else if (bundleVersion != nil) { return bundleVersion; }
-	else if (versionString != nil) { return versionString; }
-	else { return nil; }
+    NSString *bundleVersion = HTInfoPlistValueForKey(@"CFBundleVersion");
+    NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
+    if (bundleVersion != nil && versionString != nil) {
+        return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
+    }
+    else if (bundleVersion != nil) { return bundleVersion; }
+    else if (versionString != nil) { return versionString; }
+    else { return nil; }
 }
 NSString * HTApplicationName() {
-	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
-	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
-	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
-	if (displayName != nil) { return displayName; }
-	else if (bundleName != nil) { return bundleName; }
-	else if (identifier != nil) { return identifier; }
-	else { return nil; }
+    NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
+    NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
+    NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
+    if (displayName != nil) { return displayName; }
+    else if (bundleName != nil) { return bundleName; }
+    else if (identifier != nil) { return identifier; }
+    else { return nil; }
 }
 
 #pragma mark - platform accessors
@@ -204,7 +254,7 @@ NSString * HTOperatingSystemVersion() {
 }
 NSString * HTPlatform() {
 #if TARGET_IPHONE_SIMULATOR
-	return @"iPhone Simulator";
+    return @"iPhone Simulator";
 #elif TARGET_OS_IPHONE
 	size_t size = 256;
 	char *machine = malloc(sizeof(char) * size);
@@ -426,6 +476,7 @@ NSString * HTActionFromCallstack(NSArray *callStack) {
 
 #pragma mark - string substitution
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
+
 	NSString *toReturn = string;
 	
 	toReturn = [toReturn
@@ -441,47 +492,47 @@ NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
 #pragma mark - get view controller
 #if TARGET_OS_IPHONE
 NSString * HTCurrentViewController() {
-	// view controller to inspect
-	UIViewController *rootController = nil;
-	
-	// try getting view controller from notifier delegate
-	id<HTNotifierDelegate> notifierDelegate = [[HTNotifier sharedNotifier] delegate];
-	if ([notifierDelegate respondsToSelector:@selector(rootViewControllerForNotice)]) {
-		rootController = [notifierDelegate rootViewControllerForNotice];
-	}
-	
-	// try getting view controller from window
-	UIApplication *app = [UIApplication sharedApplication];
-	UIWindow *keyWindow = [app keyWindow];
-	if (rootController == nil && [keyWindow respondsToSelector:@selector(rootViewController)]) {
-		rootController = [keyWindow rootViewController];
-	}
-	
-	// if we don't have a controller yet, give up
-	if (rootController == nil) {
-		return nil;
-	}
-	
-	// call method to get class name
-	return HTVisibleViewControllerWithViewController(rootController);
+    // view controller to inspect
+    UIViewController *rootController = nil;
+    
+    // try getting view controller from notifier delegate
+    id<HTNotifierDelegate> notifierDelegate = [[HTNotifier sharedNotifier] delegate];
+    if ([notifierDelegate respondsToSelector:@selector(rootViewControllerForNotice)]) {
+        rootController = [notifierDelegate rootViewControllerForNotice];
+    }
+    
+    // try getting view controller from window
+    UIApplication *app = [UIApplication sharedApplication];
+    UIWindow *keyWindow = [app keyWindow];
+    if (rootController == nil && [keyWindow respondsToSelector:@selector(rootViewController)]) {
+        rootController = [keyWindow rootViewController];
+    }
+    
+    // if we don't have a controller yet, give up
+    if (rootController == nil) {
+        return nil;
+    }
+    
+    // call method to get class name
+    return HTVisibleViewControllerWithViewController(rootController);
 }
 
 NSString * HTVisibleViewControllerWithViewController(UIViewController *controller) {
-	
-	// tab bar controller
-	if ([controller isKindOfClass:[UITabBarController class]]) {
-		UIViewController *visibleController = [(UITabBarController *)controller selectedViewController];
-		return HTVisibleViewControllerWithViewController(visibleController);
-	}
-	// navigation controller
-	else if ([controller isKindOfClass:[UINavigationController class]]) {
-		UIViewController *visibleController = [(UINavigationController *)controller visibleViewController];
-		return HTVisibleViewControllerWithViewController(visibleController);
-	}
-	// other type
-	else {
-		return NSStringFromClass([controller class]);
-	}
-	
+    
+    // tab bar controller
+    if ([controller isKindOfClass:[UITabBarController class]]) {
+        UIViewController *visibleController = [(UITabBarController *)controller selectedViewController];
+        return HTVisibleViewControllerWithViewController(visibleController);
+    }
+    // navigation controller
+    else if ([controller isKindOfClass:[UINavigationController class]]) {
+        UIViewController *visibleController = [(UINavigationController *)controller visibleViewController];
+        return HTVisibleViewControllerWithViewController(visibleController);
+    }
+    // other type
+    else {
+        return NSStringFromClass([controller class]);
+    }
+    
 }
 #endif
