@@ -202,40 +202,53 @@ NSString * HTOperatingSystemVersion() {
 	return [[NSProcessInfo processInfo] operatingSystemVersionString];
 #endif
 }
+NSString * HTMachine() {
+#if TARGET_IPHONE_SIMULATOR
+	return @"iPhone Simulator";
+#else
+    
+    size_t size = 256;
+	char *machine = malloc(size);
+#if TARGET_OS_IPHONE
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+#else
+    sysctlbyname("hw.model", machine, &size, NULL, 0);
+#endif
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+    free(machine);
+    return platform;
+    
+#endif
+}
 NSString * HTPlatform() {
 #if TARGET_IPHONE_SIMULATOR
 	return @"iPhone Simulator";
-#elif TARGET_OS_IPHONE
-	size_t size = 256;
-	char *machine = malloc(sizeof(char) * size);
-	sysctlbyname("hw.machine", machine, &size, NULL, 0);
-	NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-    free(machine);
-	// iphone
-	if ([platform isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
-	else if ([platform isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
-	else if ([platform isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
-	else if ([platform isEqualToString:@"iPhone3,1"]) { return @"iPhone 4 (GSM)"; }
-    else if ([platform isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
-	// ipad
-	else if ([platform isEqualToString:@"iPad1,1"]) { return @"iPad"; }
-    else if ([platform isEqualToString:@"iPad2,1"]) { return @"iPad 2 (WiFi)"; }
-    else if ([platform isEqualToString:@"iPad2,2"]) { return @"iPad 2 (GSM)"; }
-    else if ([platform isEqualToString:@"iPad2,3"]) { return @"iPad 2 (CDMA)"; }
-	// ipod
-	else if ([platform isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
-	else if ([platform isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
-	else if ([platform isEqualToString:@"iPod3,1"]) { return @"iPod Touch 3rd Gen"; }
-	else if ([platform isEqualToString:@"iPod4,1"]) { return @"iPod Touch 4th Gen"; }
-	// unknown
-	else { return platform; }
 #else
-	size_t size = 256;
-	char *machine = malloc(sizeof(char) * size);
-	sysctlbyname("hw.model", machine, &size, NULL, 0);
-    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-    free(machine);
-	return platform;
+    
+    NSString *machine = HTMachine();
+#if TARGET_OS_IPHONE
+    // iphone
+	if ([machine isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
+	else if ([machine isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
+	else if ([machine isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
+	else if ([machine isEqualToString:@"iPhone3,1"]) { return @"iPhone 4 (GSM)"; }
+    else if ([machine isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
+	// ipad
+	else if ([machine isEqualToString:@"iPad1,1"]) { return @"iPad"; }
+    else if ([machine isEqualToString:@"iPad2,1"]) { return @"iPad 2 (WiFi)"; }
+    else if ([machine isEqualToString:@"iPad2,2"]) { return @"iPad 2 (GSM)"; }
+    else if ([machine isEqualToString:@"iPad2,3"]) { return @"iPad 2 (CDMA)"; }
+	// ipod
+	else if ([machine isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
+	else if ([machine isEqualToString:@"iPod2,1"]) { return @"iPod Touch 2nd Gen"; }
+	else if ([machine isEqualToString:@"iPod3,1"]) { return @"iPod Touch 3rd Gen"; }
+	else if ([machine isEqualToString:@"iPod4,1"]) { return @"iPod Touch 4th Gen"; }
+	// unknown
+	else { return machine; }
+#else
+    return machine;
+#endif
+    
 #endif
 }
 

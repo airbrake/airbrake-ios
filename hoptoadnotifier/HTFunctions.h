@@ -26,6 +26,7 @@ NSString * HTApplicationName();
 
 // get platform values
 NSString * HTOperatingSystemVersion();
+NSString * HTMachine();
 NSString * HTPlatform();
 
 // deal with notice information
