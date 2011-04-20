@@ -16,7 +16,7 @@
 #import "HTNotifier.h"
 #import "HTNotice.h"
 
-static NSString * const HTNotifierDirectoryName = @"Hoptoad Notices";
+NSString *HTNotifierDirectoryName = @"Hoptoad Notices";
 
 // handled signals
 int ht_signals_count = 6;
@@ -126,6 +126,10 @@ int ht_open_file(int type) {
         if (ht_notice_info.git_hash_len > 0) {
             write(fd, ht_notice_info.git_hash, ht_notice_info.git_hash_len);
         }
+        write(fd, &ht_notice_info.bundle_version_len, sizeof(unsigned long));
+        if (ht_notice_info.bundle_version_len > 0) {
+            write(fd, ht_notice_info.bundle_version, ht_notice_info.bundle_version_len);
+        }
     }
     return fd;
 }
@@ -171,11 +175,11 @@ void HTStopSignalHandler() {
 id HTInfoPlistValueForKey(NSString *key) {
 	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
 }
-NSString * HTExecutableName() {
+NSString *HTExecutableName() {
 	return HTInfoPlistValueForKey(@"CFBundleExecutable");
 }
-NSString * HTApplicationVersion() {
-	NSString *bundleVersion = HTInfoPlistValueForKey(@"CFBundleVersion");
+NSString *HTApplicationVersion() {
+	NSString *bundleVersion = HTBundleVersion();
 	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
 	if (bundleVersion != nil && versionString != nil) {
 		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
@@ -184,7 +188,10 @@ NSString * HTApplicationVersion() {
 	else if (versionString != nil) { return versionString; }
 	else { return nil; }
 }
-NSString * HTApplicationName() {
+NSString *HTBundleVersion() {
+    return HTInfoPlistValueForKey(@"CFBundleVersion");
+}
+NSString *HTApplicationName() {
 	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
 	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
 	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
@@ -324,6 +331,17 @@ void HTInitNoticeInfo() {
         memcpy((void *)ht_notice_info.git_hash, value_str, length);
     }
     
+    // bundle version
+    value = HTInfoPlistValueForKey(@"CFBundleVersion");
+    if (value == nil) { HTLog(@"unable to cache bundle version"); }
+    else {
+        value_str = [value UTF8String];
+        length = (strlen(value_str) + 1);
+        ht_notice_info.bundle_version = malloc(length);
+        ht_notice_info.bundle_version_len = length;
+        memcpy((void *)ht_notice_info.bundle_version, value_str, length);
+    }
+    
 }
 void HTReleaseNoticeInfo() {
     free((void *)ht_notice_info.notice_path);
@@ -343,6 +361,9 @@ void HTReleaseNoticeInfo() {
     free((void *)ht_notice_info.git_hash);
     ht_notice_info.git_hash = NULL;
     ht_notice_info.git_hash_len = 0;
+    free((void *)ht_notice_info.bundle_version);
+    ht_notice_info.bundle_version = NULL;
+    ht_notice_info.bundle_version_len = 0;
 }
 
 #pragma mark - notice information on disk

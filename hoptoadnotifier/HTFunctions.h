@@ -20,9 +20,10 @@ void HTStopSignalHandler();
 
 // get values from Info.plist
 id HTInfoPlistValueForKey(NSString *);
-NSString * HTExecutableName();
-NSString * HTApplicationVersion();
-NSString * HTApplicationName();
+NSString *HTExecutableName();
+NSString *HTApplicationVersion();
+NSString *HTBundleVersion();
+NSString *HTApplicationName();
 
 // get platform values
 NSString * HTOperatingSystemVersion();
