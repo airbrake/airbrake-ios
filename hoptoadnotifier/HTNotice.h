@@ -25,6 +25,10 @@ typedef struct ht_notice_info_t {
 	// app version
 	const char *app_version;
 	unsigned long app_version_len;
+    
+    // bundle version
+    const char *bundle_version;
+    unsigned long bundle_version_len;
 	
 	// environment name
 	const char *env_name;
@@ -59,6 +63,8 @@ extern int HTExceptionNoticeType;
 	NSString *_exceptionReason;
 	NSString *_environmentName;
 	NSString *_viewControllerName;
+    NSString *_bundleVersion;
+    NSString *_action;
 	NSDictionary *_environmentInfo;
 	NSArray *_callStack;
 }
@@ -67,6 +73,8 @@ extern int HTExceptionNoticeType;
 @property (nonatomic, copy) NSString *exceptionReason;
 @property (nonatomic, copy) NSString *environmentName;
 @property (nonatomic, copy) NSString *viewControllerName;
+@property (nonatomic, copy) NSString *bundleVersion;
+@property (nonatomic, copy) NSString *action;
 @property (nonatomic, retain) NSDictionary *environmentInfo;
 @property (nonatomic, retain) NSArray *callStack;
 
