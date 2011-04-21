@@ -26,9 +26,9 @@ NSString *HTBundleVersion();
 NSString *HTApplicationName();
 
 // get platform values
-NSString * HTOperatingSystemVersion();
-NSString * HTMachine();
-NSString * HTPlatform();
+NSString *HTOperatingSystemVersion();
+NSString *HTMachine();
+NSString *HTPlatform();
 
 // deal with notice information
 void HTInitNoticeInfo();
@@ -39,9 +39,9 @@ NSString * HTNoticesDirectory();
 NSArray * HTNotices();
 
 // callstack utilities
-NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *);
-NSArray * HTParseCallstack(NSArray *);
-NSString * HTActionFromCallstack(NSArray *);
+NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *);
+NSArray *HTParseCallstack(NSArray *);
+NSString *HTActionFromParsedCallstack(NSArray *);
 
 /*
  returns a string with all of the hoptoad variables

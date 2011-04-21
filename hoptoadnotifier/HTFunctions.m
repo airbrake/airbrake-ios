@@ -202,14 +202,14 @@ NSString *HTApplicationName() {
 }
 
 #pragma mark - platform accessors
-NSString * HTOperatingSystemVersion() {
+NSString *HTOperatingSystemVersion() {
 #if TARGET_IPHONE_SIMULATOR
 	return [[UIDevice currentDevice] systemVersion];
 #else
 	return [[NSProcessInfo processInfo] operatingSystemVersionString];
 #endif
 }
-NSString * HTMachine() {
+NSString *HTMachine() {
 #if TARGET_IPHONE_SIMULATOR
 	return @"iPhone Simulator";
 #else
@@ -227,7 +227,7 @@ NSString * HTMachine() {
     
 #endif
 }
-NSString * HTPlatform() {
+NSString *HTPlatform() {
 #if TARGET_IPHONE_SIMULATOR
 	return @"iPhone Simulator";
 #else
@@ -396,7 +396,7 @@ NSArray * HTNotices() {
 }
 
 #pragma mark - callstack functions
-NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
+NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	int frames = [addresses count];
 	void *stack[frames];
 	for (NSInteger i = 0; i < frames; i++) {
@@ -411,13 +411,14 @@ NSArray * HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	free(strs);
 	return backtrace;
 }
-NSArray * HTParseCallstack(NSArray *symbols) {
+NSArray *HTParseCallstack(NSArray *symbols) {
 	NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 	NSCharacterSet *nonWhiteSpace = [whiteSpace invertedSet];
 	NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
 	for (NSString *line in symbols) {
 		
-		// create scanner
+		// create stuff
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSScanner *scanner = [NSScanner scannerWithString:line];
 		
 		// line number
@@ -434,17 +435,20 @@ NSArray * HTParseCallstack(NSArray *symbols) {
 		method = [method stringByTrimmingCharactersInSet:whiteSpace];
 		
 		// add line
-		[parsed addObject:
+        [parsed addObject:
 		 [NSDictionary dictionaryWithObjectsAndKeys:
 		  [NSNumber numberWithInteger:number], @"number",
 		  binary, @"file",
 		  method, @"method",
 		  nil]];
+        
+        // release pool
+        [pool release];
 		
 	}
 	return parsed;
 }
-NSString * HTActionFromCallstack(NSArray *callStack) {
+NSString *HTActionFromParsedCallstack(NSArray *callStack) {
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"file matches %@", HTExecutableName()];
 	NSArray *matching = [[callStack filteredArrayUsingPredicate:predicate] valueForKey:@"method"];
 	for (NSString *file in matching) {

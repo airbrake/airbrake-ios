@@ -16,7 +16,7 @@
 #import "DDXML.h"
 
 NSString *HTNoticePathExtension = @"htnotice";
-int HTNoticeFileVersion = 2;
+int HTNoticeFileVersion = 3;
 int HTSignalNoticeType = 1;
 int HTExceptionNoticeType = 2;
 
@@ -26,6 +26,8 @@ int HTExceptionNoticeType = 2;
 @synthesize exceptionReason=_exceptionReason;
 @synthesize environmentName=_environmentName;
 @synthesize environmentInfo=_environmentInfo;
+@synthesize bundleVersion=_bundleVersion;
+@synthesize action=_action;
 @synthesize callStack=_callStack;
 @synthesize viewControllerName=_viewControllerName;
 
@@ -110,7 +112,22 @@ int HTExceptionNoticeType = 2;
             free(value_str);
         }
     }
+    
+    // bundle version
+    if (version >= 3) {
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
+        if (length > 0) {
+            char * value_str = malloc(length * sizeof(char));
+            [data getBytes:value_str range:NSMakeRange(location, length)];
+            location += length;
+            notice.bundleVersion = [NSString stringWithUTF8String:value_str];
+            free(value_str);
+        }
+    }
 	
+    
+    // signal notice
 	if (type == HTSignalNoticeType) {
 		
 		// signal
@@ -145,9 +162,9 @@ int HTExceptionNoticeType = 2;
 		notice.callStack = array;
 		
     }
+    
+    // exception notice
 	else if (type == HTExceptionNoticeType) {
-        
-		// get dictionary
 		[data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
 		location += sizeof(unsigned long);
 		NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
@@ -158,88 +175,109 @@ int HTExceptionNoticeType = 2;
 		notice.exceptionReason = [dictionary objectForKey:@"exception reason"];
 		notice.callStack = [dictionary objectForKey:@"call stack"];
 		notice.viewControllerName = [dictionary objectForKey:@"view controller"];
-        
+    }
+    
+    // set action
+    notice.callStack = HTParseCallstack(notice.callStack);
+    notice.action = HTActionFromParsedCallstack(notice.callStack);
+    if (type == HTSignalNoticeType && notice.action != nil) {
+        notice.exceptionReason = notice.action;
     }
 	
+    // set env info
 	notice.environmentInfo = info;
+    
+    // return
 	return [notice autorelease];
 }
 
 #pragma mark - object methods
 - (NSString *)hoptoadXMLString {
-	
-	// setup elements
-	DDXMLElement *e1;
-	DDXMLElement *e2;
-	DDXMLElement *e3;
-	DDXMLElement *root = [DDXMLElement elementWithName:@"notice"];;
-	[root addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.0"]];
-	
-	// set api key
+    
+    // create root
+    DDXMLElement *notice = [[DDXMLElement alloc] initWithName:@"notice"];
+	[notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.0"]];
+    
+    // set api key
 	NSString *apiKey = [[HTNotifier sharedNotifier] apiKey];
-	e1 = [DDXMLElement elementWithName:@"api-key" stringValue:(apiKey == nil) ? @"" : apiKey];
-	[root addChild:e1];
-	
-	// set notifier information
-	e1 = [DDXMLElement elementWithName:@"notifier"];
+    if (apiKey == nil) { apiKey = @""; }
+    [notice addChild:[DDXMLElement elementWithName:@"api-key" stringValue:apiKey]];
+    
+    // set notifier information
+    DDXMLElement *notifier = [[DDXMLElement alloc] initWithName:@"notifier"];
 #if TARGET_OS_IPHONE
-	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
+    [notifier addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
 #else
-	[e1 addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad Mac Notifier"]];
+    [notifier addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad Mac Notifier"]];
 #endif
-	[e1 addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
-	[e1 addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
-	[root addChild:e1];
-	
-	// set error information
-	NSString *message = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
-	e1 = [DDXMLElement elementWithName:@"error"];
-	[e1 addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
-	[e1 addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
-	e2 = [DDXMLElement elementWithName:@"backtrace"];
-	NSArray *stack = HTParseCallstack(self.callStack);
-	for (NSDictionary *line in stack) {
-		e3 = [DDXMLElement elementWithName:@"line"];
-		[e3 addAttribute:
-		 [DDXMLElement attributeWithName:@"number" stringValue:
-		  [[line objectForKey:@"number"] stringValue]]];
-		[e3 addAttribute:
-		 [DDXMLElement attributeWithName:@"file" stringValue:
-		  [line objectForKey:@"file"]]];
-		[e3 addAttribute:
-		 [DDXMLElement attributeWithName:@"method" stringValue:
-		  [line objectForKey:@"method"]]];
-		[e2 addChild:e3];
+    [notifier addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
+	[notifier addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
+	[notice addChild:notifier];
+    [notifier release];
+    
+    // set error information
+    NSString *message = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
+    DDXMLElement *error = [[DDXMLElement alloc] initWithName:@"error"];
+    [error addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
+	[error addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
+    DDXMLElement *backtrace = [[DDXMLElement alloc] initWithName:@"backtrace"];
+    for (NSDictionary *line in self.callStack) {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        DDXMLElement *element = [DDXMLElement elementWithName:@"line"];
+        [element addAttribute:
+         [DDXMLElement
+          attributeWithName:@"number"
+          stringValue:[line objectForKey:@"number"]]];
+        [element addAttribute:
+         [DDXMLElement
+          attributeWithName:@"file"
+          stringValue:[line objectForKey:@"file"]]];
+        [element addAttribute:
+         [DDXMLElement
+          attributeWithName:@"method"
+          stringValue:[line objectForKey:@"method"]]];
+        [backtrace addChild:element];
+        [pool release];
 	}
-	[e1 addChild:e2];
-	[root addChild:e1];
-	
-	// set request info
-	e1 = [DDXMLElement elementWithName:@"request"];
-	[e1 addChild:[DDXMLElement elementWithName:@"url"]];
-	e2 = [DDXMLElement elementWithName:@"component"];
-	[e2 setStringValue:self.viewControllerName];
-	[e1 addChild:e2];
-	e2 = [DDXMLElement elementWithName:@"action"];
-	[e2 setStringValue:HTActionFromCallstack(stack)];
-	[e1 addChild:e2];
-	e2 = [DDXMLElement elementWithName:@"cgi-data"];
-	for (id key in [self.environmentInfo allKeys]) {
-		id var = [self.environmentInfo objectForKey:key];
-		e3 = [DDXMLElement elementWithName:@"var" stringValue:[var description]];
-		[e3 addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:[key description]]];
-		[e2 addChild:e3];
+    [error addChild:backtrace];
+    [notice addChild:error];
+    [backtrace release];
+    [error release];
+    
+    // set request info
+	DDXMLElement *request = [[DDXMLElement alloc] initWithName:@"request"];
+	[request addChild:[DDXMLElement elementWithName:@"url"]];
+    [request addChild:[DDXMLElement elementWithName:@"component" stringValue:self.viewControllerName]];
+    [request addChild:[DDXMLElement elementWithName:@"action" stringValue:self.action]];
+    DDXMLElement *cgi = [[DDXMLElement alloc] initWithName:@"cgi-data"];
+    for (id key in [self.environmentInfo allKeys]) {
+        id value = [self.environmentInfo objectForKey:key];
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        DDXMLElement *element = [DDXMLElement elementWithName:@"var" stringValue:[value description]];
+        [element addAttribute:
+         [DDXMLElement
+          attributeWithName:@"key"
+          stringValue:[key description]]];
+        [cgi addChild:element];
+        [pool release];
 	}
-	[e1 addChild:e2];
-	[root addChild:e1];
+    [request addChild:cgi];
+    [notice addChild:request];
+    [request release];
+    [cgi release];
+    
+    // set server environment
+	DDXMLElement *environment = [[DDXMLElement alloc] initWithName:@"server-environment"];
+	[environment addChild:[DDXMLElement elementWithName:@"environment-name" stringValue:self.environmentName]];
+    [environment addChild:[DDXMLElement elementWithName:@"app-version" stringValue:self.bundleVersion]];
+	[notice addChild:environment];
+    [environment release];
 	
-	// set server environment
-	e1 = [DDXMLElement elementWithName:@"server-environment"];
-	[e1 addChild:[DDXMLElement elementWithName:@"environment-name" stringValue:self.environmentName]];
-	[root addChild:e1];
-	
-	// return
-	return [root XMLString];
+    // finish up
+    NSString *XMLString = [notice XMLString];
+    [notice release];
+    return XMLString;
+    
 }
 - (NSData *)hoptoadXMLData {
 	return [[self hoptoadXMLString] dataUsingEncoding:NSUTF8StringEncoding];
@@ -263,6 +301,8 @@ int HTExceptionNoticeType = 2;
 	self.exceptionReason = nil;
 	self.environmentName = nil;
 	self.environmentInfo = nil;
+    self.bundleVersion = nil;
+    self.action = nil;
 	self.callStack = nil;
 	self.viewControllerName = nil;
 	[super dealloc];
