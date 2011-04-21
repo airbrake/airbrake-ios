@@ -437,7 +437,7 @@ NSArray *HTParseCallstack(NSArray *symbols) {
 		// add line
         [parsed addObject:
 		 [NSDictionary dictionaryWithObjectsAndKeys:
-		  [NSNumber numberWithInteger:number], @"number",
+		  [NSString stringWithFormat:@"%ld", number], @"number",
 		  binary, @"file",
 		  method, @"method",
 		  nil]];
