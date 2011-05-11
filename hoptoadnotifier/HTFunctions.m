@@ -42,6 +42,10 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 		
 		// signal
         write(fd, &signal, sizeof(int));
+        
+        // environment info
+        write(fd, &ht_notice_info.env_info_len, sizeof(unsigned long));
+        write(fd, ht_notice_info.env_info, ht_notice_info.env_info_len);
 		
 		// backtraces
 		int count = 128;
@@ -95,6 +99,7 @@ void ht_handle_exception(NSException *exception) {
         
         // close file
         close(fd);
+        
     }
 	id<HTNotifierDelegate> delegate = [[HTNotifier sharedNotifier] delegate];
 	if ([delegate respondsToSelector:@selector(notifierDidHandleException:)]) {
@@ -364,6 +369,9 @@ void HTReleaseNoticeInfo() {
     free((void *)ht_notice_info.bundle_version);
     ht_notice_info.bundle_version = NULL;
     ht_notice_info.bundle_version_len = 0;
+    free(ht_notice_info.env_info);
+    ht_notice_info.env_info = NULL;
+    ht_notice_info.env_info_len = 0;
 }
 
 #pragma mark - notice information on disk
@@ -397,12 +405,12 @@ NSArray * HTNotices() {
 
 #pragma mark - callstack functions
 NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
-	int frames = [addresses count];
+	NSUInteger frames = [addresses count];
 	void *stack[frames];
 	for (NSInteger i = 0; i < frames; i++) {
 		stack[i] = (void *)[[addresses objectAtIndex:i] unsignedIntegerValue];
 	}
-	char **strs = backtrace_symbols(stack, frames);
+	char **strs = backtrace_symbols(stack, (int)frames);
 	NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
 	for (NSInteger i = 0; i < frames; i++) {
 		NSString *entry = [NSString stringWithUTF8String:strs[i]];
@@ -455,11 +463,8 @@ NSString *HTActionFromParsedCallstack(NSArray *callStack) {
 		if ([file rangeOfString:@"ht_handle_signal"].location == NSNotFound) {
 			return file;
 		}
-		else {
-			continue;
-		}
 	}
-	return @"";
+	return nil;
 }
 
 #pragma mark - string substitution
