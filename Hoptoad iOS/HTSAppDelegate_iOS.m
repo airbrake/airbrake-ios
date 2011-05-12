@@ -1,55 +1,59 @@
 //
-//  CrashAppAppDelegate.m
-//  CrashApp
+//  HTSAppDelegate_iOS.m
+//  Hoptoad iOS
 //
-//  Created by Caleb Davenport on 5/26/10.
-//  Copyright GUI Cocoa, LLC. 2010. All rights reserved.
+//  Created by Caleb Davenport on 5/10/11.
+//  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
-#import "CAAppDelegate.h"
+#import "HTSAppDelegate_iOS.h"
 
-static NSString * CAHoptoadAPIKey = @"";
+// api key
+static NSString * HTSHoptoadAPIKey = @"";
 
-@implementation CAAppDelegate
+@implementation HTSAppDelegate_iOS
 
-@synthesize window;
+@synthesize window=_window;
 
-#pragma mark -
-#pragma mark application delegate
+#pragma mark - application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // setup notifier
 #ifdef DEBUG
-	[HTNotifier startNotifierWithAPIKey:CAHoptoadAPIKey
+	[HTNotifier startNotifierWithAPIKey:HTSHoptoadAPIKey
 						environmentName:HTNotifierDevelopmentEnvironment];
 #else
-    [HTNotifier startNotifierWithAPIKey:CAHoptoadAPIKey
+    [HTNotifier startNotifierWithAPIKey:HTSHoptoadAPIKey
 						environmentName:HTNotifierAppStoreEnvironment];
 #endif
 	[[HTNotifier sharedNotifier] setDelegate:self];
-	[[HTNotifier sharedNotifier] setUseSSL:YES];
+	[[HTNotifier sharedNotifier] setUseSSL:YES]; // only if your account supports it
+    [[HTNotifier sharedNotifier] setEnvironmentValue:@"test value" forKey:@"test key"];
 	[[HTNotifier sharedNotifier] writeTestNotice];
-	
-    [window makeKeyAndVisible];
-	return YES;
+    
+    // show ui
+    [self.window makeKeyAndVisible];
+    
+    // return
+    return YES;
+    
 }
 
-#pragma mark -
-#pragma mark button actions
-- (IBAction)crash:(id)sender {
-	[NSException raise:NSInvalidArgumentException format:@"test exception"];
-}
-- (IBAction)signal:(id)sender {
-	raise(SIGSEGV);
-}
-
-#pragma mark -
-#pragma mark memory management
+#pragma mark - memory management
 - (void)dealloc {
-	self.window = nil;
+    self.window = nil;
     [super dealloc];
 }
 
-#pragma mark -
-#pragma mark notifier delegate
+#pragma mark - button actions
+- (IBAction)exception {
+	[NSException raise:NSInvalidArgumentException format:@"test exception"];
+}
+- (IBAction)signal {
+	raise(SIGSEGV);
+}
+
+#pragma mark - notifier delegate
 - (UIViewController *)rootViewControllerForNotice {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 	return nil;
