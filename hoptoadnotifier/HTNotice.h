@@ -11,7 +11,7 @@
 // notice info
 typedef struct ht_notice_info_t {
 	
-	// file names
+	// file name
 	const char *notice_path;
 	
 	// os version
@@ -30,13 +30,17 @@ typedef struct ht_notice_info_t {
     const char *bundle_version;
     unsigned long bundle_version_len;
 	
+    // environment name
+	const char *git_hash;
+	unsigned long git_hash_len;
+    
 	// environment name
 	const char *env_name;
 	unsigned long env_name_len;
     
-    // git hash
-    const char *git_hash;
-    unsigned long git_hash_len;
+    // environment info
+    void *env_info;
+    unsigned long env_info_len;
 	
 } ht_notice_info_t;
 ht_notice_info_t ht_notice_info;
@@ -48,6 +52,7 @@ extern int HTSignalNoticeType;
 extern int HTExceptionNoticeType;
 
 /*
+ 
  Instances of the HTNotice class represent a single crash
  report. It holds all of the properties that get posted to
  Hoptoad.
@@ -56,6 +61,7 @@ extern int HTExceptionNoticeType;
  persisted in the file representation of the object. Those
  that are not are pulled from the HTNotifier at runtime
  (primarily the API key).
+ 
  */
 @interface HTNotice : NSObject {
 @private
@@ -75,8 +81,8 @@ extern int HTExceptionNoticeType;
 @property (nonatomic, copy) NSString *viewControllerName;
 @property (nonatomic, copy) NSString *bundleVersion;
 @property (nonatomic, copy) NSString *action;
-@property (nonatomic, retain) NSDictionary *environmentInfo;
-@property (nonatomic, retain) NSArray *callStack;
+@property (nonatomic, copy) NSDictionary *environmentInfo;
+@property (nonatomic, copy) NSArray *callStack;
 
 // create an object representation of notice data
 + (HTNotice *)noticeWithContentsOfFile:(NSString *)path;

@@ -16,7 +16,7 @@
 #import "DDXML.h"
 
 NSString *HTNoticePathExtension = @"htnotice";
-int HTNoticeFileVersion = 3;
+int HTNoticeFileVersion = 4;
 int HTSignalNoticeType = 1;
 int HTExceptionNoticeType = 2;
 
@@ -138,6 +138,16 @@ int HTExceptionNoticeType = 2;
 		// exception name and reason
 		notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
 		notice.exceptionReason = @"Application recieved signal";
+        
+        // environment info
+        if (version >= 4) {
+            [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+            location += sizeof(unsigned long);
+            NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
+            location += length;
+            NSDictionary *environmentInfo = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
+            [info addEntriesFromDictionary:environmentInfo];
+        }
 		
 		// call stack
 		NSUInteger i = location;
@@ -221,21 +231,21 @@ int HTExceptionNoticeType = 2;
     [error addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
 	[error addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
     DDXMLElement *backtrace = [[DDXMLElement alloc] initWithName:@"backtrace"];
-    for (NSDictionary *line in self.callStack) {
+    for (NSArray *line in self.callStack) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         DDXMLElement *element = [DDXMLElement elementWithName:@"line"];
         [element addAttribute:
          [DDXMLElement
           attributeWithName:@"number"
-          stringValue:[line objectForKey:@"number"]]];
+          stringValue:[line objectAtIndex:0]]];
         [element addAttribute:
          [DDXMLElement
           attributeWithName:@"file"
-          stringValue:[line objectForKey:@"file"]]];
+          stringValue:[line objectAtIndex:1]]];
         [element addAttribute:
          [DDXMLElement
           attributeWithName:@"method"
-          stringValue:[line objectForKey:@"method"]]];
+          stringValue:[line objectAtIndex:2]]];
         [backtrace addChild:element];
         [pool release];
 	}
