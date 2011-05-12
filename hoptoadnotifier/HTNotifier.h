@@ -51,28 +51,21 @@ extern NSString *HTNotifierReleaseEnvironment;
  */
 @interface HTNotifier : NSObject {
 @private
-	NSString *apiKey;
-	NSString *environmentName;
-	NSMutableDictionary *environmentInfo;
+    NSMutableDictionary *_environmentInfo;
+    NSString *_environmentName;
+    NSString *_apiKey;
+	id<HTNotifierDelegate> _delegate;
+    BOOL _useSSL;
+    
 	SCNetworkReachabilityRef reachability;
-	id<HTNotifierDelegate> delegate;
-	BOOL useSSL;
 }
 
+// properties
+@property (nonatomic, readonly) NSDictionary *environmentInfo;
 @property (nonatomic, readonly) NSString *apiKey;
 @property (nonatomic, readonly) NSString *environmentName;
 @property (nonatomic, assign) id<HTNotifierDelegate> delegate;
-/*
- 
- set string key-value pairs on this item to have additional
- context for your crash notices. by default this is a blank
- mutable dictionary
- 
- NOTE: do not use this to transmit UDID's, location, or any
- other private user information without permission
- 
- */
-@property (nonatomic, readonly) NSMutableDictionary *environmentInfo;
+
 /*
  
  control whether notices are posted using SSL. your account
@@ -102,8 +95,7 @@ extern NSString *HTNotifierReleaseEnvironment;
  
  access the shared notifier object.
  
- if this is called before
-	startNotifierWithAPIKey:environmentName:
+ if this is called before `startNotifierWithAPIKey:environmentName:`
  nil will be returned.
  
  */
@@ -115,5 +107,21 @@ extern NSString *HTNotifierReleaseEnvironment;
  
  */
 - (void)writeTestNotice;
+
+/*
+ 
+ set environment info key/value pair
+ 
+ passing nil as value will remove the value for the given key
+ 
+ */
+- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
+
+/*
+ 
+ get environment info value given a key
+ 
+ */
+- (NSString *)environmentValueForKey:(NSString *)key;
 
 @end

@@ -6,6 +6,8 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import <Availability.h>
+
 #import "HTNotifier.h"
 #import "HTNotifier_iOS.h"
 #import "HTNotifier_Mac.h"
@@ -27,7 +29,7 @@ static NSString *HTNotifierHostName = @"hoptoadapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString *HTNotifierVersion = @"2.1";
+NSString *HTNotifierVersion = @"2.2";
 NSString *HTNotifierBundleName = @"${BUNDLE}";
 NSString *HTNotifierBundleVersion  = @"${VERSION}";
 NSString *HTNotifierDevelopmentEnvironment = @"Development";
@@ -56,6 +58,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 @end
 @implementation HTNotifier (private)
 
+// implementations
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	self = [super init];
 	if (self) {
@@ -71,11 +74,10 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		}
 		
 		// setup values
-		apiKey = [key copy];
-		environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
-		environmentInfo = [[NSMutableDictionary alloc] init];
+		_apiKey = [key copy];
+		_environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
+		_environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
-        HTInitNoticeInfo();
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -88,6 +90,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		[self registerNotifications];
         
         // start
+        HTInitNoticeInfo();
 		HTStartHandlers();
 		
 	}
@@ -121,10 +124,8 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (void)postNoticesWithPaths:(NSArray *)paths {
 
     // notify delegate
-    if ([paths count] > 0) {
-        if ([self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
-            [self.delegate notifierWillPostNotices];
-        }
+    if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
+        [self.delegate notifierWillPostNotices];
     }
     
 #if HT_IOS_SDK_4
@@ -132,8 +133,8 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	if (HTIsMultitaskingSupported) {
 		
 		// start background task
+        __block BOOL keepPosting = YES;
 		UIApplication *app = [UIApplication sharedApplication];
-		__block BOOL keepPosting = YES;
 		UIBackgroundTaskIdentifier task = [app beginBackgroundTaskWithExpirationHandler:^{
 			keepPosting = NO;
 		}];
@@ -166,10 +167,8 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #endif
     
     // notify delegate
-    if ([paths count] > 0) {
-        if ([self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
-            [self.delegate notifierDidPostNotices];
-        }
+    if ([paths count] && [self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
+        [self.delegate notifierDidPostNotices];
     }
 	
 }
@@ -177,6 +176,10 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     
 	// get notice payload
 	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+    if (notice == nil) {
+        HTLog(@"unable to read notice at %@", path);
+        return;
+    }
 #ifdef DEBUG
 	HTLog(@"%@", notice);
 #endif
@@ -190,8 +193,8 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	[request setHTTPBody:data];
 	
 	// perform request
+    NSError *error = nil;
 	NSHTTPURLResponse *response = nil;
-	NSError *error = nil;
 	NSData *responseBody = [NSURLConnection
 							sendSynchronousRequest:request
 							returningResponse:&response
@@ -216,9 +219,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	else {
 		NSString *responseString = [[NSString alloc] initWithData:responseBody
 														 encoding:NSUTF8StringEncoding];
-		HTLog(@"unexpected response\nstatus code:%ld\nresponse body:%@",
-			  (long)statusCode,
-			  responseString);
+		HTLog(@"unexpected response\nstatus code:%ld\nresponse body:%@", (long)statusCode, responseString);
 		[responseString release];
 	}
     
@@ -226,9 +227,10 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (BOOL)isHoptoadReachable {
 	SCNetworkReachabilityFlags flags;
 	SCNetworkReachabilityGetFlags(reachability, &flags);
-	return ((flags & kSCNetworkReachabilityFlagsReachable) != 0);
+	return (flags & kSCNetworkReachabilityFlagsReachable);
 }
 
+// override these in subclasses
 - (void)registerNotifications {}
 - (void)unregisterNotifications {}
 - (void)showNoticeAlert {}
@@ -239,16 +241,18 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #pragma mark public implementation
 @implementation HTNotifier
 
-@synthesize apiKey;
-@synthesize environmentName;
-@synthesize useSSL;
-@synthesize environmentInfo;
-@synthesize delegate;
+@synthesize environmentInfo=_environmentInfo;
+@synthesize environmentName=_environmentName;
+@synthesize apiKey=_apiKey;
+@synthesize useSSL=_useSSL;
+@synthesize delegate=_delegate;
 
+#pragma mark - start notifier
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {
 		
 		// validate
+        
 		if (key == nil || [key length] == 0) {
 			HTLog(@"The provided API key is not valid");
 			return;
@@ -268,12 +272,14 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #endif
 		
 		// log
-        if (sharedNotifier != nil) {
+        if (sharedNotifier) {
             HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
             HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
         }
 	}
 }
+
+#pragma mark - singleton methods
 + (HTNotifier *)sharedNotifier {
 	@synchronized(self) {
 		return sharedNotifier;
@@ -303,16 +309,27 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (id)autorelease {
 	return self;
 }
+
+#pragma mark - memory management
 - (void)dealloc {
+    
+    // stop event sources
 	[self unregisterNotifications];
-	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
-	[apiKey release];apiKey = nil;
-	[environmentName release];environmentName = nil;
-	[environmentInfo release];environmentInfo = nil;
     HTStopHandlers();
+    
+    // release information
     HTReleaseNoticeInfo();
+	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
+	[_apiKey release];_apiKey = nil;
+	[_environmentName release];_environmentName = nil;
+	[_environmentInfo release];_environmentInfo = nil;
+    
+    // super
 	[super dealloc];
+    
 }
+
+#pragma mark - test mechanism
 - (void)writeTestNotice {
     NSString *testPath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
     testPath = [testPath stringByAppendingPathExtension:HTNoticePathExtension];
@@ -321,6 +338,21 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	@catch (NSException * e) { ht_handle_exception(e); }
 	NSString *noticePath = [NSString stringWithUTF8String:ht_notice_info.notice_path];
 	[[NSFileManager defaultManager] moveItemAtPath:noticePath toPath:testPath error:nil];
+}
+
+#pragma mark - environment information accessors
+- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
+    if (valueOrNil == nil) { [_environmentInfo removeObjectForKey:key]; }
+    else { [_environmentInfo setObject:valueOrNil forKey:key]; }
+    NSData *environmentData = [NSKeyedArchiver archivedDataWithRootObject:_environmentInfo];
+    NSUInteger length = [environmentData length];
+    free(ht_notice_info.env_info);
+    ht_notice_info.env_info = malloc(length);
+    ht_notice_info.env_info_len = length;
+    [environmentData getBytes:ht_notice_info.env_info length:length];
+}
+- (NSString *)environmentValueForKey:(NSString *)key {
+    return [_environmentInfo objectForKey:key];
 }
 
 @end
