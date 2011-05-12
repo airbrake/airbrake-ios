@@ -9,8 +9,12 @@
 #import <execinfo.h>
 #import <fcntl.h>
 #import <unistd.h>
+
 #import <sys/sysctl.h>
+
 #import <TargetConditionals.h>
+
+#import "RegexKitLite.h"
 
 #import "HTFunctions.h"
 #import "HTNotifier.h"
@@ -420,51 +424,31 @@ NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
 	return backtrace;
 }
 NSArray *HTParseCallstack(NSArray *symbols) {
-	NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-	NSCharacterSet *nonWhiteSpace = [whiteSpace invertedSet];
-	NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
-	for (NSString *line in symbols) {
-		
-		// create stuff
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		NSScanner *scanner = [NSScanner scannerWithString:line];
-		
-		// line number
-		NSInteger number;
-		[scanner scanInteger:&number];
-		
-		// binary name
-		NSString *binary;
-		[scanner scanCharactersFromSet:nonWhiteSpace intoString:&binary];
-		
-		// method
-        NSUInteger location = [scanner scanLocation];
-		NSString *method = [line substringFromIndex:location];
-		method = [method stringByTrimmingCharactersInSet:whiteSpace];
-		
-		// add line
-        [parsed addObject:
-		 [NSDictionary dictionaryWithObjectsAndKeys:
-		  [NSString stringWithFormat:@"%ld", number], @"number",
-		  binary, @"file",
-		  method, @"method",
-		  nil]];
-        
-        // release pool
-        [pool release];
-		
-	}
-	return parsed;
+    NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
+    NSString *pattern = @"([0-9]+)[:blank:]*(.*)(0x[0-9a-f]{8}.*)";
+    NSCharacterSet *blank = [NSCharacterSet whitespaceCharacterSet];
+    for (NSString *line in symbols) {
+        NSArray *components = [line captureComponentsMatchedByRegex:pattern];
+        NSMutableArray *frame = [[NSMutableArray alloc] initWithCapacity:3];
+        for (NSInteger i = 1; i < [components count]; i++) {
+            NSString *item = [[components objectAtIndex:i] stringByTrimmingCharactersInSet:blank];
+            [frame addObject:item];
+        }
+        [parsed addObject:frame];
+        [frame release];
+    }
+    return parsed;
 }
 NSString *HTActionFromParsedCallstack(NSArray *callStack) {
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"file matches %@", HTExecutableName()];
-	NSArray *matching = [[callStack filteredArrayUsingPredicate:predicate] valueForKey:@"method"];
-	for (NSString *file in matching) {
-		if ([file rangeOfString:@"ht_handle_signal"].location == NSNotFound) {
-			return file;
-		}
-	}
-	return nil;
+    NSString *executable = HTExecutableName();
+    for (NSArray *line in callStack) {
+        NSString *binary = [line objectAtIndex:1];
+        NSString *method = [line objectAtIndex:2];
+        if ([binary isEqualToString:executable] && [method rangeOfString:@"ht_handle_signal"].location == NSNotFound) {
+            return method;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - string substitution
