@@ -1,5 +1,5 @@
 //
-//  HTNotifier.h
+//  HTNotifierDelegate.h
 //  HoptoadNotifier
 //
 //  Created by Caleb Davenport on 12/15/10.
