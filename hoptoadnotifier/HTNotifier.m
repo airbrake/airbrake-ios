@@ -6,7 +6,7 @@
 //  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
 //
 
-#import <Availability.h>
+#import <TargetConditionals.h>
 
 #import "HTNotifier.h"
 #import "HTNotifier_iOS.h"
@@ -29,7 +29,7 @@ static NSString *HTNotifierHostName = @"hoptoadapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString *HTNotifierVersion = @"2.2";
+NSString *HTNotifierVersion = @"2.2 Beta";
 NSString *HTNotifierBundleName = @"${BUNDLE}";
 NSString *HTNotifierBundleVersion  = @"${VERSION}";
 NSString *HTNotifierDevelopmentEnvironment = @"Development";
