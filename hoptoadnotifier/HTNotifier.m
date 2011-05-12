@@ -182,6 +182,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     }
 #ifdef DEBUG
 	HTLog(@"%@", notice);
+    //HTLog(@"%@", [notice hoptoadXMLString]);
 #endif
 	NSData *data = [notice hoptoadXMLData];
 	
