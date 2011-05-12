@@ -113,6 +113,8 @@
 		3BA58926137C871300D9C544 /* nl-NL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl-NL"; path = "nl-NL.lproj/HTNotifier.strings"; sourceTree = "<group>"; };
 		3BA58927137C871300D9C544 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3BA58928137C871300D9C544 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3BA58935137C87C000D9C544 /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = INSTALLATION.html; sourceTree = "<group>"; };
+		3BA58936137C87C000D9C544 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,8 @@
 		3B2E0B18137A11B1009B558C = {
 			isa = PBXGroup;
 			children = (
+				3BA58935137C87C000D9C544 /* INSTALLATION.html */,
+				3BA58936137C87C000D9C544 /* README.markdown */,
 				3B2E0B4D137A11E1009B558C /* Hoptoad Mac */,
 				3B2E0B6B137A11F9009B558C /* Hoptoad iOS */,
 				3BA58914137C871300D9C544 /* hoptoadnotifier */,

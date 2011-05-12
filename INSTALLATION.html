@@ -2,19 +2,15 @@
   
   <h3>Setting up your iOS project</h3>
   <ol>
+    <li>Download the notifier from <a href="Github">https://github.com/guicocoa/hoptoad-ios</a>.</li>
     <li>
-      Download the notifier from <a href="Github">https://github.com/guicocoa/hoptoad-ios</a>.
-    </li>
-    <li>
-      Drag the hoptoadnotifier and kissxml folders to your project.
+      Drag the hoptoadnotifier, kissxml, and regexkitlite folders to your project
       <ul>
-        <li> Make sure "Copy Items" and "Create Groups" are selected.</li>
-        <li> If you are already using kissxml, you don't need to include it again.</li>
+        <li>Make sure "Copy Items" and "Create Groups" are selected</li>
+        <li>If you are already using kissxml or regexkitlite, you don't need to include them again</li>
       </ul>
     </li>
-    <li>
-      Add SystemConfiguration.framework and libxml2.dylib to your project.
-    </li>
+    <li>Add SystemConfiguration.framework, libicucore.dylib, and libxml2.dylib to your project</li>
     <li>
       Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings.
       <ul>

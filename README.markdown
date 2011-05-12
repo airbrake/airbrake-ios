@@ -29,7 +29,7 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 
 1. Drag the hoptoadnotifier, kissxml, and regexkitlite folders to your project
     
-    - make sure "Copy Items" and "Create Groups" are selected
+    - Make sure "Copy Items" and "Create Groups" are selected
     
     - If you are already using kissxml or regexkitlite, you don't need to include them again
 
