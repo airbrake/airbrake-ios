@@ -17,7 +17,7 @@ The notifier handles all unhanded exceptions, and a select list of Unix signals:
 - SIGSEGV
 - SIGTRAP
 
-The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in HTNotifier.h. Please read through the header file for a complete reference of the library. For quick reference and examples, read the sections below.
+The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library. For quick reference and examples, read the sections below.
 
 In order for the call stack to be properly symbolicated at the time of a crash, applications built with the notifier should not be stripped of their symbol information at compile time. If these settings are not set as  recommended, frames from your binary will be displayed as hex return addresses instead of readable strings. These hex return addresses can be symbolicated using `atos`. More information about symbolication and these build settings can be found at [http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html](http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html) Here are the settings that control code stripping:
 
@@ -25,17 +25,15 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 - Strip Debug Symbols During Copy: Off
 - Strip Linked Product: Off
 
-If you add the following build script to your target, the notifier will report the git hash and automatic build version (based on git commit count) with each notice.  [https://github.com/guicocoa/xcode-git-cfbundleversion](https://github.com/guicocoa/xcode-git-cfbundleversion)
-
 #Installation
 
-1. Drag the hoptoadnotifier and kissxml folders to your project
+1. Drag the hoptoadnotifier, kissxml, and regexkitlite folders to your project
     
     - make sure "Copy Items" and "Create Groups" are selected
     
-    - If you are already using kissxml, you don't need to include it again
+    - If you are already using kissxml or regexkitlite, you don't need to include them again
 
-2. Add SystemConfiguration.framework and libxml2.dylib to your project
+2. Add SystemConfiguration.framework, libicucore.dylib, and libxml2.dylib to your project
 
 3. Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings
   
@@ -49,8 +47,8 @@ To run the notifier you only need to complete two steps. First, import the HTNot
     
 Next, call the main notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
-    [HTNotifier startNotifierWithAPIKey:<# api key #>
-                        environmentName:<# environment #>];
+    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                        environmentName:@"<# environment #>"];
 
 The API key argument expects your Hoptoad project API key. The environment name you provide will be used to categorize received crash reports in the Hoptoad web interface. The notifier provides several factory environment names that you are free to use.
 
