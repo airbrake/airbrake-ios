@@ -182,7 +182,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     }
 #ifdef DEBUG
 	HTLog(@"%@", notice);
-    //HTLog(@"%@", [notice hoptoadXMLString]);
+    HTLog(@"%@", [notice hoptoadXMLString]);
 #endif
 	NSData *data = [notice hoptoadXMLData];
 	
@@ -353,7 +353,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     [environmentData getBytes:ht_notice_info.env_info length:length];
 }
 - (NSString *)environmentValueForKey:(NSString *)key {
-    return [_environmentInfo objectForKey:key];
+    return [self.environmentInfo objectForKey:key];
 }
 
 @end

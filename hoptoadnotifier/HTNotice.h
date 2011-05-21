@@ -29,10 +29,6 @@ typedef struct ht_notice_info_t {
     // bundle version
     const char *bundle_version;
     unsigned long bundle_version_len;
-	
-    // environment name
-	const char *git_hash;
-	unsigned long git_hash_len;
     
 	// environment name
 	const char *env_name;

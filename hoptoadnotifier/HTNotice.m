@@ -206,7 +206,7 @@ int HTExceptionNoticeType = 2;
     
     // create root
     DDXMLElement *notice = [[DDXMLElement alloc] initWithName:@"notice"];
-	[notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.0"]];
+	[notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.1"]];
     
     // set api key
 	NSString *apiKey = [[HTNotifier sharedNotifier] apiKey];

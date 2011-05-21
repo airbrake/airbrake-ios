@@ -9,9 +9,7 @@
 #import <execinfo.h>
 #import <fcntl.h>
 #import <unistd.h>
-
 #import <sys/sysctl.h>
-
 #import <TargetConditionals.h>
 
 #import "RegexKitLite.h"
@@ -130,10 +128,6 @@ int ht_open_file(int type) {
         write(fd, &ht_notice_info.env_name_len, sizeof(unsigned long));
         if (ht_notice_info.env_name_len > 0) {
             write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
-        }
-        write(fd, &ht_notice_info.git_hash_len, sizeof(unsigned long));
-        if (ht_notice_info.git_hash_len > 0) {
-            write(fd, ht_notice_info.git_hash, ht_notice_info.git_hash_len);
         }
         write(fd, &ht_notice_info.bundle_version_len, sizeof(unsigned long));
         if (ht_notice_info.bundle_version_len > 0) {
@@ -329,17 +323,6 @@ void HTInitNoticeInfo() {
         memcpy((void *)ht_notice_info.env_name, value_str, length);
     }
     
-    // git hash
-    value = HTInfoPlistValueForKey(@"GCGitCommitHash");
-    if (value == nil) { HTLog(@"unable to cache git commit hash"); }
-    else {
-        value_str = [value UTF8String];
-        length = (strlen(value_str) + 1);
-        ht_notice_info.git_hash = malloc(length);
-        ht_notice_info.git_hash_len = length;
-        memcpy((void *)ht_notice_info.git_hash, value_str, length);
-    }
-    
     // bundle version
     value = HTInfoPlistValueForKey(@"CFBundleVersion");
     if (value == nil) { HTLog(@"unable to cache bundle version"); }
@@ -367,9 +350,6 @@ void HTReleaseNoticeInfo() {
     free((void *)ht_notice_info.env_name);
     ht_notice_info.env_name = NULL;
     ht_notice_info.env_name_len = 0;
-    free((void *)ht_notice_info.git_hash);
-    ht_notice_info.git_hash = NULL;
-    ht_notice_info.git_hash_len = 0;
     free((void *)ht_notice_info.bundle_version);
     ht_notice_info.bundle_version = NULL;
     ht_notice_info.bundle_version_len = 0;
