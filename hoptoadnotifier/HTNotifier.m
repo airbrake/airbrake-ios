@@ -20,7 +20,7 @@ static HTNotifier *sharedNotifier = nil;
 static NSString *HTNotifierHostName = @"hoptoadapp.com";
 #define HTNotifierURL [NSURL URLWithString: \
 	[NSString stringWithFormat: \
-	@"%@://%@%/notifier_api/v2/notices", \
+	@"%@://%@/notifier_api/v2/notices", \
 	(self.useSSL) ? @"https" : @"http", \
 	HTNotifierHostName]]
 #define HTIsMultitaskingSupported \

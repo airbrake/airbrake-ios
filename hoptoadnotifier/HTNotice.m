@@ -101,7 +101,7 @@ int HTExceptionNoticeType = 2;
 	}
     
     // git hash
-    if (version >= 2) {
+    if (version >= 2 && version < 4) {
         [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
         location += sizeof(unsigned long);
         if (length > 0) {
