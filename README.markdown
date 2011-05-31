@@ -4,7 +4,7 @@ The Hoptoad iOS Notifier is designed to give developers instant notification of 
 
 To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
 
-If you have questions or need support please visit the [support page](http://help.hoptoadapp.com/discussions/ios-notifier)
+If you have questions or need support please visit [Hoptoad support](http://help.hoptoadapp.com/discussions/ios-notifier)
 
 #Signals
 
