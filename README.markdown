@@ -1,14 +1,14 @@
 #About
 
-The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to Hoptoad ([http://hoptoadapp.com](http://hoptoadapp.com)) where you can see information like backtrace, device type, app version, and more.
+The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to [Hoptoad](http://hoptoadapp.com) where you can see information like backtrace, device type, app version, and more.
 
 To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
 
-If you have questions or need support please visit the support page at [http://help.hoptoadapp.com/discussions/ios-notifier](http://help.hoptoadapp.com/discussions/ios-notifier)
+If you have questions or need support please visit the [support page](http://help.hoptoadapp.com/discussions/ios-notifier)
 
 #Signals
 
-The notifier handles all unhanded exceptions, and a select list of Unix signals:
+The notifier handles all unhandled exceptions, and a select list of Unix signals:
 
 - SIGABRT
 - SIGBUS
@@ -19,7 +19,7 @@ The notifier handles all unhanded exceptions, and a select list of Unix signals:
 
 #Symbolication
 
-In order for the call stack to be properly symbolicated at the time of a crash, applications built with the notifier should not be stripped of their symbol information at compile time. If these settings are not set as  recommended, frames from your binary will be displayed as hex return addresses instead of readable strings. These hex return addresses can be symbolicated using `atos`. More information about symbolication and these build settings can be found at [http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html](http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html) Here are the settings that control code stripping:
+In order for the call stack to be properly symbolicated at the time of a crash, applications built with the notifier should not be stripped of their symbol information at compile time. If these settings are not set as  recommended, frames from your binary will be displayed as hex return addresses instead of readable strings. These hex return addresses can be symbolicated using `atos`. More information about symbolication and these build settings can be found in Apple's [developer documentation](http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html). Here are the settings that control code stripping:
 
 - Deployment Postprocessing: Off
 - Strip Debug Symbols During Copy: Off
@@ -27,7 +27,7 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 
 #Versioning
 
-Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will still be saved. If you would like to keep this from happening, please reset your project API key on hoptoad and update it accordingly in your app. The notifier in these older app versions will fail gracefully in this situation.
+Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will still be saved. If you would like to keep this from happening, please reset your API key in the project settings and update it accordingly in your app. The notifier in these older app versions will fail gracefully in this situation.
 
 #Installation
 
@@ -35,7 +35,7 @@ Hoptoad supports a version floor for reported notices. A setting called "Latest 
     
     - Make sure "Copy Items" and "Create Groups" are selected
     
-    - If you are already using kissxml or regexkitlite, you don't need to include them again
+    - If you are already using kissxml or regexkitlite, you do not need to include them again
 
 2. Add SystemConfiguration.framework, libicucore.dylib, and libxml2.dylib to your project
 
