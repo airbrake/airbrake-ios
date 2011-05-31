@@ -90,6 +90,7 @@ void ht_handle_exception(NSException *exception) {
 #endif
 		
 		// environment info
+        [[HTNotifier sharedNotifier] setEnvironmentValue:[[exception userInfo] description] forKey:@"Exception"];
 		NSDictionary *environmentInfo = [[HTNotifier sharedNotifier] environmentInfo];
 		[dictionary setObject:environmentInfo forKey:@"environment info"];
 		
