@@ -6,7 +6,7 @@ To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicoc
 
 If you have questions or need support please visit the support page at [http://help.hoptoadapp.com/discussions/ios-notifier](http://help.hoptoadapp.com/discussions/ios-notifier)
 
-##Notes
+#Signals
 
 The notifier handles all unhanded exceptions, and a select list of Unix signals:
 
@@ -17,13 +17,17 @@ The notifier handles all unhanded exceptions, and a select list of Unix signals:
 - SIGSEGV
 - SIGTRAP
 
-The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library. For quick reference and examples, read the sections below.
+#Symbolication
 
 In order for the call stack to be properly symbolicated at the time of a crash, applications built with the notifier should not be stripped of their symbol information at compile time. If these settings are not set as  recommended, frames from your binary will be displayed as hex return addresses instead of readable strings. These hex return addresses can be symbolicated using `atos`. More information about symbolication and these build settings can be found at [http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html](http://developer.apple.com/tools/xcode/symbolizingcrashdumps.html) Here are the settings that control code stripping:
 
 - Deployment Postprocessing: Off
 - Strip Debug Symbols During Copy: Off
 - Strip Linked Product: Off
+
+#Versioning
+
+Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will still be saved. If you would like to keep this from happening, please reset your project API key on hoptoad and update it accordingly in your app. The notifier in these older app versions will fail gracefully in this situation.
 
 #Installation
 
@@ -38,6 +42,8 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 3. Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings
   
     - make sure you add it under "All Configurations"
+
+The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library.
     
 #Running The Notifier
 
@@ -52,14 +58,14 @@ Next, call the main notifier method at the very beginning of your `application:d
 
 The API key argument expects your Hoptoad project API key. The environment name you provide will be used to categorize received crash reports in the Hoptoad web interface. The notifier provides several factory environment names that you are free to use.
 
-  - `HTNotifierDevelopmentEnvironment`
-  - `HTNotifierAdHocEnvironment`
-  - `HTNotifierAppStoreEnvironment`
-  - `HTNotifierReleaseEnvironment`
+- `HTNotifierDevelopmentEnvironment`
+- `HTNotifierAdHocEnvironment`
+- `HTNotifierAppStoreEnvironment`
+- `HTNotifierReleaseEnvironment`
 
 #Testing
 
-To test that the notifier is working inside your application, a simple test method is provided. This method creates a notice with all of the parameters filled out as if a method, `crash`, was called on the shared HTNotifier object. That notice will be picked up by the notifier and reported just like an actual crash. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
+To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
 
      [[HTNotifier sharedNotifier] writeTestNotice];
 
