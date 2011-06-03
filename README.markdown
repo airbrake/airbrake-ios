@@ -2,9 +2,7 @@
 
 The Hoptoad iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to [Hoptoad](http://hoptoadapp.com) where you can see information like backtrace, device type, app version, and more.
 
-To see a screencast visit [http://guicocoa.com/hoptoad#screencast](http://guicocoa.com/hoptoad#screencast)
-
-If you have questions or need support please visit [Hoptoad support](http://help.hoptoadapp.com/discussions/ios-notifier)
+To see how this might help you check out [this screencast](http://guicocoa.com/hoptoad#screencast). If you have questions or need support please visit [Hoptoad support](http://help.hoptoadapp.com/discussions/ios-notifier)
 
 #Signals
 
