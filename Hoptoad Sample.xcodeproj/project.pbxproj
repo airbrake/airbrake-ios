@@ -54,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		3B0BD55B1397CC26003DE0BF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/HTNotifier.strings; sourceTree = "<group>"; };
+		3B0D5DA313995DAB004E0DAD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HTNotifier.strings"; sourceTree = "<group>"; };
 		3B2E0B45137A11E0009B558C /* Hoptoad Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoptoad Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B2E0B4F137A11E1009B558C /* Hoptoad Mac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Hoptoad Mac-Info.plist"; sourceTree = "<group>"; };
 		3B2E0B51137A11E1009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -360,6 +361,7 @@
 				"nl-BE",
 				"nl-NL",
 				nl,
+				"zh-Hant",
 			);
 			mainGroup = 3B2E0B18137A11B1009B558C;
 			productRefGroup = 3B2E0B24137A11B1009B558C /* Products */;
@@ -490,6 +492,7 @@
 				3BA58927137C871300D9C544 /* ro */,
 				3BA58928137C871300D9C544 /* ru */,
 				3B0BD55B1397CC26003DE0BF /* nl */,
+				3B0D5DA313995DAB004E0DAD /* zh-Hant */,
 			);
 			name = HTNotifier.strings;
 			sourceTree = "<group>";
