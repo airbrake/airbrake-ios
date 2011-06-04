@@ -14,22 +14,6 @@
 @implementation HTNotifier_Mac
 
 #pragma mark - object methods
-- (void)registerNotifications {
-	[[NSNotificationCenter defaultCenter]
-	 addObserver:self
-	 selector:@selector(applicationDidBecomeActive:)
-	 name:NSApplicationDidBecomeActiveNotification
-	 object:nil];
-}
-- (void)unregisterNotifications {
-	[[NSNotificationCenter defaultCenter]
-	 removeObserver:self
-	 name:NSApplicationDidBecomeActiveNotification
-	 object:nil];
-}
-- (void)applicationDidBecomeActive:(NSNotification *)notif {
-	[self performSelectorInBackground:@selector(checkForNoticesAndReportIfReachable) withObject:nil];
-}
 - (void)showNoticeAlert {
 	if ([self.delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
 		[self.delegate notifierWillDisplayAlert];
