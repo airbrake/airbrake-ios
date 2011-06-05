@@ -414,8 +414,11 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     NSString *testPath = [HTNoticesDirectory() stringByAppendingPathComponent:@"TEST"];
     testPath = [testPath stringByAppendingPathExtension:HTNoticePathExtension];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:testPath]) { return; }
-	@try { [self performSelector:@selector(crash)]; }
-	@catch (NSException * e) { ht_handle_exception(e); }
+	@try {
+        NSArray *array = [NSArray array];
+        [array objectAtIndex:NSUIntegerMax];
+    }
+	@catch (NSException *e) { ht_handle_exception(e); }
 	NSString *noticePath = [NSString stringWithUTF8String:ht_notice_info.notice_path];
 	[[NSFileManager defaultManager] moveItemAtPath:noticePath toPath:testPath error:nil];
 }
