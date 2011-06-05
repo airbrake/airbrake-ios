@@ -166,22 +166,14 @@
 				3B2E0B59137A11E1009B558C /* HTSAppDelegate_Mac.h */,
 				3B2E0B5A137A11E1009B558C /* HTSAppDelegate_Mac.m */,
 				3B2E0B5C137A11E1009B558C /* MainMenu.xib */,
-				3B2E0B4E137A11E1009B558C /* Supporting Files */,
-				3B2E0BD6137A178D009B558C /* Frameworks */,
-			);
-			path = "Hoptoad Mac";
-			sourceTree = "<group>";
-		};
-		3B2E0B4E137A11E1009B558C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
 				3B2E0B4F137A11E1009B558C /* Hoptoad Mac-Info.plist */,
 				3B2E0B50137A11E1009B558C /* InfoPlist.strings */,
 				3B2E0B53137A11E1009B558C /* Hoptoad Mac-Prefix.pch */,
 				3B2E0B54137A11E1009B558C /* main.m */,
 				3B2E0B56137A11E1009B558C /* Credits.rtf */,
+				3B2E0BD6137A178D009B558C /* Frameworks */,
 			);
-			name = "Supporting Files";
+			path = "Hoptoad Mac";
 			sourceTree = "<group>";
 		};
 		3B2E0B6B137A11F9009B558C /* Hoptoad iOS */ = {
