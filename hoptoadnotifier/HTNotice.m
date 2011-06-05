@@ -38,10 +38,9 @@ int HTExceptionNoticeType = 2;
         return nil;
     }
 	
+    // setup
 	HTNotice *notice = [[HTNotice alloc] init];
 	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:3];
-	
-	// stuff
 	NSData *data = [NSData dataWithContentsOfFile:path];
 	NSUInteger location = 0;
 	NSUInteger length = 0;
@@ -232,7 +231,6 @@ int HTExceptionNoticeType = 2;
 	[error addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
     DDXMLElement *backtrace = [[DDXMLElement alloc] initWithName:@"backtrace"];
     for (NSArray *line in self.callStack) {
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         DDXMLElement *element = [DDXMLElement elementWithName:@"line"];
         [element addAttribute:
          [DDXMLElement
@@ -247,7 +245,6 @@ int HTExceptionNoticeType = 2;
           attributeWithName:@"method"
           stringValue:[line objectAtIndex:2]]];
         [backtrace addChild:element];
-        [pool release];
 	}
     [error addChild:backtrace];
     [notice addChild:error];
@@ -262,14 +259,12 @@ int HTExceptionNoticeType = 2;
     DDXMLElement *cgi = [[DDXMLElement alloc] initWithName:@"cgi-data"];
     for (id key in [self.environmentInfo allKeys]) {
         id value = [self.environmentInfo objectForKey:key];
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         DDXMLElement *element = [DDXMLElement elementWithName:@"var" stringValue:[value description]];
         [element addAttribute:
          [DDXMLElement
           attributeWithName:@"key"
           stringValue:[key description]]];
         [cgi addChild:element];
-        [pool release];
 	}
     [request addChild:cgi];
     [notice addChild:request];

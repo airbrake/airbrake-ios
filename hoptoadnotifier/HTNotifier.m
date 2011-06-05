@@ -96,9 +96,6 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
     
-    // pool
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
         [self.delegate
@@ -152,12 +149,12 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
          withObject:nil
          waitUntilDone:YES];
     }
-    
-    // pool
-    [pool drain];
 	
 }
 - (void)postNoticeWithPath:(NSString *)path {
+    
+    // pool
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
 	// get notice payload
 	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
@@ -208,6 +205,9 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		HTLog(@"unexpected response\nstatus code:%ld\nresponse body:%@", (long)statusCode, responseString);
 		[responseString release];
 	}
+    
+    // pool
+    [pool drain];
     
 }
 - (BOOL)isHoptoadReachable {
