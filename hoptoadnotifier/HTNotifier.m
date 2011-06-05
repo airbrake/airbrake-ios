@@ -312,7 +312,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
-        [self performSelectorInBackground:@selector(postNotices:) withObject:notices];
+        [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
     }
     
     // delegate
@@ -445,7 +445,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
         NSArray *notices = HTNotices();
         if ([notices count]) {
             if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
-                [self performSelectorInBackground:@selector(postNotices:) withObject:notices];
+                [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
             }
             else {
                 [self showNoticeAlert];
@@ -478,7 +478,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         NSArray *notices = HTNotices();
-        [self performSelectorInBackground:@selector(postNotices:) withObject:notices];
+        [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
     }
 }
 #endif
