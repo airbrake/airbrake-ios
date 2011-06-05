@@ -46,10 +46,6 @@
 		3BA5892E137C871300D9C544 /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA5891D137C871300D9C544 /* HTNotice.m */; };
 		3BA5892F137C871300D9C544 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA5891F137C871300D9C544 /* HTNotifier.m */; };
 		3BA58930137C871300D9C544 /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA5891F137C871300D9C544 /* HTNotifier.m */; };
-		3BA58931137C871300D9C544 /* HTNotifier_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA58921137C871300D9C544 /* HTNotifier_iOS.m */; };
-		3BA58932137C871300D9C544 /* HTNotifier_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA58921137C871300D9C544 /* HTNotifier_iOS.m */; };
-		3BA58933137C871300D9C544 /* HTNotifier_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA58923137C871300D9C544 /* HTNotifier_Mac.m */; };
-		3BA58934137C871300D9C544 /* HTNotifier_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA58923137C871300D9C544 /* HTNotifier_Mac.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,10 +102,6 @@
 		3BA5891D137C871300D9C544 /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
 		3BA5891E137C871300D9C544 /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
 		3BA5891F137C871300D9C544 /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
-		3BA58920137C871300D9C544 /* HTNotifier_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_iOS.h; sourceTree = "<group>"; };
-		3BA58921137C871300D9C544 /* HTNotifier_iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_iOS.m; sourceTree = "<group>"; };
-		3BA58922137C871300D9C544 /* HTNotifier_Mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier_Mac.h; sourceTree = "<group>"; };
-		3BA58923137C871300D9C544 /* HTNotifier_Mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier_Mac.m; sourceTree = "<group>"; };
 		3BA58924137C871300D9C544 /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
 		3BA58927137C871300D9C544 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3BA58928137C871300D9C544 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
@@ -293,10 +285,6 @@
 				3BA5891D137C871300D9C544 /* HTNotice.m */,
 				3BA5891E137C871300D9C544 /* HTNotifier.h */,
 				3BA5891F137C871300D9C544 /* HTNotifier.m */,
-				3BA58920137C871300D9C544 /* HTNotifier_iOS.h */,
-				3BA58921137C871300D9C544 /* HTNotifier_iOS.m */,
-				3BA58922137C871300D9C544 /* HTNotifier_Mac.h */,
-				3BA58923137C871300D9C544 /* HTNotifier_Mac.m */,
 				3BA58924137C871300D9C544 /* HTNotifierDelegate.h */,
 			);
 			path = hoptoadnotifier;
@@ -414,8 +402,6 @@
 				3BA5892B137C871300D9C544 /* HTFunctions.m in Sources */,
 				3BA5892D137C871300D9C544 /* HTNotice.m in Sources */,
 				3BA5892F137C871300D9C544 /* HTNotifier.m in Sources */,
-				3BA58931137C871300D9C544 /* HTNotifier_iOS.m in Sources */,
-				3BA58933137C871300D9C544 /* HTNotifier_Mac.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,8 +420,6 @@
 				3BA5892C137C871300D9C544 /* HTFunctions.m in Sources */,
 				3BA5892E137C871300D9C544 /* HTNotice.m in Sources */,
 				3BA58930137C871300D9C544 /* HTNotifier.m in Sources */,
-				3BA58932137C871300D9C544 /* HTNotifier_iOS.m in Sources */,
-				3BA58934137C871300D9C544 /* HTNotifier_Mac.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
