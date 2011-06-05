@@ -448,7 +448,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
                 [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
             }
             else {
-                [self showNoticeAlert];
+                [self performSelectorOnMainThread:@selector(showNoticeAlert) withObject:nil waitUntilDone:NO];
             }
         }
     }
