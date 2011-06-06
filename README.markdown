@@ -42,6 +42,9 @@ Hoptoad supports a version floor for reported notices. A setting called "Latest 
     - make sure you add it under "All Configurations"
 
 The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library.
+
+##Upgrading
+Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist
     
 #Running The Notifier
 
