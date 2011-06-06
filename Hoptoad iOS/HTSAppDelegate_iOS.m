@@ -27,7 +27,7 @@ static NSString * HTSHoptoadAPIKey = @"";
 						environmentName:HTNotifierAppStoreEnvironment];
 #endif
 	[[HTNotifier sharedNotifier] setDelegate:self];
-	[[HTNotifier sharedNotifier] setUseSSL:YES]; // only if your account supports it
+    [[HTNotifier sharedNotifier] setUseSSL:YES]; // only if your account supports it
     [[HTNotifier sharedNotifier] setEnvironmentValue:@"test value" forKey:@"test key"];
 	[[HTNotifier sharedNotifier] writeTestNotice];
     
@@ -47,7 +47,8 @@ static NSString * HTSHoptoadAPIKey = @"";
 
 #pragma mark - button actions
 - (IBAction)exception {
-	[NSException raise:NSInvalidArgumentException format:@"test exception"];
+	NSArray *array = [NSArray array];
+    [array objectAtIndex:NSUIntegerMax];
 }
 - (IBAction)signal {
 	raise(SIGSEGV);
