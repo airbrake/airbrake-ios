@@ -25,7 +25,7 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 
 #Versioning
 
-Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will dropped by Hoptoad.
+Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will dropped by Hoptoad. For more information on how this is implemented, read this [knowledge base article](http://help.hoptoadapp.com/kb/ios/app-versions).
 
 #Installation
 
