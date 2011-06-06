@@ -25,7 +25,7 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 
 #Versioning
 
-Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will still be saved. If you would like to keep this from happening, please reset your API key in the project settings and update it accordingly in your app. The notifier in these older app versions will fail gracefully in this situation.
+Hoptoad supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will dropped by Hoptoad.
 
 #Installation
 
@@ -64,11 +64,16 @@ The API key argument expects your Hoptoad project API key. The environment name 
 - `HTNotifierAppStoreEnvironment`
 - `HTNotifierReleaseEnvironment`
 
-#Testing
+#Debugging
 
 To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
 
      [[HTNotifier sharedNotifier] writeTestNotice];
+
+If you use the DEBUG macro to signify development builds the notifier will do a few special things for you:
+
+- log notices to the console as they are posted to help see notice details
+- automatically include the UDID of the device to help identify who submitted a crash
 
 #Implementing the HTNotifierDelegate Protocol
 
