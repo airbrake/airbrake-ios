@@ -76,6 +76,12 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		_environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
 		_environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
+#if TARGET_OS_IPHONE && DEBUG
+        NSString *UDID = [[UIDevice currentDevice] uniqueIdentifier];
+        [self
+         setEnvironmentValue:UDID
+         forKey:@"UDID"];
+#endif
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
