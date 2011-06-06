@@ -1,10 +1,26 @@
-//
-//  HTNotifier.h
-//  HoptoadNotifier
-//
-//  Created by Caleb Davenport on 10/2/10.
-//  Copyright 2010 GUI Cocoa, LLC. All rights reserved.
-//
+/*
+ 
+ Copyright (C) 2011 GUI Cocoa, LLC.
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ 
+ */
 
 #import <TargetConditionals.h>
 
@@ -27,15 +43,19 @@ extern NSString *HTNotifierVersion;
 extern NSString *HTNotifierAlwaysSendKey;
 
 /*
+ 
  use these variables in your alert title, alert body, and
  environment name to have their values replaced at runtime
+ 
  */
 extern NSString *HTNotifierBundleName;      // app name
 extern NSString *HTNotifierBundleVersion;   // bundle version
 
 /*
+ 
  use these standard environment names to have default
  values provided to hoptoad
+ 
  */
 extern NSString *HTNotifierDevelopmentEnvironment;
 extern NSString *HTNotifierAdHocEnvironment;
@@ -43,12 +63,14 @@ extern NSString *HTNotifierAppStoreEnvironment;
 extern NSString *HTNotifierReleaseEnvironment;
 
 /*
+ 
  HTNotifier is the primary class of the notifer library
  
  start the notifier by calling
  startNotifierWithAPIKey:environmentName:
  
  access the shared instance by calling sharedNotifier
+ 
  */
 #if TARGET_OS_IPHONE
 @interface HTNotifier : NSObject <UIAlertViewDelegate> {
@@ -71,14 +93,17 @@ extern NSString *HTNotifierReleaseEnvironment;
 @property (nonatomic, assign) NSObject<HTNotifierDelegate> *delegate;
 
 /*
+ 
  control whether notices are posted using SSL. your account
  must support this feature
  
  default:NO
+ 
  */
 @property (nonatomic, assign) BOOL useSSL;
 
 /*
+ 
  this method is the entry point for the library. any code
  executed after this method call is monitored for crashes
  and signals
@@ -88,39 +113,50 @@ extern NSString *HTNotifierReleaseEnvironment;
  
  include any of the above constant strings in the
  enviromnent name to have the value replaced by the library
+ 
  */
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 
 /*
+ 
  access the shared notifier object.
  
  if this is called before `startNotifierWithAPIKey:environmentName:`
  nil will be returned.
+ 
  */
 + (HTNotifier *)sharedNotifier;
 
 /*
+ 
  writes a test notice if one does not exist already. it
  will be reported just as an actual crash.
+ 
  */
 - (void)writeTestNotice;
 
 /*
+ 
  set environment info key/value pair. passing nil as the
  value will remove the value for the given key.
+ 
  */
 - (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
 
 /*
+ 
  get environment info value for a given key.
+ 
  */
 - (NSString *)environmentValueForKey:(NSString *)key;
 
 /*
+ 
  scan for notices and take action if hoptoad is reachable.
  if the user has chosen to always send notices they will
  be posted imediately, otherwise the user will be asked
  for their preference.
+ 
  */
 - (BOOL)postNotices;
 

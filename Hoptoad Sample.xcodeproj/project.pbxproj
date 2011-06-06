@@ -105,7 +105,7 @@
 		3BA58924137C871300D9C544 /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
 		3BA58927137C871300D9C544 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3BA58928137C871300D9C544 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		3BA58935137C87C000D9C544 /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = INSTALLATION.html; sourceTree = "<group>"; };
+		3BA58935137C87C000D9C544 /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = INSTALLATION.html; sourceTree = "<group>"; wrapsLines = 1; };
 		3BA58936137C87C000D9C544 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; wrapsLines = 1; };
 		3BFC84DB139C5F54000D2BB2 /* CHANGELOG.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHANGELOG.markdown; sourceTree = "<group>"; };
 /* End PBXFileReference section */

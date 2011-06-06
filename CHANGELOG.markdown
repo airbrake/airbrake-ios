@@ -5,3 +5,5 @@
 - use regex for callstack parsing
 - added Traditional Chinese localization
 - environment info is now posted in signal notices
+- fixed bug where some delegate methods weren't called on the main thread
+- added app version to notice payload for filtering
