@@ -156,24 +156,35 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     // pool
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-	// get notice payload
-	HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
-    if (notice == nil) {
-        HTLog(@"unable to read notice at %@", path);
-        return;
-    }
-#ifdef DEBUG
-	HTLog(@"%@", notice);
-//    HTLog(@"%@", [notice hoptoadXMLString]);
-#endif
-	NSData *data = [notice hoptoadXMLData];
-	
-	// create url request
+    // create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
 	[request setTimeoutInterval:10.0];
 	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
-	[request setHTTPBody:data];
+    
+	// get notice payload
+    @try {
+        HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+        NSData *data = [notice hoptoadXMLData];
+        if (data == nil) {
+            [NSException
+             raise:NSInternalInconsistencyException
+             format:@"[Hoptoad] unable to read notice at %@", path];
+        }
+        else {
+            [request setHTTPBody:data];
+#ifdef DEBUG
+            HTLog(@"%@", notice);
+#endif
+        }
+
+    }
+    @catch (NSException *exception) {
+        HTLog(@"%@", exception);
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        [pool drain];
+        return;
+    }
 	
 	// perform request
     NSError *error = nil;
@@ -354,7 +365,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// log
         if (sharedNotifier) {
             HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-            HTLog(@"Environment \"%@\"", sharedNotifier.environmentName);
+            HTLog(@"Environment \"%@\"", name);
         }
 	}
 }
@@ -463,9 +474,9 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 	}
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSArray *notices = HTNotices();
 	if (buttonIndex == alertView.cancelButtonIndex) {
-		NSArray *noticePaths = HTNotices();
-		for (NSString *notice in noticePaths) {
+		for (NSString *notice in notices) {
 			[[NSFileManager defaultManager]
 			 removeItemAtPath:notice
 			 error:nil];
@@ -477,7 +488,6 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
-        NSArray *notices = HTNotices();
         [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
     }
 }
