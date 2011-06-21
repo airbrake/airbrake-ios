@@ -22,7 +22,11 @@
  
  */
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#else
 #import <Foundation/Foundation.h>
+#endif
 
 // start handlers
 void HTStartHandlers();
