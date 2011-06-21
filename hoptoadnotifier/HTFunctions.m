@@ -26,7 +26,6 @@
 #import <fcntl.h>
 #import <unistd.h>
 #import <sys/sysctl.h>
-#import <TargetConditionals.h>
 
 #import "RegexKitLite.h"
 

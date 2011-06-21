@@ -23,7 +23,6 @@
  */
 
 #import <TargetConditionals.h>
-
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
@@ -31,7 +30,6 @@
 #else
 #error [Hoptoad] unsupported platform
 #endif
-
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "HTNotifierDelegate.h"
