@@ -37,30 +37,32 @@
 #import "HTNotifierDelegate.h"
 
 // notifier version
-extern NSString *HTNotifierVersion;
+extern NSString * const HTNotifierVersion;
 
 // internal
-extern NSString *HTNotifierAlwaysSendKey;
+extern NSString * const HTNotifierAlwaysSendKey;
 
 /*
  
- use these variables in your alert title, alert body, and
- environment name to have their values replaced at runtime
+ use these variables in your alert title and alert
+ body to have their values substituted at runtime.
  
  */
-extern NSString *HTNotifierBundleName;      // app name
-extern NSString *HTNotifierBundleVersion;   // bundle version
+extern NSString * const HTNotifierBundleName;      // app name
+extern NSString * const HTNotifierBundleVersion;   // bundle version
 
 /*
  
- use these standard environment names to have default
- values provided to hoptoad
+ these standard environment names provide default values
+ for you to pick from. the automatic environment will
+ set development or release depending on the DEBUG flag.
  
  */
-extern NSString *HTNotifierDevelopmentEnvironment;
-extern NSString *HTNotifierAdHocEnvironment;
-extern NSString *HTNotifierAppStoreEnvironment;
-extern NSString *HTNotifierReleaseEnvironment;
+extern NSString * const HTNotifierDevelopmentEnvironment;
+extern NSString * const HTNotifierAdHocEnvironment;
+extern NSString * const HTNotifierAppStoreEnvironment;
+extern NSString * const HTNotifierReleaseEnvironment;
+extern NSString * const HTNotifierAutomaticEnvironment;
 
 /*
  

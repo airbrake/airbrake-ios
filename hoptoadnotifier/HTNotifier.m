@@ -41,14 +41,15 @@ static NSString *HTNotifierHostName = @"hoptoadapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString *HTNotifierVersion = @"2.2";
-NSString *HTNotifierBundleName = @"${BUNDLE}";
-NSString *HTNotifierBundleVersion  = @"${VERSION}";
-NSString *HTNotifierDevelopmentEnvironment = @"Development";
-NSString *HTNotifierAdHocEnvironment = @"Ad Hoc";
-NSString *HTNotifierAppStoreEnvironment = @"App Store";
-NSString *HTNotifierReleaseEnvironment = @"Release";
-NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
+NSString * const HTNotifierVersion = @"2.2.1";
+NSString * const HTNotifierBundleName = @"${BUNDLE}";
+NSString * const HTNotifierBundleVersion  = @"${VERSION}";
+NSString * const HTNotifierDevelopmentEnvironment = @"Development";
+NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
+NSString * const HTNotifierAppStoreEnvironment = @"App Store";
+NSString * const HTNotifierReleaseEnvironment = @"Release";
+NSString * const HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
+NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 #pragma mark - private methods
 @interface HTNotifier (private)
@@ -89,7 +90,7 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		
 		// setup values
 		_apiKey = [key copy];
-		_environmentName = [HTStringByReplacingHoptoadVariablesInString(name) retain];
+		_environmentName = [name copy];
 		_environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
 #if TARGET_OS_IPHONE && DEBUG
@@ -382,7 +383,15 @@ NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		}
         
         // create
-        sharedNotifier = [[HTNotifier alloc] initWithAPIKey:key environmentName:name];
+        NSString *envName = name;
+        if ([envName isEqualToString:HTNotifierAutomaticEnvironment]) {
+#if DEBUG
+            envName = HTNotifierDevelopmentEnvironment;
+#else
+            envName = HTNotifierReleaseEnvironment;
+#endif
+        }
+        sharedNotifier = [[HTNotifier alloc] initWithAPIKey:key environmentName:envName];
 		
 		// log
         if (sharedNotifier) {
