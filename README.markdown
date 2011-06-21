@@ -64,7 +64,7 @@ The API key argument expects your Hoptoad project API key. The environment name 
 - `HTNotifierAppStoreEnvironment`
 - `HTNotifierReleaseEnvironment`
 
-It also provides an environment called `HTNotifierReleaseEnvironment` which will set the environment to release or development depending on the presence of the DEBUG macro
+It also provides an environment called `HTNotifierAutomaticEnvironment` which will set the environment to release or development depending on the presence of the DEBUG macro
 
 #Debugging
 
