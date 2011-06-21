@@ -396,7 +396,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		// log
         if (sharedNotifier) {
             HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-            HTLog(@"Environment \"%@\"", name);
+            HTLog(@"Environment \"%@\"", envName);
         }
 	}
 }
