@@ -64,6 +64,8 @@ The API key argument expects your Hoptoad project API key. The environment name 
 - `HTNotifierAppStoreEnvironment`
 - `HTNotifierReleaseEnvironment`
 
+It also provides an environment called `HTNotifierReleaseEnvironment` which will set the environment to release or development depending on the presence of the DEBUG macro
+
 #Debugging
 
 To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:

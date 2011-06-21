@@ -93,7 +93,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		_environmentName = [name copy];
 		_environmentInfo = [[NSMutableDictionary alloc] init];
 		self.useSSL = NO;
-#if TARGET_OS_IPHONE && DEBUG
+#if TARGET_OS_IPHONE && defined(DEBUG)
         NSString *UDID = [[UIDevice currentDevice] uniqueIdentifier];
         [self
          setEnvironmentValue:UDID
@@ -385,7 +385,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
         // create
         NSString *envName = name;
         if ([envName isEqualToString:HTNotifierAutomaticEnvironment]) {
-#if DEBUG
+#ifdef DEBUG
             envName = HTNotifierDevelopmentEnvironment;
 #else
             envName = HTNotifierReleaseEnvironment;

@@ -1,3 +1,6 @@
+2.2.1
+- added automatic environment name that sets its value based on the DEBUG macro
+
 2.2
 - UDID is posted in all DEBUG builds by default
 - improved error handling to makre sure corrupt notices don't cause issues

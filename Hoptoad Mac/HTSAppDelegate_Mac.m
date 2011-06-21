@@ -18,13 +18,7 @@ static NSString * HTSHoptoadAPIKey = @"";
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     // setup notifier
-#ifdef DEBUG
-	[HTNotifier startNotifierWithAPIKey:HTSHoptoadAPIKey
-						environmentName:HTNotifierDevelopmentEnvironment];
-#else
-    [HTNotifier startNotifierWithAPIKey:HTSHoptoadAPIKey
-						environmentName:HTNotifierAppStoreEnvironment];
-#endif
+    [HTNotifier startNotifierWithAPIKey:HTSHoptoadAPIKey environmentName:HTNotifierAutomaticEnvironment];
 	[[HTNotifier sharedNotifier] setDelegate:self];
 	[[HTNotifier sharedNotifier] setUseSSL:YES]; // only if your account supports it
     [[HTNotifier sharedNotifier] setEnvironmentValue:@"test value" forKey:@"test key"];
