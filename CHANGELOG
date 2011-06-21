@@ -1,3 +1,6 @@
+2.2.2
+- fixed compile error caused by an incorrect import when building for iOS
+
 2.2.1
 - added automatic environment name that sets its value based on the DEBUG macro
 
