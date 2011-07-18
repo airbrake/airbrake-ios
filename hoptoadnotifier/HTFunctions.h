@@ -30,34 +30,34 @@
 #endif
 
 // start handlers
-void HTStartHandlers();
-void HTStartExceptionHandler();
-void HTStartSignalHandler();
+void HTStartHandlers(void);
+void HTStartExceptionHandler(void);
+void HTStartSignalHandler(void);
 
 // stop handlers
-void HTStopHandlers();
-void HTStopExceptionHandler();
-void HTStopSignalHandler();
+void HTStopHandlers(void);
+void HTStopExceptionHandler(void);
+void HTStopSignalHandler(void);
 
 // get values from Info.plist
 id HTInfoPlistValueForKey(NSString *);
-NSString *HTExecutableName();
-NSString *HTApplicationVersion();
-NSString *HTBundleVersion();
-NSString *HTApplicationName();
+NSString *HTExecutableName(void);
+NSString *HTApplicationVersion(void);
+NSString *HTBundleVersion(void);
+NSString *HTApplicationName(void);
 
 // get platform values
-NSString *HTOperatingSystemVersion();
-NSString *HTMachine();
-NSString *HTPlatform();
+NSString *HTOperatingSystemVersion(void);
+NSString *HTMachine(void);
+NSString *HTPlatform(void);
 
 // deal with notice information
-void HTInitNoticeInfo();
-void HTReleaseNoticeInfo();
+void HTInitNoticeInfo(void);
+void HTReleaseNoticeInfo(void);
 
 // deal with notice information on disk
-NSString * HTNoticesDirectory();
-NSArray * HTNotices();
+NSString * HTNoticesDirectory(void);
+NSArray * HTNotices(void);
 
 // callstack utilities
 NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *);
@@ -88,7 +88,7 @@ NSString * HTStringByReplacingHoptoadVariablesInString(NSString *);
  inspected (if it exists)
  
  */
-NSString * HTCurrentViewController();
+NSString * HTCurrentViewController(void);
 
 /*
  

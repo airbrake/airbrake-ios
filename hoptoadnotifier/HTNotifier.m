@@ -425,7 +425,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 - (NSUInteger)retainCount {
 	return NSUIntegerMax;
 }
-- (void)release {
+- (oneway void)release {
 	// do nothing
 }
 - (id)autorelease {
