@@ -29,7 +29,7 @@
 // internal
 void ht_handle_exception(NSException *);
 static HTNotifier *sharedNotifier = nil;
-static NSString *HTNotifierHostName = @"hoptoadapp.com";
+static NSString *HTNotifierHostName = @"airbrakeapp.com";
 #define HTNotifierURL [NSURL URLWithString: \
 	[NSString stringWithFormat: \
 	@"%@://%@/notifier_api/v2/notices", \
