@@ -22,6 +22,8 @@
  
  */
 
+#import <TargetConditionals.h>
+
 /*
  
  Classes that conform to this protocol can provide
@@ -70,14 +72,11 @@
 
 /*
  
- This lets the app delegate know that an event causing a
- crash has been handled. By the time this method is called,
- the offending crash has been logged and the notifier is no
- longer watching for crashes. Use this to sync user
- defaults, save state, etc.
+ This lets the notifier delegate know that an exception
+ was logged to the file system.
  
  */
-- (void)notifierDidHandleException:(NSException *)exc;
+- (void)notifierDidLogException:(NSException *)exception;
 
 #if TARGET_OS_IPHONE
 /*
