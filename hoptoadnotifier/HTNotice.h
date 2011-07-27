@@ -58,7 +58,7 @@ typedef struct ht_notice_info_t {
 ht_notice_info_t ht_notice_info;
 
 // file flags
-extern NSString *HTNoticePathExtension;
+extern NSString * const ABNotifierNoticePathExtension;
 extern int HTNoticeFileVersion;
 extern int HTSignalNoticeType;
 extern int HTExceptionNoticeType;

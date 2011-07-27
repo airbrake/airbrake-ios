@@ -31,7 +31,7 @@
 
 #import "DDXML.h"
 
-NSString *HTNoticePathExtension = @"htnotice";
+NSString * const ABNotifierNoticePathExtension = @"htnotice";
 int HTNoticeFileVersion = 4;
 int HTSignalNoticeType = 1;
 int HTExceptionNoticeType = 2;
@@ -49,171 +49,182 @@ int HTExceptionNoticeType = 2;
 
 #pragma mark - factory method to create notice
 + (HTNotice *)noticeWithContentsOfFile:(NSString *)path {
-	NSString *extension = [path pathExtension];
-    if (![extension isEqualToString:HTNoticePathExtension]) {
-        return nil;
-    }
-	
-    // setup
-	HTNotice *notice = [[HTNotice alloc] init];
-	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:3];
-	NSData *data = [NSData dataWithContentsOfFile:path];
-	NSUInteger location = 0;
-	NSUInteger length = 0;
-	
-	// get version
-    int version;
-    [data getBytes:&version range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
     
-    // get type
-    int type;
-    [data getBytes:&type range:NSMakeRange(location, sizeof(int))];
-    location += sizeof(int);
-    
-    // os version
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	if (length > 0) {
-		char * value_str = malloc(length * sizeof(char));
-		[data getBytes:value_str range:NSMakeRange(location, length)];
-		location += length;
-		[info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Operating System"];
-		free(value_str);
-	}
-    
-    // platform
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	if (length > 0) {
-		char * value_str = malloc(length * sizeof(char));
-		[data getBytes:value_str range:NSMakeRange(location, length)];
-		location += length;
-		[info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Device"];
-		free(value_str);
-	}
-    
-    // app version
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	if (length > 0) {
-		char * value_str = malloc(length * sizeof(char));
-		[data getBytes:value_str range:NSMakeRange(location, length)];
-		location += length;
-		[info setObject:[NSString stringWithUTF8String:value_str] forKey:@"App Version"];
-		free(value_str);
-	}
-    
-    // environment
-    [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-    location += sizeof(unsigned long);
-	if (length > 0) {
-		char * value_str = malloc(length * sizeof(char));
-		[data getBytes:value_str range:NSMakeRange(location, length)];
-		location += length;
-		notice.environmentName = [NSString stringWithUTF8String:value_str];
-		free(value_str);
-	}
-    
-    // git hash
-    if (version >= 2 && version < 4) {
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-        location += sizeof(unsigned long);
-        if (length > 0) {
-            char * value_str = malloc(length * sizeof(char));
-            [data getBytes:value_str range:NSMakeRange(location, length)];
-            location += length;
-            [info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Git Commit"];
-            free(value_str);
-        }
-    }
-    
-    // bundle version
-    if (version >= 3) {
-        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-        location += sizeof(unsigned long);
-        if (length > 0) {
-            char * value_str = malloc(length * sizeof(char));
-            [data getBytes:value_str range:NSMakeRange(location, length)];
-            location += length;
-            notice.bundleVersion = [NSString stringWithUTF8String:value_str];
-            free(value_str);
-        }
-    }
-	
-    
-    // signal notice
-	if (type == HTSignalNoticeType) {
-		
-		// signal
-        int signal;
-        [data getBytes:&signal range:NSMakeRange(location, sizeof(int))];
-        location += sizeof(int);
-		
-		// exception name and reason
-		notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
-		notice.exceptionReason = @"Application recieved signal";
+    @try {
         
-        // environment info
-        if (version >= 4) {
+        // check path
+        NSString *extension = [path pathExtension];
+        if (![extension isEqualToString:ABNotifierNoticePathExtension]) {
+            [NSException raise:NSInvalidArgumentException format:@"%@ does is not a notice"];
+        }
+        
+        // setup
+        HTNotice *notice = [[HTNotice alloc] init];
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:3];
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        NSUInteger location = 0;
+        NSUInteger length = 0;
+        
+        // get version
+        int version;
+        [data getBytes:&version range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        
+        // get type
+        int type;
+        [data getBytes:&type range:NSMakeRange(location, sizeof(int))];
+        location += sizeof(int);
+        
+        // os version
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
+        if (length > 0) {
+            char * value_str = malloc(length * sizeof(char));
+            [data getBytes:value_str range:NSMakeRange(location, length)];
+            location += length;
+            [info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Operating System"];
+            free(value_str);
+        }
+        
+        // platform
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
+        if (length > 0) {
+            char * value_str = malloc(length * sizeof(char));
+            [data getBytes:value_str range:NSMakeRange(location, length)];
+            location += length;
+            [info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Device"];
+            free(value_str);
+        }
+        
+        // app version
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
+        if (length > 0) {
+            char * value_str = malloc(length * sizeof(char));
+            [data getBytes:value_str range:NSMakeRange(location, length)];
+            location += length;
+            [info setObject:[NSString stringWithUTF8String:value_str] forKey:@"App Version"];
+            free(value_str);
+        }
+        
+        // environment
+        [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+        location += sizeof(unsigned long);
+        if (length > 0) {
+            char * value_str = malloc(length * sizeof(char));
+            [data getBytes:value_str range:NSMakeRange(location, length)];
+            location += length;
+            notice.environmentName = [NSString stringWithUTF8String:value_str];
+            free(value_str);
+        }
+        
+        // git hash
+        if (version >= 2 && version < 4) {
+            [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+            location += sizeof(unsigned long);
+            if (length > 0) {
+                char * value_str = malloc(length * sizeof(char));
+                [data getBytes:value_str range:NSMakeRange(location, length)];
+                location += length;
+                [info setObject:[NSString stringWithUTF8String:value_str] forKey:@"Git Commit"];
+                free(value_str);
+            }
+        }
+        
+        // bundle version
+        if (version >= 3) {
+            [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+            location += sizeof(unsigned long);
+            if (length > 0) {
+                char * value_str = malloc(length * sizeof(char));
+                [data getBytes:value_str range:NSMakeRange(location, length)];
+                location += length;
+                notice.bundleVersion = [NSString stringWithUTF8String:value_str];
+                free(value_str);
+            }
+        }
+        
+        
+        // signal notice
+        if (type == HTSignalNoticeType) {
+            
+            // signal
+            int signal;
+            [data getBytes:&signal range:NSMakeRange(location, sizeof(int))];
+            location += sizeof(int);
+            
+            // exception name and reason
+            notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
+            notice.exceptionReason = @"Application recieved signal";
+            
+            // environment info
+            if (version >= 4) {
+                [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
+                location += sizeof(unsigned long);
+                NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
+                location += length;
+                NSDictionary *environmentInfo = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
+                [info addEntriesFromDictionary:environmentInfo];
+            }
+            
+            // call stack
+            NSUInteger i = location;
+            length = [data length];
+            const char * bytes = [data bytes];
+            NSMutableArray *array = [NSMutableArray array];
+            while (i < length) {
+                if (bytes[i] == '\0') {
+                    NSData *line = [data subdataWithRange:NSMakeRange(location, i - location)];
+                    NSString *lineString = [[NSString alloc]
+                                            initWithBytes:[line bytes]
+                                            length:[line length]
+                                            encoding:NSUTF8StringEncoding];
+                    [array addObject:lineString];
+                    [lineString release];
+                    if (i + 1 < length && bytes[i + 1] == '\n') { i += 2; }
+                    else { i++; }
+                    location = i;
+                }
+                else { i++; }
+            }
+            notice.callStack = array;
+            
+        }
+        
+        // exception notice
+        else if (type == HTExceptionNoticeType) {
             [data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
             location += sizeof(unsigned long);
             NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
             location += length;
-            NSDictionary *environmentInfo = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
-            [info addEntriesFromDictionary:environmentInfo];
+            NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
+            [info addEntriesFromDictionary:[dictionary objectForKey:@"environment info"]];
+            notice.exceptionName = [dictionary objectForKey:@"exception name"];
+            notice.exceptionReason = [dictionary objectForKey:@"exception reason"];
+            notice.callStack = [dictionary objectForKey:@"call stack"];
+            notice.viewControllerName = [dictionary objectForKey:@"view controller"];
         }
-		
-		// call stack
-		NSUInteger i = location;
-		length = [data length];
-		const char * bytes = [data bytes];
-		NSMutableArray *array = [NSMutableArray array];
-		while (i < length) {
-			if (bytes[i] == '\0') {
-				NSData *line = [data subdataWithRange:NSMakeRange(location, i - location)];
-				NSString *lineString = [[NSString alloc]
-										initWithBytes:[line bytes]
-										length:[line length]
-										encoding:NSUTF8StringEncoding];
-				[array addObject:lineString];
-				[lineString release];
-				if (i + 1 < length && bytes[i + 1] == '\n') { i += 2; }
-				else { i++; }
-				location = i;
-			}
-			else { i++; }
-		}
-		notice.callStack = array;
-		
+        
+        // set action
+        notice.callStack = HTParseCallstack(notice.callStack);
+        notice.action = HTActionFromParsedCallstack(notice.callStack);
+        if (type == HTSignalNoticeType && notice.action != nil) {
+            notice.exceptionReason = notice.action;
+        }
+        
+        // set env info
+        notice.environmentInfo = info;
+        
+        // return
+        return [notice autorelease];
+        
+    }
+    @catch (NSException *exception) {
+        HTLog(@"%@", exception);
+        return nil;
     }
     
-    // exception notice
-	else if (type == HTExceptionNoticeType) {
-		[data getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-		location += sizeof(unsigned long);
-		NSData *subdata = [data subdataWithRange:NSMakeRange(location, length)];
-		location += length;
-		NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:subdata];
-		[info addEntriesFromDictionary:[dictionary objectForKey:@"environment info"]];
-		notice.exceptionName = [dictionary objectForKey:@"exception name"];
-		notice.exceptionReason = [dictionary objectForKey:@"exception reason"];
-		notice.callStack = [dictionary objectForKey:@"call stack"];
-		notice.viewControllerName = [dictionary objectForKey:@"view controller"];
-    }
-    
-    // set action
-    notice.callStack = HTParseCallstack(notice.callStack);
-    notice.action = HTActionFromParsedCallstack(notice.callStack);
-    if (type == HTSignalNoticeType && notice.action != nil) {
-        notice.exceptionReason = notice.action;
-    }
-	
-    // set env info
-	notice.environmentInfo = info;
-    
-    // return
-	return [notice autorelease];
 }
 
 #pragma mark - object methods

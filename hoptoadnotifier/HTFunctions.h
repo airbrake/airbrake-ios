@@ -29,6 +29,9 @@
 #import <Foundation/Foundation.h>
 #endif
 
+// open a new notice file at a path
+int HTOpenFile(int type, const char *path);
+
 // start handlers
 void HTStartHandlers(void);
 void HTStartExceptionHandler(void);
@@ -56,8 +59,9 @@ void HTInitNoticeInfo(void);
 void HTReleaseNoticeInfo(void);
 
 // deal with notice information on disk
-NSString * HTNoticesDirectory(void);
-NSArray * HTNotices(void);
+NSString *ABNotifierPathForNewNoticeWithName(NSString *name);
+NSString *ABNotifierPathForNoticesDirectory(void);
+NSArray *ABNotifierAllNotices(void);
 
 // callstack utilities
 NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *);

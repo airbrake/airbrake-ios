@@ -78,11 +78,11 @@ extern NSString * const HTNotifierAutomaticEnvironment;
 @interface HTNotifier : NSObject {
 #endif
 @private
-    NSMutableDictionary *_environmentInfo;
-    NSString *_environmentName;
-    NSString *_apiKey;
-	NSObject<HTNotifierDelegate> *_delegate;
-    BOOL _useSSL;
+    NSMutableDictionary * __environmentInfo;
+    NSString * __environmentName;
+    NSString * __apiKey;
+	NSObject<HTNotifierDelegate> * __delegate;
+    BOOL __useSSL;
 	SCNetworkReachabilityRef reachability;
 }
 
@@ -129,11 +129,10 @@ extern NSString * const HTNotifierAutomaticEnvironment;
 
 /*
  
- writes a test notice if one does not exist already. it
- will be reported just as an actual crash.
+ log an exception in a new notice file
  
  */
-- (void)writeTestNotice;
+- (void)logException:(NSException *)exception;
 
 /*
  
@@ -149,6 +148,14 @@ extern NSString * const HTNotifierAutomaticEnvironment;
  
  */
 - (NSString *)environmentValueForKey:(NSString *)key;
+    
+/*
+ 
+ writes a test notice if one does not exist already. it
+ will be reported just as an actual crash.
+ 
+ */
+- (void)writeTestNotice;
 
 /*
  
