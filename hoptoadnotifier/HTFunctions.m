@@ -154,14 +154,14 @@ int ht_open_file(int type) {
 }
 
 #pragma mark - modify handler state
-void HTStartHandlers() {
+void HTStartHandlers(void) {
     HTStartExceptionHandler();
     HTStartSignalHandler();
 }
-void HTStartExceptionHandler() {
+void HTStartExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(&ht_handle_exception);
 }
-void HTStartSignalHandler() {
+void HTStartSignalHandler(void) {
 	for (NSUInteger i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
@@ -173,14 +173,14 @@ void HTStartSignalHandler() {
 		}
 	}
 }
-void HTStopHandlers() {
+void HTStopHandlers(void) {
     HTStopExceptionHandler();
     HTStopSignalHandler();
 }
-void HTStopExceptionHandler() {
+void HTStopExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(NULL);
 }
-void HTStopSignalHandler() {
+void HTStopSignalHandler(void) {
 	for (NSUInteger i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
@@ -194,10 +194,10 @@ void HTStopSignalHandler() {
 id HTInfoPlistValueForKey(NSString *key) {
 	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
 }
-NSString *HTExecutableName() {
+NSString *HTExecutableName(void) {
 	return HTInfoPlistValueForKey(@"CFBundleExecutable");
 }
-NSString *HTApplicationVersion() {
+NSString *HTApplicationVersion(void) {
 	NSString *bundleVersion = HTBundleVersion();
 	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
 	if (bundleVersion != nil && versionString != nil) {
@@ -207,10 +207,10 @@ NSString *HTApplicationVersion() {
 	else if (versionString != nil) { return versionString; }
 	else { return nil; }
 }
-NSString *HTBundleVersion() {
+NSString *HTBundleVersion(void) {
     return HTInfoPlistValueForKey(@"CFBundleVersion");
 }
-NSString *HTApplicationName() {
+NSString *HTApplicationName(void) {
 	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
 	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
 	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
@@ -221,14 +221,14 @@ NSString *HTApplicationName() {
 }
 
 #pragma mark - platform accessors
-NSString *HTOperatingSystemVersion() {
+NSString *HTOperatingSystemVersion(void) {
 #if TARGET_IPHONE_SIMULATOR
 	return [[UIDevice currentDevice] systemVersion];
 #else
 	return [[NSProcessInfo processInfo] operatingSystemVersionString];
 #endif
 }
-NSString *HTMachine() {
+NSString *HTMachine(void) {
 #if TARGET_IPHONE_SIMULATOR
 	return @"iPhone Simulator";
 #else
@@ -246,7 +246,7 @@ NSString *HTMachine() {
     
 #endif
 }
-NSString *HTPlatform() {
+NSString *HTPlatform(void) {
 #if TARGET_IPHONE_SIMULATOR
 	return @"iPhone Simulator";
 #else
@@ -279,7 +279,7 @@ NSString *HTPlatform() {
 }
 
 #pragma mark - init notice info
-void HTInitNoticeInfo() {
+void HTInitNoticeInfo(void) {
     
     NSString *value;
     const char *value_str;
@@ -351,7 +351,7 @@ void HTInitNoticeInfo() {
     }
     
 }
-void HTReleaseNoticeInfo() {
+void HTReleaseNoticeInfo(void) {
     free((void *)ht_notice_info.notice_path);
     ht_notice_info.notice_path = NULL;
     free((void *)ht_notice_info.os_version);
@@ -375,7 +375,7 @@ void HTReleaseNoticeInfo() {
 }
 
 #pragma mark - notice information on disk
-NSString * HTNoticesDirectory() {
+NSString * HTNoticesDirectory(void) {
 #if TARGET_OS_IPHONE
 	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 	NSString *path = [folders objectAtIndex:0];
@@ -389,7 +389,7 @@ NSString * HTNoticesDirectory() {
 	return [path stringByAppendingPathComponent:HTNotifierDirectoryName];
 #endif
 }
-NSArray * HTNotices() {
+NSArray * HTNotices(void) {
 	NSString *directory = HTNoticesDirectory();
 	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
 	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
@@ -463,7 +463,7 @@ NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
 
 #pragma mark - get view controller
 #if TARGET_OS_IPHONE
-NSString * HTCurrentViewController() {
+NSString * HTCurrentViewController(void) {
 	// view controller to inspect
 	UIViewController *rootController = nil;
 	
