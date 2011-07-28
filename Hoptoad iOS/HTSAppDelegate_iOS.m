@@ -9,11 +9,11 @@
 #import "HTSAppDelegate_iOS.h"
 
 // api key
-static NSString * HTSHoptoadAPIKey = @"e1cbae6ccf518bea1981b0815528b749";
+static NSString *HTSHoptoadAPIKey = @"";
 
 @implementation HTSAppDelegate_iOS
 
-@synthesize window=_window;
+@synthesize window = __window;
 
 #pragma mark - application delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -25,7 +25,7 @@ static NSString * HTSHoptoadAPIKey = @"e1cbae6ccf518bea1981b0815528b749";
 	[notifier setDelegate:self];
     [notifier setUseSSL:YES]; // only if your account supports it
     [notifier setEnvironmentValue:@"test value" forKey:@"test key"];
-//	[notifier writeTestNotice];
+	[notifier writeTestNotice];
     
     // show ui
     [self.window makeKeyAndVisible];

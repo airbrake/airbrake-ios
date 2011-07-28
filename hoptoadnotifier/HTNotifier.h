@@ -75,18 +75,18 @@ extern NSString *HTNotifierAutomaticEnvironment;
 @interface HTNotifier : NSObject {
 #endif
 @private
-    NSMutableDictionary * __environmentInfo;
-    NSString * __environmentName;
-    NSString * __apiKey;
-	NSObject<HTNotifierDelegate> * __delegate;
-    BOOL __useSSL;
-	SCNetworkReachabilityRef reachability;
+    NSMutableDictionary             * __environmentInfo;
+    NSString                        * __environmentName;
+    NSString                        * __apiKey;
+	NSObject<HTNotifierDelegate>    * __delegate;
+    BOOL                            __useSSL;
+	SCNetworkReachabilityRef        reachability;
 }
 
 // properties
 @property (nonatomic, readonly) NSDictionary *environmentInfo;
-@property (nonatomic, readonly) NSString *apiKey;
-@property (nonatomic, readonly) NSString *environmentName;
+@property (nonatomic, readonly, copy) NSString *apiKey;
+@property (nonatomic, readonly, copy) NSString *environmentName;
 @property (nonatomic, assign) NSObject<HTNotifierDelegate> *delegate;
 
 /*
@@ -111,8 +111,8 @@ extern NSString *HTNotifierAutomaticEnvironment;
  include any of the above constant strings in the
  enviromnent name to have the value replaced by the library
  
- returns the shared notifier for convenience, or nil if
- an error occurred
+ returns the shared notifier object for convenience or
+ nil if it could not be created
  
  */
 + (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
