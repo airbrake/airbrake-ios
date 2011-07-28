@@ -41,7 +41,7 @@ static NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString *HTNotifierVersion                 = @"2.3 Beta";
+NSString *HTNotifierVersion                 = @"2.3";
 NSString *HTNotifierBundleName              = @"${BUNDLE}";
 NSString *HTNotifierBundleVersion           = @"${VERSION}";
 NSString *HTNotifierDevelopmentEnvironment  = @"Development";
