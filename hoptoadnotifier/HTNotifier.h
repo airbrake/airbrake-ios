@@ -28,7 +28,7 @@
 #elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
 #else
-#error [Hoptoad] unsupported platform
+#error [Airbrake] unsupported platform
 #endif
 #import <SystemConfiguration/SystemConfiguration.h>
 
