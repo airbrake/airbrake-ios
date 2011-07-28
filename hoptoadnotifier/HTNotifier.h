@@ -35,10 +35,7 @@
 #import "HTNotifierDelegate.h"
 
 // notifier version
-extern NSString * const HTNotifierVersion;
-
-// internal
-extern NSString * const HTNotifierAlwaysSendKey;
+extern NSString *HTNotifierVersion;
 
 /*
  
@@ -46,8 +43,8 @@ extern NSString * const HTNotifierAlwaysSendKey;
  body to have their values substituted at runtime.
  
  */
-extern NSString * const HTNotifierBundleName;      // app name
-extern NSString * const HTNotifierBundleVersion;   // bundle version
+extern NSString *HTNotifierBundleName;      // app name
+extern NSString *HTNotifierBundleVersion;   // bundle version
 
 /*
  
@@ -56,11 +53,11 @@ extern NSString * const HTNotifierBundleVersion;   // bundle version
  set development or release depending on the DEBUG flag.
  
  */
-extern NSString * const HTNotifierDevelopmentEnvironment;
-extern NSString * const HTNotifierAdHocEnvironment;
-extern NSString * const HTNotifierAppStoreEnvironment;
-extern NSString * const HTNotifierReleaseEnvironment;
-extern NSString * const HTNotifierAutomaticEnvironment;
+extern NSString *HTNotifierDevelopmentEnvironment;
+extern NSString *HTNotifierAdHocEnvironment;
+extern NSString *HTNotifierAppStoreEnvironment;
+extern NSString *HTNotifierReleaseEnvironment;
+extern NSString *HTNotifierAutomaticEnvironment;
 
 /*
  
@@ -78,18 +75,18 @@ extern NSString * const HTNotifierAutomaticEnvironment;
 @interface HTNotifier : NSObject {
 #endif
 @private
-    NSMutableDictionary * __environmentInfo;
-    NSString * __environmentName;
-    NSString * __apiKey;
-	NSObject<HTNotifierDelegate> * __delegate;
-    BOOL __useSSL;
-	SCNetworkReachabilityRef reachability;
+    NSMutableDictionary             * __environmentInfo;
+    NSString                        * __environmentName;
+    NSString                        * __apiKey;
+	NSObject<HTNotifierDelegate>    * __delegate;
+    BOOL                            __useSSL;
+	SCNetworkReachabilityRef        reachability;
 }
 
 // properties
 @property (nonatomic, readonly) NSDictionary *environmentInfo;
-@property (nonatomic, readonly) NSString *apiKey;
-@property (nonatomic, readonly) NSString *environmentName;
+@property (nonatomic, readonly, copy) NSString *apiKey;
+@property (nonatomic, readonly, copy) NSString *environmentName;
 @property (nonatomic, assign) NSObject<HTNotifierDelegate> *delegate;
 
 /*

@@ -29,6 +29,7 @@
 // internal
 static HTNotifier *sharedNotifier = nil;
 static NSString *HTNotifierHostName = @"airbrakeapp.com";
+static NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #define HTNotifierURL [NSURL URLWithString: \
 	[NSString stringWithFormat: \
 	@"%@://%@/notifier_api/v2/notices", \
@@ -40,15 +41,19 @@ static NSString *HTNotifierHostName = @"airbrakeapp.com";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString * const HTNotifierVersion = @"2.2.2";
-NSString * const HTNotifierBundleName = @"${BUNDLE}";
-NSString * const HTNotifierBundleVersion  = @"${VERSION}";
-NSString * const HTNotifierDevelopmentEnvironment = @"Development";
-NSString * const HTNotifierAdHocEnvironment = @"Ad Hoc";
-NSString * const HTNotifierAppStoreEnvironment = @"App Store";
-NSString * const HTNotifierReleaseEnvironment = @"Release";
-NSString * const HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
-NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
+NSString *HTNotifierVersion = @"2.3 Beta";
+NSString *HTNotifierBundleName = @"${BUNDLE}";
+NSString *HTNotifierBundleVersion  = @"${VERSION}";
+NSString *HTNotifierDevelopmentEnvironment = @"Development";
+NSString *HTNotifierAdHocEnvironment = @"Ad Hoc";
+NSString *HTNotifierAppStoreEnvironment = @"App Store";
+NSString *HTNotifierReleaseEnvironment = @"Release";
+NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
+
+@interface HTNotifier ()
+@property (nonatomic, readwrite, copy) NSString *apiKey;
+@property (nonatomic, readwrite, copy) NSString *environmentName;
+@end
 
 #pragma mark - private methods
 @interface HTNotifier (private)
@@ -88,10 +93,10 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 		}
 		
 		// setup values
-		__apiKey = [key copy];
-		__environmentName = [name copy];
+        self.apiKey = key;
+        self.environmentName = name;
+        self.useSSL = NO;
 		__environmentInfo = [[NSMutableDictionary alloc] init];
-		self.useSSL = NO;
 #if TARGET_OS_IPHONE && defined(DEBUG)
         NSString *UDID = [[UIDevice currentDevice] uniqueIdentifier];
         [self
@@ -352,23 +357,23 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #pragma mark - public methods
 @implementation HTNotifier
 
-@synthesize environmentInfo         = __environmentInfo;
-@synthesize environmentName         = __environmentName;
-@synthesize apiKey                  = __apiKey;
-@synthesize useSSL                  = __useSSL;
-@synthesize delegate                = __delegate;
+@synthesize environmentInfo = __environmentInfo;
+@synthesize environmentName = __environmentName;
+@synthesize apiKey          = __apiKey;
+@synthesize useSSL          = __useSSL;
+@synthesize delegate        = __delegate;
 
 #pragma mark - start notifier
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {
 		
 		// validate
-		if (key == nil || [key length] == 0) {
-			HTLog(@"The provided API key is not valid");
+		if (![key length]) {
+			HTLog(@"The API key must not be blank");
 			return;
 		}
-		if (name == nil || [name length] == 0) {
-			HTLog(@"The provided environment name is not valid");
+		if (![name length]) {
+			HTLog(@"The environment name must not be blank");
 			return;
 		}
         
@@ -432,10 +437,8 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
     // release information
     HTReleaseNoticeInfo();
 	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
-	[__apiKey release];
-    __apiKey = nil;
-	[__environmentName release];
-    __environmentName = nil;
+    self.apiKey = nil;
+    self.environmentName = nil;
 	[__environmentInfo release];
     __environmentInfo = nil;
     
@@ -466,7 +469,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
         
         // write file
         if (fd > -1) {
-            
             @try {
                 
                 // crash info
@@ -501,8 +503,6 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
                 write(fd, &length, sizeof(unsigned long));
                 write(fd, [data bytes], length);
                 
-                
-                
                 // notify delegate on main thread
                 if ([self.delegate respondsToSelector:@selector(notifierDidLogException:)]) {
                     [self.delegate
@@ -518,9 +518,7 @@ NSString * const HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
             @finally {
                 close(fd);
             }
-            
         }
-        
     }
 }
 
