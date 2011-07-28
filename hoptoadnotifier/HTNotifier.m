@@ -41,14 +41,14 @@ static NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 #define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
-NSString *HTNotifierVersion = @"2.3 Beta";
-NSString *HTNotifierBundleName = @"${BUNDLE}";
-NSString *HTNotifierBundleVersion  = @"${VERSION}";
-NSString *HTNotifierDevelopmentEnvironment = @"Development";
-NSString *HTNotifierAdHocEnvironment = @"Ad Hoc";
-NSString *HTNotifierAppStoreEnvironment = @"App Store";
-NSString *HTNotifierReleaseEnvironment = @"Release";
-NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
+NSString *HTNotifierVersion                 = @"2.3 Beta";
+NSString *HTNotifierBundleName              = @"${BUNDLE}";
+NSString *HTNotifierBundleVersion           = @"${VERSION}";
+NSString *HTNotifierDevelopmentEnvironment  = @"Development";
+NSString *HTNotifierAdHocEnvironment        = @"Ad Hoc";
+NSString *HTNotifierAppStoreEnvironment     = @"App Store";
+NSString *HTNotifierReleaseEnvironment      = @"Release";
+NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 
 @interface HTNotifier ()
 @property (nonatomic, readwrite, copy) NSString *apiKey;
@@ -123,6 +123,9 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
     
+    // pool
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
         [self.delegate
@@ -176,12 +179,12 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
          withObject:nil
          waitUntilDone:YES];
     }
+    
+    // pool
+    [pool drain];
 	
 }
 - (void)postNoticeWithPath:(NSString *)path {
-    
-    // pool
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     // create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
@@ -192,9 +195,8 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
 	// get notice payload
     HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
     NSData *data = [notice hoptoadXMLData];
-    if (data) {
+    if (!data) {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-        [pool drain];
         return;
     }
     else {
@@ -229,14 +231,12 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
 		HTLog(@"unexpected response\nstatus code:%ld", (long)statusCode);
 	}
 	else {
-		NSString *responseString = [[NSString alloc] initWithData:responseBody
-														 encoding:NSUTF8StringEncoding];
+		NSString *responseString = [[NSString alloc]
+                                    initWithData:responseBody
+                                    encoding:NSUTF8StringEncoding];
 		HTLog(@"unexpected response\nstatus code:%ld\nresponse body:%@", (long)statusCode, responseString);
 		[responseString release];
 	}
-    
-    // pool
-    [pool drain];
     
 }
 - (BOOL)isHoptoadReachable {
@@ -316,11 +316,12 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
 #else
 	
     // build alert
-	NSAlert *alert = [NSAlert alertWithMessageText:HTStringByReplacingHoptoadVariablesInString(title)
-									 defaultButton:HTLocalizedString(@"ALWAYS_SEND")
-								   alternateButton:HTLocalizedString(@"DONT_SEND")
-									   otherButton:HTLocalizedString(@"SEND")
-						 informativeTextWithFormat:HTStringByReplacingHoptoadVariablesInString(body)];
+	NSAlert *alert = [NSAlert
+                      alertWithMessageText:HTStringByReplacingHoptoadVariablesInString(title)
+                      defaultButton:HTLocalizedString(@"ALWAYS_SEND")
+                      alternateButton:HTLocalizedString(@"DONT_SEND")
+                      otherButton:HTLocalizedString(@"SEND")
+                      informativeTextWithFormat:HTStringByReplacingHoptoadVariablesInString(body)];
     
     // run alert
 	NSInteger code = [alert runModal];
@@ -364,17 +365,17 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
 @synthesize delegate        = __delegate;
 
 #pragma mark - start notifier
-+ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
++ (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	if (sharedNotifier == nil) {
 		
 		// validate
 		if (![key length]) {
 			HTLog(@"The API key must not be blank");
-			return;
+			return nil;
 		}
 		if (![name length]) {
 			HTLog(@"The environment name must not be blank");
-			return;
+			return nil;
 		}
         
         // create
@@ -393,7 +394,11 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
             HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
             HTLog(@"Environment \"%@\"", envName);
         }
+        else {
+            HTLog(@"Unable to create crash notifier");
+        }
 	}
+    return sharedNotifier;
 }
 
 #pragma mark - singleton methods
@@ -534,7 +539,7 @@ NSString *HTNotifierAutomaticEnvironment = @"${AUTOMATIC}";
     [environmentData getBytes:ht_notice_info.env_info length:length];
 }
 - (NSString *)environmentValueForKey:(NSString *)key {
-    return [__environmentInfo objectForKey:key];
+    return [self.environmentInfo objectForKey:key];
 }
 
 #pragma mark - post notices
