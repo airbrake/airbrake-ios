@@ -114,8 +114,11 @@ extern NSString * const HTNotifierAutomaticEnvironment;
  include any of the above constant strings in the
  enviromnent name to have the value replaced by the library
  
+ returns the shared notifier for convenience, or nil if
+ an error occurred
+ 
  */
-+ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
++ (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 
 /*
  
