@@ -167,9 +167,7 @@ extern NSString *HTNotifierAutomaticEnvironment;
  this method is asynchronous and simply spawns the post
  action on a new thread, if airbrake is reachable
  
- returns true if notices will be posted
- 
  */
-- (BOOL)postNotices;
+- (void)postNotices;
 
 @end
