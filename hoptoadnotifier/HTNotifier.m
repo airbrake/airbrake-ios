@@ -30,15 +30,6 @@
 static HTNotifier *sharedNotifier = nil;
 static NSString *HTNotifierHostName = @"airbrakeapp.com";
 static NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
-#define HTNotifierURL [NSURL URLWithString: \
-	[NSString stringWithFormat: \
-	@"%@://%@/notifier_api/v2/notices", \
-	(self.useSSL) ? @"https" : @"http", \
-	HTNotifierHostName]]
-#define HTIsMultitaskingSupported \
-	[[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] && \
-	[[UIDevice currentDevice] isMultitaskingSupported]
-#define HT_IOS_SDK_4 (TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED >= 4000)
 
 // extern strings
 NSString *HTNotifierVersion                 = @"2.3";
@@ -50,12 +41,15 @@ NSString *HTNotifierAppStoreEnvironment     = @"App Store";
 NSString *HTNotifierReleaseEnvironment      = @"Release";
 NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 
+// reachability callback
+void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
+
 @interface HTNotifier ()
 @property (nonatomic, readwrite, copy) NSString *apiKey;
 @property (nonatomic, readwrite, copy) NSString *environmentName;
+@property (nonatomic, assign) dispatch_queue_t backgroundQueue;
 @end
 
-#pragma mark - private methods
 @interface HTNotifier (private)
 
 // init
@@ -63,20 +57,13 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 
 // post methods
 - (void)postNoticesWithPaths:(NSArray *)paths;
-- (void)postNoticeWithPath:(NSString *)path;
-
-// reachability
-- (BOOL)isHoptoadReachable;
-
-// notifications
-- (void)registerNotifications;
-- (void)unregisterNotifications;
-- (void)applicationDidBecomeActive:(NSNotification *)notif;
+- (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL;
 
 // show alert
 - (void)showNoticeAlert;
 
 @end
+
 @implementation HTNotifier (private)
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	self = [super init];
@@ -97,7 +84,8 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
         self.environmentName = name;
         self.useSSL = NO;
 		__environmentInfo = [[NSMutableDictionary alloc] init];
-#if TARGET_OS_IPHONE && defined(DEBUG)
+        self.backgroundQueue = dispatch_queue_create("com.airbrakeapp.BackgroundQueue", nil);
+#ifdef DEBUG
         NSString *UDID = [[UIDevice currentDevice] uniqueIdentifier];
         [self
          setEnvironmentValue:UDID
@@ -109,10 +97,17 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 		 [NSDictionary dictionaryWithObject:@"NO" forKey:HTNotifierAlwaysSendKey]];
 		
 		// setup reachability
+        BOOL reachabilityConfigured = NO;
 		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
-		
-		// notifications
-		[self registerNotifications];
+        if (SCNetworkReachabilitySetCallback(reachability, ABNotifierReachabilityDidChange, nil)) {
+            if (SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
+                reachabilityConfigured = YES;
+            }
+        }
+        if (!reachabilityConfigured) {
+            [self release];
+            return nil;
+        }
         
         // start
         HTInitNoticeInfo();
@@ -128,66 +123,51 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
     
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
-        [self.delegate
-         performSelectorOnMainThread:@selector(notifierWillPostNotices)
-         withObject:nil
-         waitUntilDone:YES];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.delegate notifierWillPostNotices];
+        });
     }
     
-#if HT_IOS_SDK_4
-	
-	if (HTIsMultitaskingSupported) {
-		
-		// start background task
-        __block BOOL keepPosting = YES;
-		UIApplication *app = [UIApplication sharedApplication];
-		UIBackgroundTaskIdentifier task = [app beginBackgroundTaskWithExpirationHandler:^{
-			keepPosting = NO;
-		}];
-		
-		// report each notice
-		for (NSString *path in paths) {
-			if (!keepPosting) { break; }
-			[self postNoticeWithPath:path];
-		}
-		
-		// end background task
-		if (task != UIBackgroundTaskInvalid) {
-			[app endBackgroundTask:task];
-		}
-		
-	}
-	else {
-		
-#endif
-        
-		// report each notice
-		for (NSString *path in paths) {
-			[self postNoticeWithPath:path];
-		}
-		
-#if HT_IOS_SDK_4
-		
-	}
-	
-#endif
+    // create url
+    NSString *URLString = [NSString stringWithFormat:
+                           @"%@://%@/notifier_api/v2/notices",
+                           (self.useSSL) ? @"https" : @"http",
+                           HTNotifierHostName];
+    NSURL *URL = [NSURL URLWithString:URLString];
+    
+    // start background task
+    __block BOOL keepPosting = YES;
+    UIApplication *app = [UIApplication sharedApplication];
+    UIBackgroundTaskIdentifier task = [app beginBackgroundTaskWithExpirationHandler:^{
+        keepPosting = NO;
+    }];
+    
+    // report each notice
+    [paths enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (keepPosting) { [self postNoticeWithContentsOfFile:obj toURL:URL]; }
+        else { *stop = YES; }
+    }];
+    
+    // end background task
+    if (task != UIBackgroundTaskInvalid) {
+        [app endBackgroundTask:task];
+    }
     
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
-        [self.delegate
-         performSelectorOnMainThread:@selector(notifierDidPostNotices)
-         withObject:nil
-         waitUntilDone:YES];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.delegate notifierDidPostNotices]; 
+        });
     }
     
     // pool
     [pool drain];
 	
 }
-- (void)postNoticeWithPath:(NSString *)path {
+- (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
     
     // create url request
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:HTNotifierURL];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 	[request setTimeoutInterval:10.0];
 	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
@@ -195,15 +175,15 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 	// get notice payload
     HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
     NSData *data = [notice hoptoadXMLData];
-    if (!data) {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-        return;
-    }
-    else {
+    if (data) {
         [request setHTTPBody:data];
 #ifdef DEBUG
         HTLog(@"%@", notice);
 #endif
+    }
+    else {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        return;
     }
 	
 	// perform request
@@ -215,12 +195,12 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 							error:&error];
 	
 	// error checking
-	if (error == nil) {
-		[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-	}
-	else {
-		HTLog(@"encountered error while posting notice\n%@", error);
-	}
+    if (error) {
+        HTLog(@"encountered error while posting notice\n%@", error);
+    }
+    else {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+    }
 	
 	// status code checking
 	NSInteger statusCode = [response statusCode];
@@ -239,45 +219,12 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 	}
     
 }
-- (BOOL)isHoptoadReachable {
-	SCNetworkReachabilityFlags flags;
-	SCNetworkReachabilityGetFlags(reachability, &flags);
-	return (flags & kSCNetworkReachabilityFlagsReachable);
-}
-- (void)registerNotifications {
-#if TARGET_OS_IPHONE
-    [[NSNotificationCenter defaultCenter]
-	 addObserver:self
-	 selector:@selector(applicationDidBecomeActive:)
-	 name:UIApplicationDidBecomeActiveNotification
-	 object:nil];
-#else
-    [[NSNotificationCenter defaultCenter]
-	 addObserver:self
-	 selector:@selector(applicationDidBecomeActive:)
-	 name:NSApplicationDidBecomeActiveNotification
-	 object:nil];
-#endif
-}
-- (void)unregisterNotifications {
-#if TARGET_OS_IPHONE
-    [[NSNotificationCenter defaultCenter]
-	 removeObserver:self
-	 name:UIApplicationDidBecomeActiveNotification
-	 object:nil];
-#else
-    [[NSNotificationCenter defaultCenter]
-	 removeObserver:self
-	 name:NSApplicationDidBecomeActiveNotification
-	 object:nil];
-#endif
-}
-- (void)applicationDidBecomeActive:(NSNotification *)notif {
-    if ([self postNotices]) {
-        [self unregisterNotifications];
-    }
-}
 - (void)showNoticeAlert {
+    
+    // delegate
+    if ([self.delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
+		[self.delegate notifierWillDisplayAlert];
+	}
     
     // alert title
     NSString *title = nil;
@@ -297,13 +244,7 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
         body = HTLocalizedString(@"NOTICE_BODY");
     }
     
-    // delegate
-    if ([self.delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
-		[self.delegate notifierWillDisplayAlert];
-	}
-    
-#if TARGET_OS_IPHONE
-    
+    // show alert
     UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
 						  message:HTStringByReplacingHoptoadVariablesInString(body)
@@ -313,69 +254,31 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 	[alert show];
 	[alert release];
     
-#else
-	
-    // build alert
-	NSAlert *alert = [NSAlert
-                      alertWithMessageText:HTStringByReplacingHoptoadVariablesInString(title)
-                      defaultButton:HTLocalizedString(@"ALWAYS_SEND")
-                      alternateButton:HTLocalizedString(@"DONT_SEND")
-                      otherButton:HTLocalizedString(@"SEND")
-                      informativeTextWithFormat:HTStringByReplacingHoptoadVariablesInString(body)];
-    
-    // run alert
-	NSInteger code = [alert runModal];
-    
-    // get notices
-    NSArray *notices = HTNotices();
-    
-    // don't send
-    if (code == NSAlertAlternateReturn) {
-        for (NSString *notice in notices) {
-			[[NSFileManager defaultManager] removeItemAtPath:notice error:nil];
-		}
-    }
-    
-    // send
-    else {
-        if (code == NSAlertDefaultReturn) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
-    }
-    
-    // delegate
-	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
-		[self.delegate notifierDidDismissAlert];
-	}
-    
-#endif
-    
 }
 @end
 
-#pragma mark - public methods
 @implementation HTNotifier
 
 @synthesize environmentInfo = __environmentInfo;
 @synthesize environmentName = __environmentName;
+@synthesize backgroundQueue = __backgroundQueue;
 @synthesize apiKey          = __apiKey;
 @synthesize useSSL          = __useSSL;
 @synthesize delegate        = __delegate;
 
-#pragma mark - start notifier
+#pragma mark - class methods
 + (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
-	if (sharedNotifier == nil) {
-		
-		// validate
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        
+        // validate
 		if (![key length]) {
 			HTLog(@"The API key must not be blank");
-			return nil;
+			return;
 		}
 		if (![name length]) {
 			HTLog(@"The environment name must not be blank");
-			return nil;
+			return;
 		}
         
         // create
@@ -397,68 +300,44 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
         else {
             HTLog(@"Unable to create crash notifier");
         }
-	}
+        
+    });
     return sharedNotifier;
 }
-
-#pragma mark - singleton methods
 + (HTNotifier *)sharedNotifier {
 	@synchronized(self) {
 		return sharedNotifier;
 	}
 }
-+ (id)allocWithZone:(NSZone *)zone {
-	@synchronized(self) {
-		if (sharedNotifier == nil) {
-			sharedNotifier = [super allocWithZone:zone];
-			return sharedNotifier;
-		}
-	}
-	return nil;
+
+#pragma mark - environment variables
+- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
+    @synchronized(self) {
+        if (valueOrNil == nil) { [__environmentInfo removeObjectForKey:key]; }
+        else { [__environmentInfo setObject:valueOrNil forKey:key]; }
+        NSData *environmentData = [NSKeyedArchiver archivedDataWithRootObject:__environmentInfo];
+        NSUInteger length = [environmentData length];
+        free(ht_notice_info.env_info);
+        ht_notice_info.env_info = malloc(length);
+        ht_notice_info.env_info_len = length;
+        [environmentData getBytes:ht_notice_info.env_info length:length];
+    }
 }
-- (id)copyWithZone:(NSZone *)zone {
-	return self;
-}
-- (id)retain {
-	return self;
-}
-- (NSUInteger)retainCount {
-	return NSUIntegerMax;
-}
-- (oneway void)release {
-	// do nothing
-}
-- (id)autorelease {
-	return self;
+- (NSString *)environmentValueForKey:(NSString *)key {
+    NSString *value = nil;
+    @synchronized(self) {
+        value = [self.environmentInfo objectForKey:key];
+    }
+    return value;
 }
 
-#pragma mark - memory management
-- (void)dealloc {
-    
-    // stop event sources
-	[self unregisterNotifications];
-    HTStopHandlers();
-    
-    // release information
-    HTReleaseNoticeInfo();
-	if (reachability != NULL) { CFRelease(reachability);reachability = NULL; }
-    self.apiKey = nil;
-    self.environmentName = nil;
-	[__environmentInfo release];
-    __environmentInfo = nil;
-    
-    // super
-	[super dealloc];
-    
-}
-
-#pragma mark - test mechanism
+#pragma mark - test notice
 - (void)writeTestNotice {
     @try {
         NSArray *array = [NSArray array];
         [array objectAtIndex:NSUIntegerMax];
     }
-	@catch (NSException *e) {
+    @catch (NSException *e) {
         [self logException:e];
     }
 }
@@ -488,15 +367,11 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
                 [dictionary setObject:[exception name] forKey:@"exception name"];
                 [dictionary setObject:[exception reason] forKey:@"exception reason"];
                 
-#if TARGET_OS_IPHONE
-                
                 // view controller
                 NSString *viewController = HTCurrentViewController();
                 if (viewController != nil) {
                     [dictionary setObject:viewController forKey:@"view controller"];
                 }
-                
-#endif
                 
                 // environment info
                 [self setEnvironmentValue:[[exception userInfo] description] forKey:@"Exception"];
@@ -527,39 +402,34 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
     }
 }
 
-#pragma mark - environment information accessors
-- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
-    if (valueOrNil == nil) { [__environmentInfo removeObjectForKey:key]; }
-    else { [__environmentInfo setObject:valueOrNil forKey:key]; }
-    NSData *environmentData = [NSKeyedArchiver archivedDataWithRootObject:__environmentInfo];
-    NSUInteger length = [environmentData length];
-    free(ht_notice_info.env_info);
-    ht_notice_info.env_info = malloc(length);
-    ht_notice_info.env_info_len = length;
-    [environmentData getBytes:ht_notice_info.env_info length:length];
-}
-- (NSString *)environmentValueForKey:(NSString *)key {
-    return [self.environmentInfo objectForKey:key];
-}
-
-#pragma mark - post notices
-- (BOOL)postNotices {
-    BOOL value = [self isHoptoadReachable];
-    if (value) {
-        NSArray *notices = ABNotifierAllNotices();
-        if ([notices count]) {
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
-                [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
-            }
-            else {
-                [self performSelectorOnMainThread:@selector(showNoticeAlert) withObject:nil waitUntilDone:NO];
-            }
-        }
+#pragma mark - memory management
+- (void)dealloc {
+    
+    // stop event sources
+    if (reachability) {
+        SCNetworkReachabilitySetCallback(reachability, nil, nil);
+        SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
+        CFRelease(reachability);
+        reachability = nil;
     }
-    return value;
+    
+    // stop handlers
+    HTStopHandlers();
+    
+    // release information
+    HTReleaseNoticeInfo();
+    self.apiKey = nil;
+    self.environmentName = nil;
+	[__environmentInfo release];
+    __environmentInfo = nil;
+    dispatch_release(self.backgroundQueue);
+    self.backgroundQueue = nil;
+    
+    // super
+	[super dealloc];
+    
 }
 
-#if TARGET_OS_IPHONE
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
@@ -584,6 +454,27 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
         [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
     }
 }
-#endif
 
 @end
+
+#pragma mark - reachability change
+void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
+    if (flags & kSCNetworkReachabilityFlagsReachable) {
+        SCNetworkReachabilitySetCallback(target, nil, nil);
+        SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
+        HTNotifier *notifier = [HTNotifier sharedNotifier];
+        dispatch_async([notifier backgroundQueue], ^{
+            NSArray *notices = ABNotifierAllNotices();
+            if ([notices count]) {
+                if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
+                    [notifier postNoticesWithPaths:notices];
+                }
+                else {
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        [notifier showNoticeAlert];
+                    });
+                }
+            }
+        });
+    }
+}

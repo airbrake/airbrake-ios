@@ -22,14 +22,7 @@
  
  */
 
-#import <TargetConditionals.h>
-#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-#elif TARGET_OS_MAC
-#import <Cocoa/Cocoa.h>
-#else
-#error [Airbrake] unsupported platform
-#endif
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "HTNotifierDelegate.h"
@@ -69,35 +62,22 @@ extern NSString *HTNotifierAutomaticEnvironment;
  access the shared instance by calling sharedNotifier
  
  */
-#if TARGET_OS_IPHONE
 @interface HTNotifier : NSObject <UIAlertViewDelegate> {
-#else
-@interface HTNotifier : NSObject {
-#endif
 @private
-    NSMutableDictionary             * __environmentInfo;
-    NSString                        * __environmentName;
-    NSString                        * __apiKey;
-	NSObject<HTNotifierDelegate>    * __delegate;
-    BOOL                            __useSSL;
-	SCNetworkReachabilityRef        reachability;
+    NSMutableDictionary         * __environmentInfo;
+    NSString                    * __environmentName;
+    NSString                    * __apiKey;
+	id<HTNotifierDelegate>      __delegate;
+    BOOL                        __useSSL;
+	SCNetworkReachabilityRef    reachability;
 }
 
 // properties
 @property (nonatomic, readonly) NSDictionary *environmentInfo;
 @property (nonatomic, readonly, copy) NSString *apiKey;
 @property (nonatomic, readonly, copy) NSString *environmentName;
-@property (nonatomic, assign) NSObject<HTNotifierDelegate> *delegate;
-
-/*
- 
- control whether notices are posted using SSL. your account
- must support this feature
- 
- default:NO
- 
- */
-@property (nonatomic, assign) BOOL useSSL;
+@property (nonatomic, assign) id<HTNotifierDelegate> delegate;
+@property (nonatomic, assign) BOOL useSSL; // your account must support this feature
 
 /*
  
@@ -156,18 +136,5 @@ extern NSString *HTNotifierAutomaticEnvironment;
  
  */
 - (void)writeTestNotice;
-
-/*
- 
- scan for notices and take action if hoptoad is reachable.
- if the user has chosen to always send notices they will
- be posted imediately, otherwise the user will be asked
- for their preference.
- 
- this method is asynchronous and simply spawns the post
- action on a new thread, if airbrake is reachable
- 
- */
-- (void)postNotices;
 
 @end
