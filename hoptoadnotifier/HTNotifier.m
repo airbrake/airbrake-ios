@@ -79,17 +79,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 			 error:nil];
 		}
 		
-		// setup values
+		// setup ivars
         self.apiKey = key;
         self.environmentName = name;
         self.useSSL = NO;
-		__environmentInfo = [[NSMutableDictionary alloc] init];
         self.backgroundQueue = dispatch_queue_create("com.airbrakeapp.BackgroundQueue", nil);
 #ifdef DEBUG
-        NSString *UDID = [[UIDevice currentDevice] uniqueIdentifier];
-        [self
-         setEnvironmentValue:UDID
-         forKey:@"UDID"];
+        __environmentInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                             [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
+                             nil];
+#else
+        __environmentInfo = [[NSMutableDictionary alloc] init];
 #endif
 		
 		// register defaults
@@ -109,17 +109,93 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             return nil;
         }
         
-        // start
-        HTInitNoticeInfo();
+        // setup notifier information
+        {
+            
+            // setup values
+            NSString *value;
+            const char *value_str;
+            NSUInteger length;
+            
+            // exception file name
+            NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
+            value = ABNotifierPathForNewNoticeWithName(name);
+            value_str = [value UTF8String];
+            length = (strlen(value_str) + 1);
+            ht_notice_info.notice_path = malloc(length);
+            memcpy((void *)ht_notice_info.notice_path, value_str, length);
+            
+            // os version
+            value = HTOperatingSystemVersion();
+            if (value == nil) { HTLog(@"unable to cache operating system version"); }
+            else {
+                value_str = [value UTF8String];
+                length = (strlen(value_str) + 1);
+                ht_notice_info.os_version = malloc(length);
+                ht_notice_info.os_version_len = length;
+                memcpy((void *)ht_notice_info.os_version, value_str, length);
+            }
+            
+            // app version
+            value = HTApplicationVersion();
+            if (value == nil) { HTLog(@"unable to cache app version"); }
+            else {
+                value_str = [value UTF8String];
+                length = (strlen(value_str) + 1);
+                ht_notice_info.app_version = malloc(length);
+                ht_notice_info.app_version_len = length;
+                memcpy((void *)ht_notice_info.app_version, value_str, length);
+            }
+            
+            // platform
+            value = HTPlatform();
+            if (value == nil) { HTLog(@"unable to cache platform"); }
+            else {
+                value_str = [value UTF8String];
+                length = (strlen(value_str) + 1);
+                ht_notice_info.platform = malloc(length);
+                ht_notice_info.platform_len = length;
+                memcpy((void *)ht_notice_info.platform, value_str, length);
+            }
+            
+            // environment name
+            value = [[HTNotifier sharedNotifier] environmentName];
+            if (value == nil) { HTLog(@"unable to cache environment name"); }
+            else {
+                value_str = [value UTF8String];
+                length = (strlen(value_str) + 1);
+                ht_notice_info.env_name = malloc(length);
+                ht_notice_info.env_name_len = length;
+                memcpy((void *)ht_notice_info.env_name, value_str, length);
+            }
+            
+            // bundle version
+            value = HTInfoPlistValueForKey(@"CFBundleVersion");
+            if (value == nil) { HTLog(@"unable to cache bundle version"); }
+            else {
+                value_str = [value UTF8String];
+                length = (strlen(value_str) + 1);
+                ht_notice_info.bundle_version = malloc(length);
+                ht_notice_info.bundle_version_len = length;
+                memcpy((void *)ht_notice_info.bundle_version, value_str, length);
+            }
+            
+            // environment info
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:__environmentInfo];
+            length = [data length];
+            ht_notice_info.env_info = malloc(length);
+            ht_notice_info.env_info_len = length;
+            [data getBytes:ht_notice_info.env_info length:length];
+            
+        }
+        
+        // start handlers
 		HTStartHandlers();
 		
 	}
 	return self;
 }
 - (void)postNoticesWithPaths:(NSArray *)paths {
-    
-    // pool
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
@@ -159,9 +235,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [self.delegate notifierDidPostNotices]; 
         });
     }
-    
-    // pool
-    [pool drain];
 	
 }
 - (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
@@ -385,10 +458,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 
                 // notify delegate on main thread
                 if ([self.delegate respondsToSelector:@selector(notifierDidLogException:)]) {
-                    [self.delegate
-                     performSelectorOnMainThread:@selector(notifierDidLogException:)
-                     withObject:exception
-                     waitUntilDone:YES];
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        [self.delegate notifierDidLogException:exception];
+                    });
                 }
                 
             }
@@ -416,8 +488,31 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     // stop handlers
     HTStopHandlers();
     
-    // release information
-    HTReleaseNoticeInfo();
+    // release notice information
+    {
+        free((void *)ht_notice_info.notice_path);
+        ht_notice_info.notice_path = NULL;
+        free((void *)ht_notice_info.os_version);
+        ht_notice_info.os_version = NULL;
+        ht_notice_info.os_version_len = 0;
+        free((void *)ht_notice_info.app_version);
+        ht_notice_info.app_version = NULL;
+        ht_notice_info.app_version_len = 0;
+        free((void *)ht_notice_info.platform);
+        ht_notice_info.platform = NULL;
+        ht_notice_info.platform_len = 0;
+        free((void *)ht_notice_info.env_name);
+        ht_notice_info.env_name = NULL;
+        ht_notice_info.env_name_len = 0;
+        free((void *)ht_notice_info.bundle_version);
+        ht_notice_info.bundle_version = NULL;
+        ht_notice_info.bundle_version_len = 0;
+        free(ht_notice_info.env_info);
+        ht_notice_info.env_info = NULL;
+        ht_notice_info.env_info_len = 0;
+    }
+    
+    // free ivars
     self.apiKey = nil;
     self.environmentName = nil;
 	[__environmentInfo release];
@@ -439,11 +534,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSArray *notices = ABNotifierAllNotices();
 	if (buttonIndex == alertView.cancelButtonIndex) {
-		for (NSString *notice in notices) {
-			[[NSFileManager defaultManager]
-			 removeItemAtPath:notice
-			 error:nil];
-		}
+        NSFileManager *manager = [NSFileManager defaultManager];
+        [notices enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [manager removeItemAtPath:obj error:nil];
+        }];
 	}
     else {
         NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
@@ -451,7 +545,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
-        [self performSelectorInBackground:@selector(postNoticesWithPaths:) withObject:notices];
+        dispatch_async(self.backgroundQueue, ^{
+            [self postNoticesWithPaths:notices];
+        });
     }
 }
 
@@ -460,21 +556,24 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #pragma mark - reachability change
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     if (flags & kSCNetworkReachabilityFlagsReachable) {
-        SCNetworkReachabilitySetCallback(target, nil, nil);
-        SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
-        HTNotifier *notifier = [HTNotifier sharedNotifier];
-        dispatch_async([notifier backgroundQueue], ^{
-            NSArray *notices = ABNotifierAllNotices();
-            if ([notices count]) {
-                if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
-                    [notifier postNoticesWithPaths:notices];
+        static dispatch_once_t predicate;
+        dispatch_once(&predicate, ^{
+            SCNetworkReachabilitySetCallback(target, nil, nil);
+            SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
+            HTNotifier *notifier = [HTNotifier sharedNotifier];
+            dispatch_async([notifier backgroundQueue], ^{
+                NSArray *notices = ABNotifierAllNotices();
+                if ([notices count]) {
+                    if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
+                        [notifier postNoticesWithPaths:notices];
+                    }
+                    else {
+                        dispatch_sync(dispatch_get_main_queue(), ^{
+                            [notifier showNoticeAlert];
+                        });
+                    }
                 }
-                else {
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        [notifier showNoticeAlert];
-                    });
-                }
-            }
+            });
         });
     }
 }
