@@ -54,10 +54,6 @@ NSString *HTOperatingSystemVersion(void);
 NSString *HTMachine(void);
 NSString *HTPlatform(void);
 
-// deal with notice information
-void HTInitNoticeInfo(void);
-void HTReleaseNoticeInfo(void);
-
 // deal with notice information on disk
 NSString *ABNotifierPathForNewNoticeWithName(NSString *name);
 NSString *ABNotifierPathForNoticesDirectory(void);
