@@ -33,8 +33,6 @@
 #import "HTNotifier.h"
 #import "HTNotice.h"
 
-static NSString * const ABNotifierNoticeDirectoryName = @"Hoptoad Notices";
-
 // handled signals
 int ht_signals_count = 6;
 int ht_signals[] = {
@@ -234,39 +232,6 @@ NSString *HTPlatform(void) {
 #endif
     
 #endif
-}
-
-#pragma mark - notice information on disk
-NSString *ABNotifierPathForNewNoticeWithName(NSString *name) {
-    NSString *path = ABNotifierPathForNoticesDirectory();
-    path = [path stringByAppendingPathComponent:name];
-    return [path stringByAppendingPathExtension:ABNotifierNoticePathExtension];
-}
-NSString *ABNotifierPathForNoticesDirectory() {
-#if TARGET_OS_IPHONE
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-	NSString *path = [folders objectAtIndex:0];
-	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	return [path stringByAppendingPathComponent:ABNotifierNoticePathExtension];
-#else
-	NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString *path = [folders objectAtIndex:0];
-	if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-	path = [path stringByAppendingPathComponent:HTApplicationName()];
-	return [path stringByAppendingPathComponent:ABNotifierNoticePathExtension];
-#endif
-}
-NSArray *ABNotifierAllNotices(void) {
-    NSString *path = ABNotifierPathForNoticesDirectory();
-	NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-	NSMutableArray *crashes = [NSMutableArray arrayWithCapacity:[directoryContents count]];
-	for (NSString *file in directoryContents) {
-		if ([[file pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
-			NSString *crashPath = [path stringByAppendingPathComponent:file];
-			[crashes addObject:crashPath];
-		}
-	}
-	return crashes;
 }
 
 #pragma mark - callstack functions

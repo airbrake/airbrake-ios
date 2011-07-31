@@ -54,11 +54,6 @@ NSString *HTOperatingSystemVersion(void);
 NSString *HTMachine(void);
 NSString *HTPlatform(void);
 
-// deal with notice information on disk
-NSString *ABNotifierPathForNewNoticeWithName(NSString *name);
-NSString *ABNotifierPathForNoticesDirectory(void);
-NSArray *ABNotifierAllNotices(void);
-
 // callstack utilities
 NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *);
 NSArray *HTParseCallstack(NSArray *);

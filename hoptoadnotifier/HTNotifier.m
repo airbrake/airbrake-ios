@@ -22,6 +22,8 @@
  
  */
 
+#import <TargetConditionals.h>
+
 #import "HTNotifier.h"
 #import "HTNotice.h"
 #import "HTFunctions.h"
@@ -47,16 +49,21 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @interface HTNotifier ()
 @property (nonatomic, readwrite, copy) NSString *apiKey;
 @property (nonatomic, readwrite, copy) NSString *environmentName;
-@property (nonatomic, assign) dispatch_queue_t backgroundQueue;
 @end
 
 @interface HTNotifier (private)
+
+// utility methods
++ (NSString *)pathForNoticesDirectory;
++ (NSString *)pathForNewNoticeWithName:(NSString *)name;
++ (BOOL)hasNotices;
++ (NSArray *)pathsForAllNotices;
 
 // init
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
 
 // post methods
-- (void)postNoticesWithPaths:(NSArray *)paths;
+- (void)postAllNotices;
 - (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL;
 
 // show alert
@@ -65,25 +72,66 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @end
 
 @implementation HTNotifier (private)
++ (NSString *)pathForNoticesDirectory {
+    static NSString *folderName = @"Hoptoad Notices";
+    static NSString *path = nil;
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+#if TARGET_OS_IPHONE
+        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+        NSString *path = [folders objectAtIndex:0];
+        if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+        else { path = [path stringByAppendingPathComponent:folderName]; }
+#else
+        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+        NSString *path = [folders objectAtIndex:0];
+        if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+        else {
+            path = [path stringByAppendingPathComponent:HTApplicationName()];
+            path = [path stringByAppendingPathComponent:folderName];
+        }
+#endif
+        NSFileManager *manager = [NSFileManager defaultManager];
+        if (![manager fileExistsAtPath:path]) {
+            [manager
+             createDirectoryAtPath:path
+             withIntermediateDirectories:YES
+             attributes:nil
+             error:nil];
+        }
+    });
+    return path;
+}
++ (NSString *)pathForNewNoticeWithName:(NSString *)name {
+    NSString *path = [self pathForNoticesDirectory];
+    path = [path stringByAppendingPathComponent:name];
+    return [path stringByAppendingPathExtension:ABNotifierNoticePathExtension];
+}
++ (BOOL)hasNotices {
+    NSString *path = [self pathForNoticesDirectory];
+    NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    return ([contents count] > 0);
+}
++ (NSArray *)pathsForAllNotices {
+    NSString *path = [self pathForNoticesDirectory];
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:[contents count]];
+    [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
+            NSString *noticePath = [path stringByAppendingPathComponent:obj];
+            [paths addObject:noticePath];
+        }
+    }];
+    return [paths autorelease];
+}
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	self = [super init];
 	if (self) {
-		
-		// create folder
-		NSString *directory = ABNotifierPathForNoticesDirectory();
-		if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
-			[[NSFileManager defaultManager]
-			 createDirectoryAtPath:directory
-			 withIntermediateDirectories:YES
-			 attributes:nil
-			 error:nil];
-		}
 		
 		// setup ivars
         self.apiKey = key;
         self.environmentName = name;
         self.useSSL = NO;
-        self.backgroundQueue = dispatch_queue_create("com.airbrakeapp.BackgroundQueue", nil);
 #ifdef DEBUG
         __environmentInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
@@ -119,7 +167,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // exception file name
             NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-            value = ABNotifierPathForNewNoticeWithName(name);
+            value = [HTNotifier pathForNewNoticeWithName:name];
             value_str = [value UTF8String];
             length = (strlen(value_str) + 1);
             ht_notice_info.notice_path = malloc(length);
@@ -195,7 +243,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	}
 	return self;
 }
-- (void)postNoticesWithPaths:(NSArray *)paths {
+- (void)postAllNotices {
+    
+    // get paths
+    NSArray *paths = [HTNotifier pathsForAllNotices];
     
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
@@ -334,7 +385,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 
 @synthesize environmentInfo = __environmentInfo;
 @synthesize environmentName = __environmentName;
-@synthesize backgroundQueue = __backgroundQueue;
 @synthesize apiKey          = __apiKey;
 @synthesize useSSL          = __useSSL;
 @synthesize delegate        = __delegate;
@@ -421,7 +471,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         
         // open file
         NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-        NSString *path = ABNotifierPathForNewNoticeWithName(name);
+        NSString *path = [HTNotifier pathForNewNoticeWithName:name];
         int fd = HTOpenFile(HTExceptionNoticeType, [path UTF8String]);
         
         // write file
@@ -517,8 +567,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     self.environmentName = nil;
 	[__environmentInfo release];
     __environmentInfo = nil;
-    dispatch_release(self.backgroundQueue);
-    self.backgroundQueue = nil;
     
     // super
 	[super dealloc];
@@ -532,10 +580,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	}
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSArray *notices = ABNotifierAllNotices();
 	if (buttonIndex == alertView.cancelButtonIndex) {
         NSFileManager *manager = [NSFileManager defaultManager];
-        [notices enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [[HTNotifier pathsForAllNotices] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             [manager removeItemAtPath:obj error:nil];
         }];
 	}
@@ -545,8 +592,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
-        dispatch_async(self.backgroundQueue, ^{
-            [self postNoticesWithPaths:notices];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self postAllNotices];
         });
     }
 }
@@ -561,11 +608,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             SCNetworkReachabilitySetCallback(target, nil, nil);
             SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
             HTNotifier *notifier = [HTNotifier sharedNotifier];
-            dispatch_async([notifier backgroundQueue], ^{
-                NSArray *notices = ABNotifierAllNotices();
-                if ([notices count]) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                if ([HTNotifier hasNotices]) {
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
-                        [notifier postNoticesWithPaths:notices];
+                        [notifier postAllNotices];
                     }
                     else {
                         dispatch_sync(dispatch_get_main_queue(), ^{
