@@ -22,6 +22,10 @@
  
  */
 
+#ifndef __IPHONE_4_0
+#warning "This version of the Airbrake notifier requires iOS 4.0 or later."
+#endif
+
 #import <TargetConditionals.h>
 
 #import "HTNotifier.h"
@@ -30,8 +34,8 @@
 
 // internal
 static HTNotifier *sharedNotifier = nil;
-static NSString *HTNotifierHostName = @"airbrakeapp.com";
-static NSString *HTNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
+static NSString *ABNotifierHostName = @"airbrakeapp.com";
+static NSString *ABNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 // extern strings
 NSString *HTNotifierVersion                 = @"2.3";
@@ -137,11 +141,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 		
 		// register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
-		 [NSDictionary dictionaryWithObject:@"NO" forKey:HTNotifierAlwaysSendKey]];
+		 [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
 		
 		// setup reachability
         BOOL reachabilityConfigured = NO;
-		reachability = SCNetworkReachabilityCreateWithName(NULL, [HTNotifierHostName UTF8String]);
+		reachability = SCNetworkReachabilityCreateWithName(NULL, [ABNotifierHostName UTF8String]);
         if (SCNetworkReachabilitySetCallback(reachability, ABNotifierReachabilityDidChange, nil)) {
             if (SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
                 reachabilityConfigured = YES;
@@ -260,7 +264,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     NSString *URLString = [NSString stringWithFormat:
                            @"%@://%@/notifier_api/v2/notices",
                            (self.useSSL) ? @"https" : @"http",
-                           HTNotifierHostName];
+                           ABNotifierHostName];
     NSURL *URL = [NSURL URLWithString:URLString];
     
     // start background task
@@ -588,7 +592,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     else {
         NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
         if ([button isEqualToString:HTLocalizedString(@"ALWAYS_SEND")]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:HTNotifierAlwaysSendKey];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ABNotifierAlwaysSendKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -608,7 +612,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 if ([HTNotifier hasNotices]) {
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
+                    if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
                         [[HTNotifier sharedNotifier] postAllNotices];
                     }
                     else {
