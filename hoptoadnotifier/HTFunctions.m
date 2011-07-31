@@ -118,7 +118,7 @@ void HTStartExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(&ht_handle_exception);
 }
 void HTStartSignalHandler(void) {
-	for (NSUInteger i = 0; i < ht_signals_count; i++) {
+	for (int i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
 		sigemptyset(&action.sa_mask);
@@ -137,7 +137,7 @@ void HTStopExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(NULL);
 }
 void HTStopSignalHandler(void) {
-	for (NSUInteger i = 0; i < ht_signals_count; i++) {
+	for (int i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
 		sigemptyset(&action.sa_mask);
