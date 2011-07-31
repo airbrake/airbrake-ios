@@ -43,10 +43,7 @@ void HTStopExceptionHandler(void);
 void HTStopSignalHandler(void);
 
 // get values from Info.plist
-id HTInfoPlistValueForKey(NSString *);
-NSString *HTExecutableName(void);
 NSString *HTApplicationVersion(void);
-NSString *HTBundleVersion(void);
 NSString *HTApplicationName(void);
 
 // get platform values

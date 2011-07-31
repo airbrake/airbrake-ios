@@ -147,15 +147,9 @@ void HTStopSignalHandler(void) {
 }
 
 #pragma mark - Info.plist accessors
-id HTInfoPlistValueForKey(NSString *key) {
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
-}
-NSString *HTExecutableName(void) {
-	return HTInfoPlistValueForKey(@"CFBundleExecutable");
-}
 NSString *HTApplicationVersion(void) {
-	NSString *bundleVersion = HTBundleVersion();
-	NSString *versionString = HTInfoPlistValueForKey(@"CFBundleShortVersionString");
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+	NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 	if (bundleVersion != nil && versionString != nil) {
 		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
 	}
@@ -163,13 +157,10 @@ NSString *HTApplicationVersion(void) {
 	else if (versionString != nil) { return versionString; }
 	else { return nil; }
 }
-NSString *HTBundleVersion(void) {
-    return HTInfoPlistValueForKey(@"CFBundleVersion");
-}
 NSString *HTApplicationName(void) {
-	NSString *displayName = HTInfoPlistValueForKey(@"CFBundleDisplayName");
-	NSString *bundleName = HTInfoPlistValueForKey(@"CFBundleName");
-	NSString *identifier = HTInfoPlistValueForKey(@"CFBundleIdentifier");
+	NSString *displayName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	NSString *identifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
 	if (displayName != nil) { return displayName; }
 	else if (bundleName != nil) { return bundleName; }
 	else if (identifier != nil) { return identifier; }
@@ -267,7 +258,7 @@ NSArray *HTParseCallstack(NSArray *symbols) {
     return parsed;
 }
 NSString *HTActionFromParsedCallstack(NSArray *callStack) {
-    NSString *executable = HTExecutableName();
+    NSString *executable = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];
     for (NSArray *line in callStack) {
         NSString *binary = [line objectAtIndex:1];
         NSString *method = [line objectAtIndex:2];
