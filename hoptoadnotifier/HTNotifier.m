@@ -77,20 +77,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     static NSString *path = nil;
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
-#if TARGET_OS_IPHONE
         NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-        NSString *path = [folders objectAtIndex:0];
-        if ([folders count] == 0) { path = NSTemporaryDirectory(); }
-        else { path = [path stringByAppendingPathComponent:folderName]; }
-#else
-        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-        NSString *path = [folders objectAtIndex:0];
-        if ([folders count] == 0) { path = NSTemporaryDirectory(); }
+        path = [folders objectAtIndex:0];
+        if ([folders count] == 0) {
+            path = NSTemporaryDirectory();
+        }
         else {
-            path = [path stringByAppendingPathComponent:HTApplicationName()];
             path = [path stringByAppendingPathComponent:folderName];
         }
-#endif
         NSFileManager *manager = [NSFileManager defaultManager];
         if (![manager fileExistsAtPath:path]) {
             [manager
@@ -99,6 +93,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              attributes:nil
              error:nil];
         }
+        [path retain];
     });
     return path;
 }
@@ -109,7 +104,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 + (BOOL)hasNotices {
     NSString *path = [self pathForNoticesDirectory];
-    NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
     return ([contents count] > 0);
 }
 + (NSArray *)pathsForAllNotices {
@@ -127,7 +122,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 - (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
 	self = [super init];
 	if (self) {
-		
+        
 		// setup ivars
         self.apiKey = key;
         self.environmentName = name;
@@ -166,16 +161,19 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             NSUInteger length;
             
             // exception file name
-            NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-            value = [HTNotifier pathForNewNoticeWithName:name];
-            value_str = [value UTF8String];
-            length = (strlen(value_str) + 1);
-            ht_notice_info.notice_path = malloc(length);
-            memcpy((void *)ht_notice_info.notice_path, value_str, length);
+            value = [[NSProcessInfo processInfo] globallyUniqueString];
+            value = [HTNotifier pathForNewNoticeWithName:value];
+            if (![value length]) { HTLog(@"unable to cache notice file path"); }
+            else {
+                value_str = [value UTF8String];
+                length = (strlen(value_str) + 1);
+                ht_notice_info.notice_path = malloc(length);
+                memcpy((void *)ht_notice_info.notice_path, value_str, length);
+            }
             
             // os version
             value = HTOperatingSystemVersion();
-            if (value == nil) { HTLog(@"unable to cache operating system version"); }
+            if (![value length]) { HTLog(@"unable to cache operating system version"); }
             else {
                 value_str = [value UTF8String];
                 length = (strlen(value_str) + 1);
@@ -186,7 +184,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // app version
             value = HTApplicationVersion();
-            if (value == nil) { HTLog(@"unable to cache app version"); }
+            if (![value length]) { HTLog(@"unable to cache app version"); }
             else {
                 value_str = [value UTF8String];
                 length = (strlen(value_str) + 1);
@@ -197,7 +195,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // platform
             value = HTPlatform();
-            if (value == nil) { HTLog(@"unable to cache platform"); }
+            if (![value length]) { HTLog(@"unable to cache platform"); }
             else {
                 value_str = [value UTF8String];
                 length = (strlen(value_str) + 1);
@@ -207,8 +205,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             }
             
             // environment name
-            value = [[HTNotifier sharedNotifier] environmentName];
-            if (value == nil) { HTLog(@"unable to cache environment name"); }
+            value = self.environmentName;
+            if (![value length]) { HTLog(@"unable to cache environment name"); }
             else {
                 value_str = [value UTF8String];
                 length = (strlen(value_str) + 1);
@@ -219,7 +217,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // bundle version
             value = HTInfoPlistValueForKey(@"CFBundleVersion");
-            if (value == nil) { HTLog(@"unable to cache bundle version"); }
+            if (![value length]) { HTLog(@"unable to cache bundle version"); }
             else {
                 value_str = [value UTF8String];
                 length = (strlen(value_str) + 1);
@@ -229,7 +227,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             }
             
             // environment info
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:__environmentInfo];
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.environmentInfo];
             length = [data length];
             ht_notice_info.env_info = malloc(length);
             ht_notice_info.env_info_len = length;
@@ -244,6 +242,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	return self;
 }
 - (void)postAllNotices {
+    
+    // assert
+    NSAssert1(![NSThread isMainThread], @"%@ must not be called on the main thread", NSStringFromSelector(_cmd));
     
     // get paths
     NSArray *paths = [HTNotifier pathsForAllNotices];
@@ -508,9 +509,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 
                 // notify delegate on main thread
                 if ([self.delegate respondsToSelector:@selector(notifierDidLogException:)]) {
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        [self.delegate notifierDidLogException:exception];
-                    });
+                    [self.delegate notifierDidLogException:exception];
                 }
                 
             }
@@ -607,15 +606,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         dispatch_once(&predicate, ^{
             SCNetworkReachabilitySetCallback(target, nil, nil);
             SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
-            HTNotifier *notifier = [HTNotifier sharedNotifier];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 if ([HTNotifier hasNotices]) {
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:HTNotifierAlwaysSendKey]) {
-                        [notifier postAllNotices];
+                        [[HTNotifier sharedNotifier] postAllNotices];
                     }
                     else {
                         dispatch_sync(dispatch_get_main_queue(), ^{
-                            [notifier showNoticeAlert];
+                            [[HTNotifier sharedNotifier] showNoticeAlert];
                         });
                     }
                 }
