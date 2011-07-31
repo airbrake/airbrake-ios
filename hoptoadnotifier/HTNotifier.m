@@ -216,7 +216,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             }
             
             // bundle version
-            value = HTInfoPlistValueForKey(@"CFBundleVersion");
+            value = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
             if (![value length]) { HTLog(@"unable to cache bundle version"); }
             else {
                 value_str = [value UTF8String];
