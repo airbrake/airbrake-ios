@@ -76,6 +76,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     static NSString *path = nil;
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
+#if TARGET_OS_IPHONE
         NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
         path = [folders objectAtIndex:0];
         if ([folders count] == 0) {
@@ -84,6 +85,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         else {
             path = [path stringByAppendingPathComponent:folderName];
         }
+#else
+        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+        path = [folders objectAtIndex:0];
+        if ([folders count] == 0) {
+            path = NSTemporaryDirectory();
+        }
+        else {
+            path = [path stringByAppendingPathComponent:ABNotifierApplicationName()];
+            path = [path stringByAppendingPathComponent:folderName];
+        }
+#endif
         NSFileManager *manager = [NSFileManager defaultManager];
         if (![manager fileExistsAtPath:path]) {
             [manager
