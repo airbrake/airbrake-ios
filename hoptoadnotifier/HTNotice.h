@@ -25,43 +25,41 @@
 #import <Foundation/Foundation.h>
 
 // notice info
-typedef struct ht_notice_info_t {
+typedef struct ab_signal_info_t {
 	
-	// file name
+	// file name used for a signal notice
 	const char *notice_path;
-	
-	// os version
-	const char *os_version;
-	unsigned long os_version_len;
-	
-	// platform
-	const char *platform;
-	unsigned long platform_len;
-	
-	// app version
-	const char *app_version;
-	unsigned long app_version_len;
     
-    // bundle version
-    const char *bundle_version;
-    unsigned long bundle_version_len;
-    
-	// environment name
-	const char *env_name;
-	unsigned long env_name_len;
+    // notice payload
+    unsigned long notice_payload_length;
+    void *notice_payload;
     
     // environment info
-    void *env_info;
-    unsigned long env_info_len;
+    unsigned long user_data_length;
+    void *user_data;
 	
-} ht_notice_info_t;
-ht_notice_info_t ht_notice_info;
+} ab_signal_info_t;
+ab_signal_info_t ab_signal_info;
+
+// notice payload keys
+extern NSString *ABNotifierOperatingSystemVersionKey;
+extern NSString *ABNotifierApplicationVersionKey;
+extern NSString *ABNotifierPlatformNameKey;
+extern NSString *ABNotifierEnvironmentNameKey;
+extern NSString *ABNotifierBundleVersionKey;
+extern NSString *ABNotifierExceptionNameKey;
+extern NSString *ABNotifierExceptionReasonKey;
+extern NSString *ABNotifierCallStackKey;
+extern NSString *ABNotifierControllerKey;
+extern NSString *ABNotifierExecutableKey;
+
+// notice file extension
+extern NSString *ABNotifierNoticePathExtension;
 
 // file flags
-extern NSString * const ABNotifierNoticePathExtension;
-extern int HTNoticeFileVersion;
-extern int HTSignalNoticeType;
-extern int HTExceptionNoticeType;
+extern int ABNotifierNoticeVersion;
+extern int ABNotifierSignalNoticeType;
+extern int ABNotifierExceptionNoticeType;
 
 /*
  
@@ -76,27 +74,11 @@ extern int HTExceptionNoticeType;
  
  */
 @interface HTNotice : NSObject {
-@private
-	NSString *_exceptionName;
-	NSString *_exceptionReason;
-	NSString *_environmentName;
-	NSString *_viewControllerName;
-    NSString *_bundleVersion;
-    NSString *_action;
-	NSDictionary *_environmentInfo;
-	NSArray *_callStack;
+    
 }
 
-@property (nonatomic, copy) NSString *exceptionName;
-@property (nonatomic, copy) NSString *exceptionReason;
-@property (nonatomic, copy) NSString *environmentName;
-@property (nonatomic, copy) NSString *viewControllerName;
-@property (nonatomic, copy) NSString *bundleVersion;
-@property (nonatomic, copy) NSString *action;
-@property (nonatomic, copy) NSDictionary *environmentInfo;
-@property (nonatomic, copy) NSArray *callStack;
-
 // create an object representation of notice data
+- (id)initWithContentsOfFile:(NSString *)path;
 + (HTNotice *)noticeWithContentsOfFile:(NSString *)path;
 
 // get a string representation of the hoptoad xml payload
