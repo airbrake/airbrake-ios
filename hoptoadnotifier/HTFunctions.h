@@ -29,6 +29,14 @@
 #import <Foundation/Foundation.h>
 #endif
 
+/*
+ 
+ opens a notice file given a path and populates it with the default header
+ values. returns a file descriptor to the file. call this in handler functions.
+ 
+ */
+int ABNotifierOpenNewNoticeFile(const char *path, int type);
+
 // start handlers
 void ABNotifierStartHandlers(void);
 
@@ -45,6 +53,26 @@ NSString *ABNotifierApplicationName(void);
 NSString *ABNotifierOperatingSystemVersion(void);
 NSString *ABNotifierMachineName(void);
 NSString *ABNotifierPlatformName(void);
+
+/*
+ 
+ parse a call stack and return an array of the following components:
+ 0 - matched line
+ 1 - frame number
+ 2 - binary name
+ 3 - description
+ 4 - address
+ 
+ */
+NSArray *ABNotifierParseCallStack(NSArray *callStack);
+
+/*
+ 
+ returns the method name of the highest entry in the callstack that matches
+ the given executable name
+ 
+ */
+NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *executable);
 
 /*
  
