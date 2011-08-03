@@ -275,10 +275,10 @@
 				3BA58915137C871300D9C544 /* HTNotifier.strings */,
 				3BA5891E137C871300D9C544 /* HTNotifier.h */,
 				3BA5891F137C871300D9C544 /* HTNotifier.m */,
-				3BA5891A137C871300D9C544 /* HTFunctions.h */,
-				3BA5891B137C871300D9C544 /* HTFunctions.m */,
 				3BA5891C137C871300D9C544 /* HTNotice.h */,
 				3BA5891D137C871300D9C544 /* HTNotice.m */,
+				3BA5891A137C871300D9C544 /* HTFunctions.h */,
+				3BA5891B137C871300D9C544 /* HTFunctions.m */,
 				3BA58924137C871300D9C544 /* HTNotifierDelegate.h */,
 			);
 			path = hoptoadnotifier;
