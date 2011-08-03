@@ -23,9 +23,11 @@
  */
 
 #import <execinfo.h>
-
+#import <fcntl.h>
 #import <unistd.h>
 #import <sys/sysctl.h>
+
+#import "RegexKitLite.h"
 
 #import "HTFunctions.h"
 #import "HTNotifier.h"
@@ -79,6 +81,29 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 void ht_handle_exception(NSException *exception) {
     ABNotifierStopHandlers();
     [[HTNotifier sharedNotifier] logException:exception];
+}
+
+#pragma mark - notice file methods
+int ABNotifierOpenNewNoticeFile(const char *path, int type) {
+    int fd = open(path, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
+    if (fd > -1) {
+        
+        // file version
+        write(fd, &ABNotifierNoticeVersion, sizeof(int));
+        
+        // file bype
+        write(fd, &type, sizeof(int));
+        
+        // notice payload
+        write(fd, &ab_signal_info.notice_payload_length, sizeof(unsigned long));
+        write(fd, ab_signal_info.notice_payload, ab_signal_info.notice_payload_length);
+        
+        // user data
+        write(fd, &ab_signal_info.user_data_length, sizeof(unsigned long));
+        write(fd, ab_signal_info.user_data, ab_signal_info.user_data_length);
+        
+    }
+    return fd;
 }
 
 #pragma mark - modify handler state
@@ -181,6 +206,37 @@ NSString *ABNotifierPlatformName(void) {
 #else
     return machine;
 #endif
+}
+
+#pragma mark - call stack functions
+NSArray *ABNotifierParseCallStack(NSArray *callStack) {
+    static NSString *pattern = @"^(\\d+)\\s+(\\S.*?)\\s+((0x[0-9a-f]+)\\s+.*)$";
+    NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[callStack count]];
+    [callStack enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [parsed addObject:[obj captureComponentsMatchedByRegex:pattern]];
+    }];
+    return parsed;
+}
+NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *executable) {
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bindings) {
+        
+        // check binary
+        if (![[obj objectAtIndex:2] isEqualToString:executable]) {
+            return NO;
+        }
+        
+        // check method name
+        NSRange range = [[obj objectAtIndex:3] rangeOfString:@"ht_handle_signal"];
+        return range.location == NSNotFound;
+        
+    }];
+    NSArray *matching = [callStack filteredArrayUsingPredicate:predicate];
+    if ([matching count]) {
+        return [[matching objectAtIndex:0] objectAtIndex:3];
+    }
+    else {
+        return nil;
+    }
 }
 
 #pragma mark - string substitution
