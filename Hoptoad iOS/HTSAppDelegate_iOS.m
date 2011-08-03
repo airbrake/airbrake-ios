@@ -24,7 +24,7 @@ static NSString *HTSHoptoadAPIKey = @"";
                             environmentName:HTNotifierAutomaticEnvironment];
 	[notifier setDelegate:self];
     [notifier setUseSSL:YES]; // only if your account supports it
-    [notifier setEnvironmentValue:@"test value" forKey:@"test key"];
+//    [notifier setEnvironmentValue:@"test value" forKey:@"test key"];
 	[notifier writeTestNotice];
     
     // show ui

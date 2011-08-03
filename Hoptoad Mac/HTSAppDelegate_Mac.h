@@ -12,7 +12,7 @@
 
 @interface HTSAppDelegate_Mac : NSObject <NSApplicationDelegate, HTNotifierDelegate> {
 @private
-    NSWindow *_window;
+    NSWindow *__window;
 }
 
 @property (assign) IBOutlet NSWindow *window;

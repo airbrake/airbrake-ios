@@ -13,21 +13,24 @@ static NSString * HTSHoptoadAPIKey = @"";
 
 @implementation HTSAppDelegate_Mac
 
-@synthesize window=_window;
+@synthesize window = __window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     // setup notifier
-    [HTNotifier startNotifierWithAPIKey:HTSHoptoadAPIKey environmentName:HTNotifierAutomaticEnvironment];
-	[[HTNotifier sharedNotifier] setDelegate:self];
-	[[HTNotifier sharedNotifier] setUseSSL:YES]; // only if your account supports it
-    [[HTNotifier sharedNotifier] setEnvironmentValue:@"test value" forKey:@"test key"];
-	[[HTNotifier sharedNotifier] writeTestNotice];
+    HTNotifier *notifier = [HTNotifier
+                            startNotifierWithAPIKey:HTSHoptoadAPIKey
+                            environmentName:HTNotifierAutomaticEnvironment];
+    
+	[notifier setDelegate:self];
+	[notifier setUseSSL:YES]; // only if your account supports it
+//    [notifier setEnvironmentValue:@"test value" forKey:@"test key"];
+	[notifier writeTestNotice];
     
 }
 
 #pragma mark - notifier delegate
-- (void)notifierDidHandleException:(NSException *)exc {
+- (void)notifierDidLogException:(NSException *)exc {
 	NSLog(@"%s %@", __PRETTY_FUNCTION__, exc);
 }
 - (void)notifierWillDisplayAlert {
