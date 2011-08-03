@@ -51,8 +51,7 @@ NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 @interface HTNotifier ()
-@property (nonatomic, readwrite, copy) NSString *apiKey;
-@property (nonatomic, readwrite, copy) NSString *environmentName;
+@property (nonatomic, readwrite, copy) NSString *APIKey;
 @end
 
 @interface HTNotifier (private)
@@ -64,7 +63,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (NSArray *)pathsForAllNotices;
 
 // init
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name;
+- (id)initWithAPIKey:(NSString *)APIKey environmentName:(NSString *)environmentName;
 
 // post methods
 - (void)postAllNotices;
@@ -123,25 +122,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }];
     return [paths autorelease];
 }
-- (id)initWithAPIKey:(NSString *)key environmentName:(NSString *)name {
+- (id)initWithAPIKey:(NSString *)APIKey environmentName:(NSString *)environmentName {
 	self = [super init];
 	if (self) {
         
 		// setup ivars
-        self.apiKey = key;
-        self.environmentName = name;
+        self.APIKey = APIKey;
         self.useSSL = NO;
-#ifdef DEBUG
-        __environmentInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                             [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
-                             nil];
-#else
-        __environmentInfo = [[NSMutableDictionary alloc] init];
-#endif
 		
 		// register defaults
-		[[NSUserDefaults standardUserDefaults] registerDefaults:
-		 [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
+        NSDictionary *toRegister = [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey];
+		[[NSUserDefaults standardUserDefaults] registerDefaults:toRegister];
 		
 		// setup reachability
         BOOL reachabilityConfigured = NO;
@@ -156,91 +147,55 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             return nil;
         }
         
-        // setup notifier information
         {
             
-            // setup values
-            NSString *value;
-            const char *value_str;
-            NSUInteger length;
+            // vars
+            NSDictionary *dictionary;
+            NSData *data;
+            unsigned long length;
             
-            // exception file name
-            value = [[NSProcessInfo processInfo] globallyUniqueString];
-            value = [HTNotifier pathForNewNoticeWithName:value];
-            if (![value length]) { HTLog(@"unable to cache notice file path"); }
-            else {
-                value_str = [value UTF8String];
-                length = (strlen(value_str) + 1);
-                ht_notice_info.notice_path = malloc(length);
-                memcpy((void *)ht_notice_info.notice_path, value_str, length);
-            }
+            // cache notice file path
+            NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
+            const char *filePath = [[HTNotifier pathForNewNoticeWithName:fileName] UTF8String];
+            length = (strlen(filePath) + 1);
+            ab_signal_info.notice_path = malloc(length);
+            memcpy((void *)ab_signal_info.notice_path, filePath, length);
             
-            // os version
-            value = HTOperatingSystemVersion();
-            if (![value length]) { HTLog(@"unable to cache operating system version"); }
-            else {
-                value_str = [value UTF8String];
-                length = (strlen(value_str) + 1);
-                ht_notice_info.os_version = malloc(length);
-                ht_notice_info.os_version_len = length;
-                memcpy((void *)ht_notice_info.os_version, value_str, length);
-            }
-            
-            // app version
-            value = HTApplicationVersion();
-            if (![value length]) { HTLog(@"unable to cache app version"); }
-            else {
-                value_str = [value UTF8String];
-                length = (strlen(value_str) + 1);
-                ht_notice_info.app_version = malloc(length);
-                ht_notice_info.app_version_len = length;
-                memcpy((void *)ht_notice_info.app_version, value_str, length);
-            }
-            
-            // platform
-            value = HTPlatform();
-            if (![value length]) { HTLog(@"unable to cache platform"); }
-            else {
-                value_str = [value UTF8String];
-                length = (strlen(value_str) + 1);
-                ht_notice_info.platform = malloc(length);
-                ht_notice_info.platform_len = length;
-                memcpy((void *)ht_notice_info.platform, value_str, length);
-            }
-            
-            // environment name
-            value = self.environmentName;
-            if (![value length]) { HTLog(@"unable to cache environment name"); }
-            else {
-                value_str = [value UTF8String];
-                length = (strlen(value_str) + 1);
-                ht_notice_info.env_name = malloc(length);
-                ht_notice_info.env_name_len = length;
-                memcpy((void *)ht_notice_info.env_name, value_str, length);
-            }
-            
-            // bundle version
-            value = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-            if (![value length]) { HTLog(@"unable to cache bundle version"); }
-            else {
-                value_str = [value UTF8String];
-                length = (strlen(value_str) + 1);
-                ht_notice_info.bundle_version = malloc(length);
-                ht_notice_info.bundle_version_len = length;
-                memcpy((void *)ht_notice_info.bundle_version, value_str, length);
-            }
-            
-            // environment info
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.environmentInfo];
+            // notice payload
+            dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                          ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
+                          ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
+                          ABNotifierPlatformName(), ABNotifierPlatformNameKey,
+                          environmentName, ABNotifierEnvironmentNameKey,
+                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
+                          ABNotifierBundleVersionKey,
+                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
+                          ABNotifierExecutableKey,
+                          nil];
+            data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
             length = [data length];
-            ht_notice_info.env_info = malloc(length);
-            ht_notice_info.env_info_len = length;
-            [data getBytes:ht_notice_info.env_info length:length];
+            ab_signal_info.notice_payload = malloc(length);
+            ab_signal_info.notice_payload_length = length;
+            [data getBytes:ab_signal_info.notice_payload length:length];
+            
+            // user data
+#ifdef DEBUG
+            dictionary = [NSDictionary
+                          dictionaryWithObject:[[UIDevice currentDevice] uniqueIdentifier]
+                          forKey:@"UDID"];
+#else
+            dictionary = [NSDictionary dictionary];
+#endif
+            data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+            length = [data length];
+            ab_signal_info.user_data = malloc(length);
+            ab_signal_info.user_data_length = length;
+            [data getBytes:ab_signal_info.user_data length:length];
             
         }
         
         // start handlers
-		HTStartHandlers();
+		ABNotifierStartHandlers();
 		
 	}
 	return self;
@@ -303,12 +258,12 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 	// get notice payload
     HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+#ifdef DEBUG
+    HTLog(@"%@", notice);
+#endif 
     NSData *data = [notice hoptoadXMLData];
     if (data) {
         [request setHTTPBody:data];
-#ifdef DEBUG
-        HTLog(@"%@", notice);
-#endif
     }
     else {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
@@ -375,8 +330,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // show alert
     UIAlertView *alert = [[UIAlertView alloc]
-						  initWithTitle:HTStringByReplacingHoptoadVariablesInString(title)
-						  message:HTStringByReplacingHoptoadVariablesInString(body)
+						  initWithTitle:ABNotifierStringByReplacingAirbrakeConstantsInString(title)
+						  message:ABNotifierStringByReplacingAirbrakeConstantsInString(body)
 						  delegate:self
 						  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
 						  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
@@ -388,11 +343,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 
 @implementation HTNotifier
 
-@synthesize environmentInfo = __environmentInfo;
-@synthesize environmentName = __environmentName;
-@synthesize apiKey          = __apiKey;
-@synthesize useSSL          = __useSSL;
-@synthesize delegate        = __delegate;
+@synthesize APIKey = __apiKey;
+@synthesize useSSL = __useSSL;
+@synthesize delegate = __delegate;
 
 #pragma mark - class methods
 + (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
@@ -438,26 +391,22 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	}
 }
 
-#pragma mark - environment variables
-- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
-    @synchronized(self) {
-        if (valueOrNil == nil) { [__environmentInfo removeObjectForKey:key]; }
-        else { [__environmentInfo setObject:valueOrNil forKey:key]; }
-        NSData *environmentData = [NSKeyedArchiver archivedDataWithRootObject:__environmentInfo];
-        NSUInteger length = [environmentData length];
-        free(ht_notice_info.env_info);
-        ht_notice_info.env_info = malloc(length);
-        ht_notice_info.env_info_len = length;
-        [environmentData getBytes:ht_notice_info.env_info length:length];
-    }
-}
-- (NSString *)environmentValueForKey:(NSString *)key {
-    NSString *value = nil;
-    @synchronized(self) {
-        value = [self.environmentInfo objectForKey:key];
-    }
-    return value;
-}
+//#pragma mark - environment variables
+//- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
+//    @synchronized(self) {
+//        NSMutableDictionary *dictionary = [self.environmentInfo mutableCopy];
+//        if (valueOrNil) { [dictionary removeObjectForKey:key]; }
+//        else { [dictionary setObject:valueOrNil forKey:key]; }
+//        self.environmentInfo = dictionary;
+//    }
+//}
+//- (NSString *)environmentValueForKey:(NSString *)key {
+//    NSString *value = nil;
+//    @synchronized(self) {
+//        value = [self.environmentInfo objectForKey:key];
+//    }
+//    return value;
+//}
 
 #pragma mark - test notice
 - (void)writeTestNotice {
@@ -474,56 +423,88 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 - (void)logException:(NSException *)exception {
     @synchronized(self) {
         
-        // open file
+        // get file handle
         NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
         NSString *path = [HTNotifier pathForNewNoticeWithName:name];
-        int fd = HTOpenFile(HTExceptionNoticeType, [path UTF8String]);
+        int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
         
-        // write file
+        // write stuff
         if (fd > -1) {
             @try {
                 
-                // crash info
-                NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:5];
-                
-                // addresses
-                NSArray *addresses = [exception callStackReturnAddresses];
-                NSArray *symbols = HTCallStackSymbolsFromReturnAddresses(addresses);
-                [dictionary setObject:symbols forKey:@"call stack"];
-                
-                // exception name and reason
-                [dictionary setObject:[exception name] forKey:@"exception name"];
-                [dictionary setObject:[exception reason] forKey:@"exception reason"];
-                
-                // view controller
-                NSString *viewController = HTCurrentViewController();
-                if (viewController != nil) {
-                    [dictionary setObject:viewController forKey:@"view controller"];
-                }
-                
-                // environment info
-                [self setEnvironmentValue:[[exception userInfo] description] forKey:@"Exception"];
-                [dictionary setObject:self.environmentInfo forKey:@"environment info"];
-                
-                // write data
+                // write exception
+                NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            [exception name], ABNotifierExceptionNameKey,
+                                            [exception reason], ABNotifierExceptionReasonKey,
+                                            [exception callStackSymbols], ABNotifierCallStackKey,
+                                            ABNotifierCurrentViewController(), ABNotifierControllerKey,
+                                            nil];
                 NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-                NSUInteger length = [data length];
+                unsigned long length = [data length];
                 write(fd, &length, sizeof(unsigned long));
                 write(fd, [data bytes], length);
                 
-                // notify delegate on main thread
-                if ([self.delegate respondsToSelector:@selector(notifierDidLogException:)]) {
-                    [self.delegate notifierDidLogException:exception];
-                }
-                
             }
             @catch (NSException *exception) {
-                HTLog(@"Encountered an exception while logging an exception");
+                
             }
             @finally {
                 close(fd);
             }
         }
+
+        
+        
+        
+//        // open file
+//        NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
+//        NSString *path = [HTNotifier pathForNewNoticeWithName:name];
+//        int fd = HTOpenFile(HTExceptionNoticeType, [path UTF8String]);
+//        
+//        // write file
+//        if (fd > -1) {
+//            @try {
+//                
+//                // crash info
+//                NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:5];
+//                
+//                // addresses
+//                NSArray *symbols = [exception callStackSymbols];
+//                [dictionary setObject:symbols forKey:@"call stack"];
+//                
+//                // exception name and reason
+//                [dictionary setObject:[exception name] forKey:@"exception name"];
+//                [dictionary setObject:[exception reason] forKey:@"exception reason"];
+//                
+//                // view controller
+//                NSString *viewController = HTCurrentViewController();
+//                if (viewController != nil) {
+//                    [dictionary setObject:viewController forKey:@"view controller"];
+//                }
+//                
+//                // environment info
+//                [self setEnvironmentValue:[[exception userInfo] description] forKey:@"Exception"];
+//                [dictionary setObject:self.environmentInfo forKey:@"environment info"];
+//                
+//                // write data
+//                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+//                NSUInteger length = [data length];
+//                write(fd, &length, sizeof(unsigned long));
+//                write(fd, [data bytes], length);
+//                
+//                // notify delegate on main thread
+//                if ([self.delegate respondsToSelector:@selector(notifierDidLogException:)]) {
+//                    [self.delegate notifierDidLogException:exception];
+//                }
+//                
+//            }
+//            @catch (NSException *exception) {
+//                HTLog(@"Encountered an exception while logging an exception");
+//            }
+//            @finally {
+//                close(fd);
+//            }
+//        }
     }
 }
 
@@ -539,37 +520,18 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }
     
     // stop handlers
-    HTStopHandlers();
-    
-    // release notice information
-    {
-        free((void *)ht_notice_info.notice_path);
-        ht_notice_info.notice_path = NULL;
-        free((void *)ht_notice_info.os_version);
-        ht_notice_info.os_version = NULL;
-        ht_notice_info.os_version_len = 0;
-        free((void *)ht_notice_info.app_version);
-        ht_notice_info.app_version = NULL;
-        ht_notice_info.app_version_len = 0;
-        free((void *)ht_notice_info.platform);
-        ht_notice_info.platform = NULL;
-        ht_notice_info.platform_len = 0;
-        free((void *)ht_notice_info.env_name);
-        ht_notice_info.env_name = NULL;
-        ht_notice_info.env_name_len = 0;
-        free((void *)ht_notice_info.bundle_version);
-        ht_notice_info.bundle_version = NULL;
-        ht_notice_info.bundle_version_len = 0;
-        free(ht_notice_info.env_info);
-        ht_notice_info.env_info = NULL;
-        ht_notice_info.env_info_len = 0;
-    }
+    ABNotifierStopHandlers();
+    free(ab_signal_info.user_data);
+    ab_signal_info.user_data = nil;
+    ab_signal_info.user_data_length = 0;
+    free(ab_signal_info.notice_payload);
+    ab_signal_info.notice_payload = nil;
+    ab_signal_info.notice_payload_length = 0;
+    free((void *)ab_signal_info.notice_path);
+    ab_signal_info.notice_path = nil;
     
     // free ivars
-    self.apiKey = nil;
-    self.environmentName = nil;
-	[__environmentInfo release];
-    __environmentInfo = nil;
+    self.APIKey = nil;
     
     // super
 	[super dealloc];
