@@ -138,6 +138,22 @@ int ABNotifierExceptionNoticeType   = 2;
                 self.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
                 self.exceptionReason = @"Application recieved signal";
                 
+                // call stack
+                length = [data length] - location;
+                char *string = malloc(length + 1);
+                const char *bytes = [data bytes];
+                for (unsigned long i = 0; location < [data length]; location++) {
+                    if (bytes[location] != '\0') {
+                        string[i++] = bytes[location];
+                    }
+                }
+                NSArray *lines = [[NSString stringWithUTF8String:string] componentsSeparatedByString:@"\n"];
+                NSPredicate *lengthPredicate = [NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+                    return ([object length] > 0);
+                }];
+                self.callStack = [lines filteredArrayUsingPredicate:lengthPredicate];
+                free(string);
+                
             }
             
             // exception notice
@@ -158,6 +174,9 @@ int ABNotifierExceptionNoticeType   = 2;
             // finish up call stack stuff
             self.callStack = ABNotifierParseCallStack(self.callStack);
             self.action = ABNotifierActionFromParsedCallStack(self.callStack, self.executable);
+            if (type == ABNotifierSignalNoticeType && self.action != nil) {
+                self.exceptionReason = self.action;
+            }
             
         }
         @catch (NSException *exception) {
@@ -170,103 +189,6 @@ int ABNotifierExceptionNoticeType   = 2;
 }
 + (HTNotice *)noticeWithContentsOfFile:(NSString *)path {
     return [[[HTNotice alloc] initWithContentsOfFile:path] autorelease];
-    
-//    
-//    @try {
-//        
-//
-//        
-//        
-//        // signal notice
-//        if (type == HTSignalNoticeType) {
-//            
-//            // signal
-//            int signal;
-//            [fileData getBytes:&signal range:NSMakeRange(location, sizeof(int))];
-//            location += sizeof(int);
-//            
-//            // exception name and reason
-//            notice.exceptionName = [NSString stringWithUTF8String:strsignal(signal)];
-//            notice.exceptionReason = @"Application recieved signal";
-//            
-//            // environment info
-//            if (version >= 4) {
-//                [fileData getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-//                location += sizeof(unsigned long);
-//                NSData *data = [fileData subdataWithRange:NSMakeRange(location, length)];
-//                location += length;
-//                NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-//                [environmentInfo addEntriesFromDictionary:dictionary];
-//            }
-//            
-//            // call stack
-//            const char *bytes = [fileData bytes];
-//            for (NSUInteger i = location; i < [fileData length]; i++) {
-//                printf("%d", bytes[i]);
-//                if (bytes[i] == '\0') {
-//                    printf("\nnull\n");
-//                }
-//                else if (bytes[i] == '\n') {
-//                    printf("\nnew line\n");
-//                }
-//            }
-//            
-//            NSUInteger i = location;
-//            length = [data length];
-//            const char * bytes = [data bytes];
-//            NSMutableArray *array = [NSMutableArray array];
-//            while (i < length) {
-//                if (bytes[i] == '\0') {
-//                    NSData *line = [data subdataWithRange:NSMakeRange(location, i - location)];
-//                    NSString *lineString = [[NSString alloc]
-//                                            initWithBytes:[line bytes]
-//                                            length:[line length]
-//                                            encoding:NSUTF8StringEncoding];
-//                    [array addObject:lineString];
-//                    [lineString release];
-//                    if (i + 1 < length && bytes[i + 1] == '\n') { i += 2; }
-//                    else { i++; }
-//                    location = i;
-//                }
-//                else { i++; }
-//            }
-//            notice.callStack = array;
-//            
-//        }
-//        
-//        // exception notice
-//        else if (type == HTExceptionNoticeType) {
-//            [fileData getBytes:&length range:NSMakeRange(location, sizeof(unsigned long))];
-//            location += sizeof(unsigned long);
-//            NSData *data = [fileData subdataWithRange:NSMakeRange(location, length)];
-//            location += length;
-//            NSDictionary *dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-//            [environmentInfo addEntriesFromDictionary:[dictionary objectForKey:@"environment info"]];
-//            notice.exceptionName = [dictionary objectForKey:@"exception name"];
-//            notice.exceptionReason = [dictionary objectForKey:@"exception reason"];
-//            notice.callStack = [dictionary objectForKey:@"call stack"];
-//            notice.viewControllerName = [dictionary objectForKey:@"view controller"];
-//        }
-//        
-//        // set action
-//        notice.callStack = HTParseCallstack(notice.callStack);
-//        notice.action = HTActionFromParsedCallstack(notice.callStack);
-//        if (type == HTSignalNoticeType && notice.action != nil) {
-//            notice.exceptionReason = notice.action;
-//        }
-//        
-//        // set env info
-//        notice.environmentInfo = environmentInfo;
-//        
-//        // return
-//        return [notice autorelease];
-//        
-//    }
-//    @catch (NSException *exception) {
-//        HTLog(@"%@", exception);
-//        return nil;
-//    }
-    
 }
 - (NSString *)hoptoadXMLString {
     

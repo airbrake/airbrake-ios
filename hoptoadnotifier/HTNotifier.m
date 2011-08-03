@@ -114,9 +114,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     return [path stringByAppendingPathExtension:ABNotifierNoticePathExtension];
 }
 + (BOOL)hasNotices {
-    NSString *path = [self pathForNoticesDirectory];
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-    return ([contents count] > 0);
+    return ([[self pathsForAllNotices] count] > 0);
 }
 + (NSArray *)pathsForAllNotices {
     NSString *path = [self pathForNoticesDirectory];
@@ -259,8 +257,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }];
     
 #endif
-    
-    
     
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
