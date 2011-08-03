@@ -22,10 +22,6 @@
  
  */
 
-#ifndef __IPHONE_4_0
-#warning "This version of the Airbrake notifier requires iOS 4.0 or later."
-#endif
-
 #import <TargetConditionals.h>
 
 #import "HTNotifier.h"

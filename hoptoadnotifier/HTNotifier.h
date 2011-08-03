@@ -24,8 +24,14 @@
 
 #import <TargetConditionals.h>
 #if TARGET_OS_IPHONE
+#ifndef __IPHONE_4_0
+#error This version of the Airbrake notifier requires iOS 4.0 or later
+#endif
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
+#ifndef __MAC_10_6
+#error This version of the Airbrake notifier requires Mac OS 10.6 or later
+#endif
 #import <Cocoa/Cocoa.h>
 #else
 #error [Airbrake] unsupported platform
