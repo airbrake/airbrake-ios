@@ -179,7 +179,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [data getBytes:ab_signal_info.notice_payload length:length];
             
             // user data
-#ifdef DEBUG
+#if TARGET_OS_IPHONE && defined(DEBUG)
             dictionary = [NSDictionary
                           dictionaryWithObject:[[UIDevice currentDevice] uniqueIdentifier]
                           forKey:@"UDID"];
@@ -222,6 +222,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                            ABNotifierHostName];
     NSURL *URL = [NSURL URLWithString:URLString];
     
+#if TARGET_OS_IPHONE
+    
     // start background task
     __block BOOL keepPosting = YES;
     UIApplication *app = [UIApplication sharedApplication];
@@ -239,6 +241,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     if (task != UIBackgroundTaskInvalid) {
         [app endBackgroundTask:task];
     }
+    
+#else
+    
+    // report each notice
+    [paths enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self postNoticeWithContentsOfFile:obj toURL:URL];
+    }];
+    
+#endif
+    
+    
     
     // notify delegate
     if ([paths count] && [self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
@@ -328,6 +341,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         body = HTLocalizedString(@"NOTICE_BODY");
     }
     
+#if TARGET_OS_IPHONE
+    
     // show alert
     UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle:ABNotifierStringByReplacingAirbrakeConstantsInString(title)
@@ -338,12 +353,53 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	[alert show];
 	[alert release];
     
+#else
+    
+    // build alert
+	NSAlert *alert = [NSAlert
+                      alertWithMessageText:ABNotifierStringByReplacingAirbrakeConstantsInString(title)
+                      defaultButton:HTLocalizedString(@"ALWAYS_SEND")
+                      alternateButton:HTLocalizedString(@"DONT_SEND")
+                      otherButton:HTLocalizedString(@"SEND")
+                      informativeTextWithFormat:ABNotifierStringByReplacingAirbrakeConstantsInString(body)];
+    
+    // run alert
+	NSInteger code = [alert runModal];
+    
+    // don't send
+    if (code == NSAlertAlternateReturn) {
+        NSFileManager *manager = [NSFileManager defaultManager];
+        [[HTNotifier pathsForAllNotices] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [manager removeItemAtPath:obj error:nil];
+        }];
+    }
+    
+    // send
+    else {
+        if (code == NSAlertDefaultReturn) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ABNotifierAlwaysSendKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self postAllNotices];
+        });
+    }
+    
+    // delegate
+	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
+		[self.delegate notifierDidDismissAlert];
+	}
+    
+#endif
+    
+    
+    
 }
 @end
 
 @implementation HTNotifier
 
-@synthesize APIKey = __apiKey;
+@synthesize APIKey = __APIKey;
 @synthesize useSSL = __useSSL;
 @synthesize delegate = __delegate;
 
@@ -437,7 +493,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                                             [exception name], ABNotifierExceptionNameKey,
                                             [exception reason], ABNotifierExceptionReasonKey,
                                             [exception callStackSymbols], ABNotifierCallStackKey,
+#if TARGET_OS_IPHONE
                                             ABNotifierCurrentViewController(), ABNotifierControllerKey,
+#endif
                                             nil];
                 NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
                 unsigned long length = [data length];
@@ -538,6 +596,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 }
 
+#if TARGET_OS_IPHONE
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
@@ -562,6 +621,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         });
     }
 }
+#endif
 
 @end
 
