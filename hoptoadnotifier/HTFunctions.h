@@ -29,40 +29,30 @@
 #import <Foundation/Foundation.h>
 #endif
 
-// open a new notice file at a path
-int HTOpenFile(int type, const char *path);
-
 // start handlers
-void HTStartHandlers(void);
-void HTStartExceptionHandler(void);
-void HTStartSignalHandler(void);
+void ABNotifierStartHandlers(void);
 
 // stop handlers
-void HTStopHandlers(void);
-void HTStopExceptionHandler(void);
-void HTStopSignalHandler(void);
+void ABNotifierStopHandlers(void);
+void ABNotifierStopExceptionHandler(void);
+void ABNotifierStopSignalHandler(void);
 
 // get values from Info.plist
-NSString *HTApplicationVersion(void);
-NSString *HTApplicationName(void);
+NSString *ABNotifierApplicationVersion(void);
+NSString *ABNotifierApplicationName(void);
 
 // get platform values
-NSString *HTOperatingSystemVersion(void);
-NSString *HTMachine(void);
-NSString *HTPlatform(void);
-
-// callstack utilities
-NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *);
-NSArray *HTParseCallstack(NSArray *);
-NSString *HTActionFromParsedCallstack(NSArray *);
+NSString *ABNotifierOperatingSystemVersion(void);
+NSString *ABNotifierMachineName(void);
+NSString *ABNotifierPlatformName(void);
 
 /*
  
- returns a string with all of the hoptoad variables
- replaced by their appropriate values
+ returns a string with all of the airbrake variables replaced by their
+ appropriate values
  
  */
-NSString * HTStringByReplacingHoptoadVariablesInString(NSString *);
+NSString *ABNotifierStringByReplacingAirbrakeConstantsInString(NSString *string);
 
 #if TARGET_OS_IPHONE
 /*
@@ -80,7 +70,7 @@ NSString * HTStringByReplacingHoptoadVariablesInString(NSString *);
  inspected (if it exists)
  
  */
-NSString * HTCurrentViewController(void);
+NSString *ABNotifierCurrentViewController(void);
 
 /*
  
@@ -96,7 +86,7 @@ NSString * HTCurrentViewController(void);
 	+ currentViewController
  
  */
-NSString * HTVisibleViewControllerWithViewController(UIViewController *);
+NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *controller);
 #endif
 
 // useful defines
