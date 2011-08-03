@@ -64,18 +64,14 @@ extern NSString *HTNotifierAutomaticEnvironment;
  */
 @interface HTNotifier : NSObject <UIAlertViewDelegate> {
 @private
-    NSMutableDictionary         * __environmentInfo;
-    NSString                    * __environmentName;
-    NSString                    * __apiKey;
-	id<HTNotifierDelegate>      __delegate;
-    BOOL                        __useSSL;
-	SCNetworkReachabilityRef    reachability;
+    NSString * __APIKey;
+	id<HTNotifierDelegate> __delegate;
+    BOOL __useSSL;
+	SCNetworkReachabilityRef reachability;
 }
 
 // properties
-@property (nonatomic, readonly) NSDictionary *environmentInfo;
-@property (nonatomic, readonly, copy) NSString *apiKey;
-@property (nonatomic, readonly, copy) NSString *environmentName;
+@property (nonatomic, readonly, copy) NSString *APIKey;
 @property (nonatomic, assign) id<HTNotifierDelegate> delegate;
 @property (nonatomic, assign) BOOL useSSL; // your account must support this feature
 
@@ -120,14 +116,14 @@ extern NSString *HTNotifierAutomaticEnvironment;
  value will remove the value for the given key.
  
  */
-- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
+//- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
 
 /*
  
  get environment info value for a given key.
  
  */
-- (NSString *)environmentValueForKey:(NSString *)key;
+//- (NSString *)environmentValueForKey:(NSString *)key;
     
 /*
  
