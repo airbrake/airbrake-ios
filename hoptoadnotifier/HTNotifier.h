@@ -22,7 +22,14 @@
  
  */
 
+#import <TargetConditionals.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <Cocoa/Cocoa.h>
+#else
+#error [Airbrake] unsupported platform
+#endif
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "HTNotifierDelegate.h"
@@ -62,7 +69,11 @@ extern NSString *HTNotifierAutomaticEnvironment;
  access the shared instance by calling sharedNotifier
  
  */
+#if TARGET_OS_IPHONE
 @interface HTNotifier : NSObject <UIAlertViewDelegate> {
+#else
+@interface HTNotifier : NSObject {    
+#endif
 @private
     NSString * __APIKey;
 	id<HTNotifierDelegate> __delegate;
