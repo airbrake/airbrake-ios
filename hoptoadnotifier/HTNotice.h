@@ -74,7 +74,16 @@ extern int ABNotifierExceptionNoticeType;
  
  */
 @interface HTNotice : NSObject {
-    
+    NSString *__environmentName;
+    NSString *__bundleVersion;
+    NSString *__exceptionName;
+    NSString *__exceptionReason;
+    NSString *__controller;
+    NSString *__action;
+    NSString *__executable;
+    NSDictionary *__environmentInfo;
+    NSArray *__callStack;
+    NSNumber *__noticeVersion;
 }
 
 // create an object representation of notice data
