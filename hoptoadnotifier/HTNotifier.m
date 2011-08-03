@@ -163,9 +163,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // notice payload
             dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                          ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
-                          ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-                          ABNotifierPlatformName(), ABNotifierPlatformNameKey,
                           environmentName, ABNotifierEnvironmentNameKey,
                           [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
                           ABNotifierBundleVersionKey,
@@ -179,12 +176,16 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [data getBytes:ab_signal_info.notice_payload length:length];
             
             // user data
+            dictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                          ABNotifierPlatformName(), ABNotifierPlatformNameKey,
+                          ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
+                          ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
+                          nil];
+            
 #if TARGET_OS_IPHONE && defined(DEBUG)
-            dictionary = [NSDictionary
-                          dictionaryWithObject:[[UIDevice currentDevice] uniqueIdentifier]
-                          forKey:@"UDID"];
-#else
-            dictionary = [NSDictionary dictionary];
+            [(NSMutableDictionary *)dictionary
+             setObject:[[UIDevice currentDevice] uniqueIdentifier]
+             forKey:@"UDID"];
 #endif
             data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
             length = [data length];
