@@ -23,11 +23,9 @@
  */
 
 #import <execinfo.h>
-#import <fcntl.h>
+
 #import <unistd.h>
 #import <sys/sysctl.h>
-
-#import "RegexKitLite.h"
 
 #import "HTFunctions.h"
 #import "HTNotifier.h"
@@ -50,18 +48,20 @@ void ht_handle_exception(NSException *);
 
 #pragma mark crash time methods
 void ht_handle_signal(int signal, siginfo_t *info, void *context) {
-    HTStopSignalHandler();
-    int fd = HTOpenFile(HTSignalNoticeType, ht_notice_info.notice_path);
+    
+    // stop handler
+    ABNotifierStopSignalHandler();
+    
+    // get file handle
+    int fd = ABNotifierOpenNewNoticeFile(ab_signal_info.notice_path, ABNotifierSignalNoticeType);
+    
+    // write if we have a file
     if (fd > -1) {
 		
 		// signal
         write(fd, &signal, sizeof(int));
-        
-        // environment info
-        write(fd, &ht_notice_info.env_info_len, sizeof(unsigned long));
-        write(fd, ht_notice_info.env_info, ht_notice_info.env_info_len);
 		
-		// backtraces
+		// backtrace
 		int count = 128;
 		void *frames[count];
 		count = backtrace(frames, count);
@@ -69,56 +69,22 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 		
 		// close
         close(fd);
+        
     }
 	
 	// re raise
 	raise(signal);
+    
 }
 void ht_handle_exception(NSException *exception) {
-    HTStopHandlers();
+    ABNotifierStopHandlers();
     [[HTNotifier sharedNotifier] logException:exception];
 }
 
-#pragma mark - open notice file
-int HTOpenFile(int type, const char *path) {
-    int fd = open(path, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
-    if (fd > -1) {
-        write(fd, &HTNoticeFileVersion, sizeof(int));
-        write(fd, &type, sizeof(int));
-        write(fd, &ht_notice_info.os_version_len, sizeof(unsigned long));
-        if (ht_notice_info.os_version_len > 0) {
-            write(fd, ht_notice_info.os_version, ht_notice_info.os_version_len);
-        }
-        write(fd, &ht_notice_info.platform_len, sizeof(unsigned long));
-        if (ht_notice_info.platform_len > 0) {
-            write(fd, ht_notice_info.platform, ht_notice_info.platform_len);
-        }
-        write(fd, &ht_notice_info.app_version_len, sizeof(unsigned long));
-        if (ht_notice_info.app_version_len > 0) {
-            write(fd, ht_notice_info.app_version, ht_notice_info.app_version_len);
-        }
-        write(fd, &ht_notice_info.env_name_len, sizeof(unsigned long));
-        if (ht_notice_info.env_name_len > 0) {
-            write(fd, ht_notice_info.env_name, ht_notice_info.env_name_len);
-        }
-        write(fd, &ht_notice_info.bundle_version_len, sizeof(unsigned long));
-        if (ht_notice_info.bundle_version_len > 0) {
-            write(fd, ht_notice_info.bundle_version, ht_notice_info.bundle_version_len);
-        }
-    }
-    return fd;
-}
-
 #pragma mark - modify handler state
-void HTStartHandlers(void) {
-    HTStartExceptionHandler();
-    HTStartSignalHandler();
-}
-void HTStartExceptionHandler(void) {
+void ABNotifierStartHandlers(void) {
     NSSetUncaughtExceptionHandler(&ht_handle_exception);
-}
-void HTStartSignalHandler(void) {
-	for (int i = 0; i < ht_signals_count; i++) {
+    for (int i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
 		sigemptyset(&action.sa_mask);
@@ -129,14 +95,14 @@ void HTStartSignalHandler(void) {
 		}
 	}
 }
-void HTStopHandlers(void) {
-    HTStopExceptionHandler();
-    HTStopSignalHandler();
+void ABNotifierStopHandlers(void) {
+    ABNotifierStopExceptionHandler();
+    ABNotifierStopSignalHandler();
 }
-void HTStopExceptionHandler(void) {
+void ABNotifierStopExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(NULL);
 }
-void HTStopSignalHandler(void) {
+void ABNotifierStopSignalHandler(void) {
 	for (int i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
@@ -147,7 +113,7 @@ void HTStopSignalHandler(void) {
 }
 
 #pragma mark - Info.plist accessors
-NSString *HTApplicationVersion(void) {
+NSString *ABNotifierApplicationVersion(void) {
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
 	NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 	if (bundleVersion != nil && versionString != nil) {
@@ -157,7 +123,7 @@ NSString *HTApplicationVersion(void) {
 	else if (versionString != nil) { return versionString; }
 	else { return nil; }
 }
-NSString *HTApplicationName(void) {
+NSString *ABNotifierApplicationName(void) {
 	NSString *displayName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSString *identifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
@@ -168,18 +134,17 @@ NSString *HTApplicationName(void) {
 }
 
 #pragma mark - platform accessors
-NSString *HTOperatingSystemVersion(void) {
+NSString *ABNotifierOperatingSystemVersion(void) {
 #if TARGET_IPHONE_SIMULATOR
 	return [[UIDevice currentDevice] systemVersion];
 #else
 	return [[NSProcessInfo processInfo] operatingSystemVersionString];
 #endif
 }
-NSString *HTMachine(void) {
+NSString *ABNotifierMachineName(void) {
 #if TARGET_IPHONE_SIMULATOR
 	return @"iPhone Simulator";
 #else
-    
     size_t size = 256;
 	char *machine = malloc(size);
 #if TARGET_OS_IPHONE
@@ -190,15 +155,10 @@ NSString *HTMachine(void) {
     NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
     free(machine);
     return platform;
-    
 #endif
 }
-NSString *HTPlatform(void) {
-#if TARGET_IPHONE_SIMULATOR
-	return @"iPhone Simulator";
-#else
-    
-    NSString *machine = HTMachine();
+NSString *ABNotifierPlatformName(void) {
+    NSString *machine = ABNotifierMachineName();
 #if TARGET_OS_IPHONE
     // iphone
 	if ([machine isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
@@ -221,71 +181,24 @@ NSString *HTPlatform(void) {
 #else
     return machine;
 #endif
-    
-#endif
-}
-
-#pragma mark - callstack functions
-NSArray *HTCallStackSymbolsFromReturnAddresses(NSArray *addresses) {
-	NSUInteger frames = [addresses count];
-	void *stack[frames];
-	for (NSInteger i = 0; i < frames; i++) {
-		stack[i] = (void *)[[addresses objectAtIndex:i] unsignedIntegerValue];
-	}
-	char **strs = backtrace_symbols(stack, (int)frames);
-	NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
-	for (NSInteger i = 0; i < frames; i++) {
-		NSString *entry = [NSString stringWithUTF8String:strs[i]];
-		[backtrace addObject:entry];
-	}
-	free(strs);
-	return backtrace;
-}
-NSArray *HTParseCallstack(NSArray *symbols) {
-    NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[symbols count]];
-    NSString *pattern = @"([0-9]+)[:blank:]*(.*)(0x[0-9a-f]{8}.*)";
-    NSCharacterSet *blank = [NSCharacterSet whitespaceCharacterSet];
-    for (NSString *line in symbols) {
-        NSArray *components = [line captureComponentsMatchedByRegex:pattern];
-        NSMutableArray *frame = [[NSMutableArray alloc] initWithCapacity:3];
-        for (NSInteger i = 1; i < [components count]; i++) {
-            NSString *item = [[components objectAtIndex:i] stringByTrimmingCharactersInSet:blank];
-            [frame addObject:item];
-        }
-        [parsed addObject:frame];
-        [frame release];
-    }
-    return parsed;
-}
-NSString *HTActionFromParsedCallstack(NSArray *callStack) {
-    NSString *executable = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];
-    for (NSArray *line in callStack) {
-        NSString *binary = [line objectAtIndex:1];
-        NSString *method = [line objectAtIndex:2];
-        if ([binary isEqualToString:executable] && [method rangeOfString:@"ht_handle_signal"].location == NSNotFound) {
-            return method;
-        }
-    }
-    return nil;
 }
 
 #pragma mark - string substitution
-NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
+NSString * ABNotifierStringByReplacingAirbrakeConstantsInString(NSString *string) {
 	NSString *toReturn = string;
-	
 	toReturn = [toReturn
 				stringByReplacingOccurrencesOfString:HTNotifierBundleName
-				withString:HTApplicationName()];
+				withString:ABNotifierApplicationName()];
 	toReturn = [toReturn
 				stringByReplacingOccurrencesOfString:HTNotifierBundleVersion
-				withString:HTApplicationVersion()];
-	
+				withString:ABNotifierApplicationVersion()];
 	return toReturn;
 }
 
 #pragma mark - get view controller
 #if TARGET_OS_IPHONE
-NSString * HTCurrentViewController(void) {
+NSString *ABNotifierCurrentViewController(void) {
+    
 	// view controller to inspect
 	UIViewController *rootController = nil;
 	
@@ -308,21 +221,24 @@ NSString * HTCurrentViewController(void) {
 	}
 	
 	// call method to get class name
-	return HTVisibleViewControllerWithViewController(rootController);
+	return ABNotifierVisibleViewControllerFromViewController(rootController);
+    
 }
 
-NSString * HTVisibleViewControllerWithViewController(UIViewController *controller) {
+NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *controller) {
 	
 	// tab bar controller
 	if ([controller isKindOfClass:[UITabBarController class]]) {
 		UIViewController *visibleController = [(UITabBarController *)controller selectedViewController];
-		return HTVisibleViewControllerWithViewController(visibleController);
+		return ABNotifierVisibleViewControllerFromViewController(visibleController);
 	}
+    
 	// navigation controller
 	else if ([controller isKindOfClass:[UINavigationController class]]) {
 		UIViewController *visibleController = [(UINavigationController *)controller visibleViewController];
-		return HTVisibleViewControllerWithViewController(visibleController);
+		return ABNotifierVisibleViewControllerFromViewController(visibleController);
 	}
+    
 	// other type
 	else {
 		return NSStringFromClass([controller class]);
