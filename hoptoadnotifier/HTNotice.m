@@ -180,7 +180,7 @@ int ABNotifierExceptionNoticeType   = 2;
             
         }
         @catch (NSException *exception) {
-            HTLog(@"%@", exception);
+            ABLog(@"%@", exception);
             [self release];
             return nil;
         }
@@ -263,9 +263,6 @@ int ABNotifierExceptionNoticeType   = 2;
     // return
     return [XMLString autorelease];
     
-}
-- (NSData *)hoptoadXMLData {
-	return [[self hoptoadXMLString] dataUsingEncoding:NSUTF8StringEncoding];
 }
 - (NSString *)description {
 	unsigned int count;

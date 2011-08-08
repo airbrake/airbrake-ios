@@ -57,6 +57,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (NSString *)pathForNewNoticeWithName:(NSString *)name;
 + (BOOL)hasNotices;
 + (NSArray *)pathsForAllNotices;
++ (void)cacheUserDataDictionary:(NSDictionary *)dictionary;
++ (void)cacheNoticePayloadDictionary:(NSDictionary *)dictionary;
 
 // init
 - (id)initWithAPIKey:(NSString *)APIKey environmentName:(NSString *)environmentName;
@@ -128,6 +130,40 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }];
     return [paths autorelease];
 }
++ (void)cacheUserDataDictionary:(NSDictionary *)dictionary {
+    
+    // free old cached value
+    free(ab_signal_info.user_data);
+    ab_signal_info.user_data_length = 0;
+    ab_signal_info.user_data = nil;
+    
+    // cache new value
+    if (dictionary) {
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+        unsigned long length = [data length];
+        ab_signal_info.user_data = malloc(length);
+        ab_signal_info.user_data_length = length;
+        [data getBytes:ab_signal_info.user_data length:length];
+    }
+    
+}
++ (void)cacheNoticePayloadDictionary:(NSDictionary *)dictionary {
+    
+    // free old cached value
+    free(ab_signal_info.notice_payload);
+    ab_signal_info.notice_payload_length = 0;
+    ab_signal_info.notice_payload = nil;
+    
+    // cache new value
+    if (dictionary) {
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+        unsigned long length = [data length];
+        ab_signal_info.notice_payload = malloc(length);
+        ab_signal_info.notice_payload_length = length;
+        [data getBytes:ab_signal_info.notice_payload length:length];
+    }
+    
+}
 - (id)initWithAPIKey:(NSString *)APIKey environmentName:(NSString *)environmentName {
 	self = [super init];
 	if (self) {
@@ -135,6 +171,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 		// setup ivars
         self.APIKey = APIKey;
         self.useSSL = NO;
+        __userData = [[NSMutableDictionary alloc] init];
 		
 		// register defaults
         NSDictionary *toRegister = [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey];
@@ -156,8 +193,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         {
             
             // vars
-            NSDictionary *dictionary;
-            NSData *data;
+            NSMutableDictionary *dictionary;
             unsigned long length;
             
             // cache notice file path
@@ -175,11 +211,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                           [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
                           ABNotifierExecutableKey,
                           nil];
-            data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-            length = [data length];
-            ab_signal_info.notice_payload = malloc(length);
-            ab_signal_info.notice_payload_length = length;
-            [data getBytes:ab_signal_info.notice_payload length:length];
+            [HTNotifier cacheNoticePayloadDictionary:dictionary];
             
             // user data
             dictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -187,17 +219,12 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                           ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
                           ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
                           nil];
-            
 #if TARGET_OS_IPHONE && defined(DEBUG)
-            [(NSMutableDictionary *)dictionary
+            [dictionary
              setObject:[[UIDevice currentDevice] uniqueIdentifier]
              forKey:@"UDID"];
 #endif
-            data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-            length = [data length];
-            ab_signal_info.user_data = malloc(length);
-            ab_signal_info.user_data_length = length;
-            [data getBytes:ab_signal_info.user_data length:length];
+            [HTNotifier cacheUserDataDictionary:dictionary];
             
         }
         
@@ -276,11 +303,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 	// get notice payload
     HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
-#ifdef DEBUG
-    HTLog(@"%@", notice);
-#endif 
-    NSData *data = [notice hoptoadXMLData];
-    if (data) {
+    ABDebugLog(@"%@", notice);
+    NSString *XMLString = [notice hoptoadXMLString];
+    if (XMLString) {
+        NSData *data = [XMLString dataUsingEncoding:NSUTF8StringEncoding];
         [request setHTTPBody:data];
     }
     else {
@@ -295,30 +321,44 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 							sendSynchronousRequest:request
 							returningResponse:&response
 							error:&error];
+    NSInteger statusCode = [response statusCode];
 	
 	// error checking
     if (error) {
-        HTLog(@"encountered error while posting notice\n%@", error);
+        ABLog(@"encountered error while posting notice\n%@", error);
+        return;
     }
     else {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
 	
-	// status code checking
-	NSInteger statusCode = [response statusCode];
+	// great success
 	if (statusCode == 200) {
-		HTLog(@"crash report posted");
+        ABLog(@"crash report posted");
 	}
-	else if (responseBody == nil) {
-		HTLog(@"unexpected response\nstatus code:%ld", (long)statusCode);
-	}
-	else {
-		NSString *responseString = [[NSString alloc]
+    
+    // forbidden
+    else if (statusCode == 403) {
+        ABLog(@"Please make sure that your API key is correct and that your project supports SSL.");
+    }
+    
+    // invalid post
+    else if (statusCode == 422) {
+        ABLog(@"The posted notice payload is invalid.");
+        ABDebugLog(@"%@", XMLString);
+    }
+    
+    // unknown
+    else {
+        ABLog(@"Encountered unexpected status code:%ld", (long)statusCode);
+#ifdef DEBUG
+        NSString *responseString = [[NSString alloc]
                                     initWithData:responseBody
                                     encoding:NSUTF8StringEncoding];
-		HTLog(@"unexpected response\nstatus code:%ld\nresponse body:%@", (long)statusCode, responseString);
-		[responseString release];
-	}
+        ABLog(@"%@", responseString);
+        [responseString release];
+#endif
+    }
     
 }
 - (void)showNoticeAlert {
@@ -415,11 +455,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         
         // validate
 		if (![key length]) {
-			HTLog(@"The API key must not be blank");
+			ABLog(@"The API key must not be blank");
 			return;
 		}
 		if (![name length]) {
-			HTLog(@"The environment name must not be blank");
+			ABLog(@"The environment name must not be blank");
 			return;
 		}
         
@@ -436,11 +476,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 		
 		// log
         if (sharedNotifier) {
-            HTLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-            HTLog(@"Environment \"%@\"", envName);
+            ABLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+            ABLog(@"Environment \"%@\"", envName);
         }
         else {
-            HTLog(@"Unable to create crash notifier");
+            ABLog(@"Unable to create crash notifier");
         }
         
     });
@@ -452,22 +492,25 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	}
 }
 
-//#pragma mark - environment variables
-//- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
-//    @synchronized(self) {
-//        NSMutableDictionary *dictionary = [self.environmentInfo mutableCopy];
-//        if (valueOrNil) { [dictionary removeObjectForKey:key]; }
-//        else { [dictionary setObject:valueOrNil forKey:key]; }
-//        self.environmentInfo = dictionary;
-//    }
-//}
-//- (NSString *)environmentValueForKey:(NSString *)key {
-//    NSString *value = nil;
-//    @synchronized(self) {
-//        value = [self.environmentInfo objectForKey:key];
-//    }
-//    return value;
-//}
+#pragma mark - environment variables
+- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
+    @synchronized(self) {
+        if (valueOrNil) { [__userData removeObjectForKey:key]; }
+        else { [__userData setObject:valueOrNil forKey:key]; }
+        [HTNotifier cacheUserDataDictionary:__userData];
+    }
+}
+- (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary {
+    @synchronized(self) {
+        [__userData addEntriesFromDictionary:dictionary];
+        [HTNotifier cacheUserDataDictionary:__userData];
+    }
+}
+- (NSString *)environmentValueForKey:(NSString *)key {
+    @synchronized(self) {
+        return [__userData objectForKey:key];
+    }
+}
 
 #pragma mark - test notice
 - (void)writeTestNotice {
@@ -584,12 +627,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // stop handlers
     ABNotifierStopHandlers();
-    free(ab_signal_info.user_data);
-    ab_signal_info.user_data = nil;
-    ab_signal_info.user_data_length = 0;
-    free(ab_signal_info.notice_payload);
-    ab_signal_info.notice_payload = nil;
-    ab_signal_info.notice_payload_length = 0;
+    [HTNotifier cacheUserDataDictionary:nil];
+    [HTNotifier cacheNoticePayloadDictionary:nil];
     free((void *)ab_signal_info.notice_path);
     ab_signal_info.notice_path = nil;
     

@@ -45,8 +45,8 @@ extern NSString *HTNotifierVersion;
 
 /*
  
- use these variables in your alert title and alert
- body to have their values substituted at runtime.
+ use these variables in your alert title and alert body to have their values
+ substituted at runtime.
  
  */
 extern NSString *HTNotifierBundleName;      // app name
@@ -54,9 +54,9 @@ extern NSString *HTNotifierBundleVersion;   // bundle version
 
 /*
  
- these standard environment names provide default values
- for you to pick from. the automatic environment will
- set development or release depending on the DEBUG flag.
+ these standard environment names provide default values for you to pick from.
+ the automatic environment will set development or release depending on the
+ DEBUG flag.
  
  */
 extern NSString *HTNotifierDevelopmentEnvironment;
@@ -69,10 +69,9 @@ extern NSString *HTNotifierAutomaticEnvironment;
  
  HTNotifier is the primary class of the notifer library
  
- start the notifier by calling
- startNotifierWithAPIKey:environmentName:
+ start the notifier by calling `startNotifierWithAPIKey:environmentName:`
  
- access the shared instance by calling sharedNotifier
+ access the shared instance by calling `sharedNotifier`
  
  */
 #if TARGET_OS_IPHONE
@@ -82,9 +81,10 @@ extern NSString *HTNotifierAutomaticEnvironment;
 #endif
 @private
     NSString * __APIKey;
-	id<HTNotifierDelegate> __delegate;
     BOOL __useSSL;
 	SCNetworkReachabilityRef reachability;
+    id<HTNotifierDelegate> __delegate;
+    NSMutableDictionary *__userData;
 }
 
 // properties
@@ -94,18 +94,17 @@ extern NSString *HTNotifierAutomaticEnvironment;
 
 /*
  
- this method is the entry point for the library. any code
- executed after this method call is monitored for crashes
- and signals
+ this method is the entry point for the library. any code executed after this
+ method call is monitored for crashes and signals
  
- the values for key and environment name must not be nil
- and must have a length greater than 0
+ the values for key and environment name must not be nil and must have a length
+ greater than 0
  
- include any of the above constant strings in the
- enviromnent name to have the value replaced by the library
+ include any of the above constant strings in the enviromnent name to have the
+ value replaced by the library
  
- returns the shared notifier object for convenience or
- nil if it could not be created
+ returns the shared notifier object for convenience or nil if it could not be
+ created
  
  */
 + (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
@@ -114,8 +113,8 @@ extern NSString *HTNotifierAutomaticEnvironment;
  
  access the shared notifier object.
  
- if this is called before `startNotifierWithAPIKey:environmentName:`
- nil will be returned.
+ if this is called before `startNotifierWithAPIKey:environmentName:` nil will be
+ returned.
  
  */
 + (HTNotifier *)sharedNotifier;
@@ -129,23 +128,25 @@ extern NSString *HTNotifierAutomaticEnvironment;
 
 /*
  
- set environment info key/value pair. passing nil as the
- value will remove the value for the given key.
+ set environment info key/value pair. passing nil as the value will remove the
+ value for the given key.
  
  */
-//- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
+- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
+- (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary;
 
+    
 /*
  
  get environment info value for a given key.
  
  */
-//- (NSString *)environmentValueForKey:(NSString *)key;
+- (NSString *)environmentValueForKey:(NSString *)key;
     
 /*
  
- writes a test notice if one does not exist already. it
- will be reported just as an actual crash.
+ writes a test notice if one does not exist already. it will be reported just as
+ an actual crash.
  
  */
 - (void)writeTestNotice;
