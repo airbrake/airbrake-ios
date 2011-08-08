@@ -133,9 +133,15 @@ extern NSString *HTNotifierAutomaticEnvironment;
  
  */
 - (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
+
+/*
+ 
+ copy entries from the given dictionary into the environment info dictionary.
+ these should be string key/value pairs.
+ 
+ */
 - (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary;
 
-    
 /*
  
  get environment info value for a given key.

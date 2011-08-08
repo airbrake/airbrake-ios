@@ -224,7 +224,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              setObject:[[UIDevice currentDevice] uniqueIdentifier]
              forKey:@"UDID"];
 #endif
-            [HTNotifier cacheUserDataDictionary:dictionary];
+            [self addEnvironmentEntriesFromDictionary:dictionary];
             
         }
         
