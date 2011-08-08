@@ -93,7 +93,4 @@ extern int ABNotifierExceptionNoticeType;
 // get a string representation of the hoptoad xml payload
 - (NSString *)hoptoadXMLString;
 
-// get a data representation of the hoptoad xml payload
-- (NSData *)hoptoadXMLData;
-
 @end
