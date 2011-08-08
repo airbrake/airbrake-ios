@@ -34,7 +34,7 @@ static NSString *ABNotifierHostName = @"airbrakeapp.com";
 static NSString *ABNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
 
 // extern strings
-NSString *HTNotifierVersion                 = @"2.3";
+NSString *HTNotifierVersion                 = @"3.0 beta";
 NSString *HTNotifierBundleName              = @"${BUNDLE}";
 NSString *HTNotifierBundleVersion           = @"${VERSION}";
 NSString *HTNotifierDevelopmentEnvironment  = @"Development";
