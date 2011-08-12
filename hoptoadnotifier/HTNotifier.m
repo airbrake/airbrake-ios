@@ -243,10 +243,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 
 #pragma mark - environment variables
-+ (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
++ (void)setEnvironmentValue:(NSString *)value forKey:(NSString *)key {
     @synchronized(self) {
-        if (valueOrNil) { [__userData removeObjectForKey:key]; }
-        else { [__userData setObject:valueOrNil forKey:key]; }
+        [__userData setObject:value forKey:key];
         [HTNotifier cacheUserDataDictionary];
     }
 }
@@ -485,8 +484,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             NSData *data = [NSKeyedArchiver archivedDataWithRootObject:__userData];
             unsigned long length = [data length];
             ab_signal_info.user_data = malloc(length);
-            ab_signal_info.user_data_length = length;
             [data getBytes:ab_signal_info.user_data length:length];
+            ab_signal_info.user_data_length = length;
         }
         
     }
