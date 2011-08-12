@@ -200,7 +200,7 @@ int ABNotifierExceptionNoticeType   = 2;
     [notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.1"]];
     
     // set api key
-    NSString *APIKey = [[HTNotifier sharedNotifier] APIKey];
+    NSString *APIKey = [HTNotifier APIKey];
     if (APIKey == nil) { APIKey = @""; }
     [notice addChild:[DDXMLElement elementWithName:@"api-key" stringValue:APIKey]];
     
