@@ -1,3 +1,10 @@
+3.0
+- all new public API
+- all new notice file format
+- new method to log your own exceptions
+- uses asynch reachability events
+- bug fixes
+
 2.2.2
 - fixed compile error caused by an incorrect import when building for iOS
 
