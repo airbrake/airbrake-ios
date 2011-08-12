@@ -27,8 +27,6 @@
 #import <unistd.h>
 #import <sys/sysctl.h>
 
-#import "RegexKitLite.h"
-
 #import "HTFunctions.h"
 #import "HTNotifier.h"
 #import "HTNotice.h"
@@ -384,11 +382,15 @@ NSArray *HTParseCallstack(NSArray *symbols) {
     NSString *pattern = @"([0-9]+)[:blank:]*(.*)(0x[0-9a-f]{8}.*)";
     NSCharacterSet *blank = [NSCharacterSet whitespaceCharacterSet];
     for (NSString *line in symbols) {
-        NSArray *components = [line captureComponentsMatchedByRegex:pattern];
+        NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
+        NSArray *components = [regularExpression matchesInString:line options:NSMatchingReportCompletion range:NSMakeRange(0, line.length)];
         NSMutableArray *frame = [[NSMutableArray alloc] initWithCapacity:3];
-        for (NSInteger i = 1; i < [components count]; i++) {
-            NSString *item = [[components objectAtIndex:i] stringByTrimmingCharactersInSet:blank];
-            [frame addObject:item];
+        for (NSInteger i = 0; i < [components count]; i++) {
+			NSTextCheckingResult *result = [components objectAtIndex:i];
+			for (NSUInteger j = 1; j < [result numberOfRanges]; j++) {
+				NSString *item = [[line substringWithRange:[result rangeAtIndex:j]] stringByTrimmingCharactersInSet:blank];
+				[frame addObject:item];
+			}
         }
         [parsed addObject:frame];
         [frame release];
