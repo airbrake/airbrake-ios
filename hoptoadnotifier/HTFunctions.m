@@ -264,7 +264,6 @@ NSString *ABNotifierCurrentViewController(void) {
 	UIViewController *rootController = nil;
     
 	// try getting view controller from notifier delegate
-    
 	id<HTNotifierDelegate> delegte = [HTNotifier delegate];
 	if ([delegte respondsToSelector:@selector(rootViewControllerForNotice)]) {
 		rootController = [delegte rootViewControllerForNotice];
