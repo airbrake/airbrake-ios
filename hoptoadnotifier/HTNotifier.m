@@ -28,56 +28,260 @@
 #import "HTNotice.h"
 #import "HTFunctions.h"
 
-// internal
-static HTNotifier *sharedNotifier = nil;
-static NSString *ABNotifierHostName = @"airbrakeapp.com";
-static NSString *ABNotifierAlwaysSendKey = @"AlwaysSendCrashReports";
+#import "UIAlertView+Blocks.h"
 
-// extern strings
+// internal
+static SCNetworkReachabilityRef __reachability = nil;
+static id<HTNotifierDelegate> __delegate = nil;
+static NSMutableDictionary *__userData;
+static NSString * __APIKey = nil;
+static BOOL __useSSL = NO;
+
+// constant strings
+static NSString *ABNotifierHostName         = @"airbrakeapp.com";
+static NSString *ABNotifierAlwaysSendKey    = @"AlwaysSendCrashReports";
 NSString *HTNotifierVersion                 = @"3.0 beta";
-NSString *HTNotifierBundleName              = @"${BUNDLE}";
-NSString *HTNotifierBundleVersion           = @"${VERSION}";
 NSString *HTNotifierDevelopmentEnvironment  = @"Development";
 NSString *HTNotifierAdHocEnvironment        = @"Ad Hoc";
 NSString *HTNotifierAppStoreEnvironment     = @"App Store";
 NSString *HTNotifierReleaseEnvironment      = @"Release";
-NSString *HTNotifierAutomaticEnvironment    = @"${AUTOMATIC}";
+#ifdef DEBUG
+NSString *HTNotifierAutomaticEnvironment    = @"Development";
+#else
+NSString *HTNotifierAutomaticEnvironment    = @"Release";
+#endif
 
 // reachability callback
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
-@interface HTNotifier ()
-@property (nonatomic, readwrite, copy) NSString *APIKey;
-@end
-
-@interface HTNotifier (private)
-
-// utility methods
+#pragma mark - file path utilities
+@interface HTNotifier (FilePathMethods)
 + (NSString *)pathForNoticesDirectory;
 + (NSString *)pathForNewNoticeWithName:(NSString *)name;
-+ (BOOL)hasNotices;
 + (NSArray *)pathsForAllNotices;
-+ (void)cacheUserDataDictionary:(NSDictionary *)dictionary;
-+ (void)cacheNoticePayloadDictionary:(NSDictionary *)dictionary;
+@end
 
-// init
-- (id)initWithAPIKey:(NSString *)APIKey environmentName:(NSString *)environmentName;
+#pragma mark - post notice utilities
+@interface HTNotifier (PostNoticeMethods)
++ (void)postNoticesWithPaths:(NSArray *)paths;
++ (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL;
+@end
 
-// post methods
-- (void)postAllNotices;
-- (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL;
+#pragma mark - cache values
+@interface HTNotifier (CacheMethods)
++ (void)cacheUserDataDictionary;
+@end
 
-// show alert
-- (void)showNoticeAlert;
+#pragma mark - ui methods
+@interface HTNotifier (UserInterfaceMethods)
++ (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths;
+@end
+
+@implementation HTNotifier
+
+#pragma mark - class methods
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<HTNotifierDelegate>)delegate {
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        
+        // register defaults
+		[[NSUserDefaults standardUserDefaults] registerDefaults:
+         [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
+        
+        // capture vars
+        __userData = [[NSMutableDictionary alloc] init];
+        [self setDelegate:delegate];
+        __useSSL = useSSL;
+        
+        // switch on api key
+        if ([key length]) {
+            __APIKey = [key copy];
+            __reachability = SCNetworkReachabilityCreateWithName(NULL, [ABNotifierHostName UTF8String]);
+            if (SCNetworkReachabilitySetCallback(__reachability, ABNotifierReachabilityDidChange, nil)) {
+                if (!SCNetworkReachabilityScheduleWithRunLoop(__reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
+                    ABLog(@"Reachability could not be configired. No notices will be posted.");
+                }
+            }
+        }
+        else {
+            ABLog(@"The API key must not be blank. No notices will be posted.");
+        }
+        
+        // switch on environment name
+        if ([name length]) {
+            
+            // vars
+            unsigned long length;
+            
+            // cache signal notice file path
+            NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
+            const char *filePath = [[HTNotifier pathForNewNoticeWithName:fileName] UTF8String];
+            length = (strlen(filePath) + 1);
+            ab_signal_info.notice_path = malloc(length);
+            memcpy((void *)ab_signal_info.notice_path, filePath, length);
+            
+            // cache notice payload
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
+                            [NSDictionary dictionaryWithObjectsAndKeys:
+                             name, ABNotifierEnvironmentNameKey,
+                             [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
+                             ABNotifierBundleVersionKey,
+                             [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
+                             ABNotifierExecutableKey,
+                             nil]];
+            length = [data length];
+            ab_signal_info.notice_payload = malloc(length);
+            memcpy(ab_signal_info.notice_payload, [data bytes], length);
+            ab_signal_info.notice_payload_length = length;
+            
+            // cache user data
+            [self addEnvironmentEntriesFromDictionary:
+             [NSMutableDictionary dictionaryWithObjectsAndKeys:
+              ABNotifierPlatformName(), ABNotifierPlatformNameKey,
+              ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
+              ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
+#if TARGET_OS_IPHONE && defined (DEBUG)
+              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
+#endif
+              nil]];
+            
+            // start handlers
+            ABNotifierStartHandlers();
+            
+            // log
+            ABLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+            ABLog(@"Environment \"%@\"", name);
+            
+        }
+        else {
+            ABLog(@"The environment name must not be blank. No new notices will be logged");
+        }
+        
+    });
+}
++ (void)setDelegate:(id<HTNotifierDelegate>)delegate {
+    @synchronized(self) {
+        __delegate = delegate;
+    }
+}
++ (id<HTNotifierDelegate>)delegate {
+    @synchronized(self) {
+        return __delegate;
+    }
+}
++ (NSString *)APIKey {
+    @synchronized(self) {
+        return __APIKey;
+    }
+}
++ (void)logException:(NSException *)exception {
+    static NSString *logExceptionLock = @"logExceptionLock";
+    @synchronized(logExceptionLock) {
+        
+        void (^block) (void) = ^{
+            
+            // get file handle
+            NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
+            NSString *path = [self pathForNewNoticeWithName:name];
+            int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
+            
+            // write stuff
+            if (fd > -1) {
+                @try {
+                    
+                    // write exception
+                    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                [exception name], ABNotifierExceptionNameKey,
+                                                [exception reason], ABNotifierExceptionReasonKey,
+                                                [exception callStackSymbols], ABNotifierCallStackKey,
+#if TARGET_OS_IPHONE
+                                                ABNotifierCurrentViewController(), ABNotifierControllerKey,
+#endif
+                                                nil];
+                    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+                    unsigned long length = [data length];
+                    write(fd, &length, sizeof(unsigned long));
+                    write(fd, [data bytes], length);
+                    
+                    // delegate
+                    id<HTNotifierDelegate> delegate = [self delegate];
+                    if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
+                        [delegate notifierDidLogException:exception];
+                    }
+                    
+                }
+                @catch (NSException *exception) {
+                    ABLog(@"Exception encountered while logging exception");
+                }
+                @finally {
+                    close(fd);
+                }
+            }
+                
+        };
+        
+        if ([NSThread isMainThread]) {
+            block();
+        }
+        else {
+            dispatch_sync(dispatch_get_main_queue(), block);
+        }
+        
+    }
+}
++ (void)writeTestNotice {
+    @try {
+        NSArray *array = [NSArray array];
+        [array objectAtIndex:NSUIntegerMax];
+    }
+    @catch (NSException *e) {
+        [self logException:e];
+    }
+}
+
+#pragma mark - environment variables
++ (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
+    @synchronized(self) {
+        if (valueOrNil) { [__userData removeObjectForKey:key]; }
+        else { [__userData setObject:valueOrNil forKey:key]; }
+        [HTNotifier cacheUserDataDictionary];
+    }
+}
++ (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary {
+    @synchronized(self) {
+        [__userData addEntriesFromDictionary:dictionary];
+        [HTNotifier cacheUserDataDictionary];
+    }
+}
++ (NSString *)environmentValueForKey:(NSString *)key {
+    @synchronized(self) {
+        return [__userData objectForKey:key];
+    }
+}
++ (void)removeEnvironmentValueForKey:(NSString *)key {
+    @synchronized(self) {
+        [__userData removeObjectForKey:key];
+        [HTNotifier cacheUserDataDictionary];
+    }
+}
++ (void)removeEnvironmentValuesForKeys:(NSArray *)keys {
+    @synchronized(self) {
+        [__userData removeObjectsForKeys:keys];
+        [HTNotifier cacheUserDataDictionary];
+    }
+}
 
 @end
 
-@implementation HTNotifier (private)
+#pragma mark - file path utilities
+@implementation HTNotifier (FilePathMethods)
 + (NSString *)pathForNoticesDirectory {
-    static NSString *folderName = @"Hoptoad Notices";
     static NSString *path = nil;
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
 #if TARGET_OS_IPHONE
         NSArray *folders = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
         path = [folders objectAtIndex:0];
@@ -85,7 +289,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             path = NSTemporaryDirectory();
         }
         else {
-            path = [path stringByAppendingPathComponent:folderName];
+            path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
         }
 #else
         NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -95,7 +299,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         }
         else {
             path = [path stringByAppendingPathComponent:ABNotifierApplicationName()];
-            path = [path stringByAppendingPathComponent:folderName];
+            path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
         }
 #endif
         NSFileManager *manager = [NSFileManager defaultManager];
@@ -115,144 +319,43 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     path = [path stringByAppendingPathComponent:name];
     return [path stringByAppendingPathExtension:ABNotifierNoticePathExtension];
 }
-+ (BOOL)hasNotices {
-    return ([[self pathsForAllNotices] count] > 0);
-}
 + (NSArray *)pathsForAllNotices {
     NSString *path = [self pathForNoticesDirectory];
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:[contents count]];
+    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:[contents count]];
     [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
             NSString *noticePath = [path stringByAppendingPathComponent:obj];
             [paths addObject:noticePath];
         }
     }];
-    return [paths autorelease];
+    return paths;
 }
-+ (void)cacheUserDataDictionary:(NSDictionary *)dictionary {
-    
-    // free old cached value
-    free(ab_signal_info.user_data);
-    ab_signal_info.user_data_length = 0;
-    ab_signal_info.user_data = nil;
-    
-    // cache new value
-    if (dictionary) {
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-        unsigned long length = [data length];
-        ab_signal_info.user_data = malloc(length);
-        ab_signal_info.user_data_length = length;
-        [data getBytes:ab_signal_info.user_data length:length];
-    }
-    
-}
-+ (void)cacheNoticePayloadDictionary:(NSDictionary *)dictionary {
-    
-    // free old cached value
-    free(ab_signal_info.notice_payload);
-    ab_signal_info.notice_payload_length = 0;
-    ab_signal_info.notice_payload = nil;
-    
-    // cache new value
-    if (dictionary) {
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-        unsigned long length = [data length];
-        ab_signal_info.notice_payload = malloc(length);
-        ab_signal_info.notice_payload_length = length;
-        [data getBytes:ab_signal_info.notice_payload length:length];
-    }
-    
-}
-- (id)initWithAPIKey:(NSString *)APIKey environmentName:(NSString *)environmentName {
-	self = [super init];
-	if (self) {
-        
-		// setup ivars
-        self.APIKey = APIKey;
-        self.useSSL = NO;
-        __userData = [[NSMutableDictionary alloc] init];
-		
-		// register defaults
-        NSDictionary *toRegister = [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey];
-		[[NSUserDefaults standardUserDefaults] registerDefaults:toRegister];
-		
-		// setup reachability
-        BOOL reachabilityConfigured = NO;
-		reachability = SCNetworkReachabilityCreateWithName(NULL, [ABNotifierHostName UTF8String]);
-        if (SCNetworkReachabilitySetCallback(reachability, ABNotifierReachabilityDidChange, nil)) {
-            if (SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
-                reachabilityConfigured = YES;
-            }
-        }
-        if (!reachabilityConfigured) {
-            [self release];
-            return nil;
-        }
-        
-        {
-            
-            // vars
-            NSMutableDictionary *dictionary;
-            unsigned long length;
-            
-            // cache notice file path
-            NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
-            const char *filePath = [[HTNotifier pathForNewNoticeWithName:fileName] UTF8String];
-            length = (strlen(filePath) + 1);
-            ab_signal_info.notice_path = malloc(length);
-            memcpy((void *)ab_signal_info.notice_path, filePath, length);
-            
-            // notice payload
-            dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                          environmentName, ABNotifierEnvironmentNameKey,
-                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
-                          ABNotifierBundleVersionKey,
-                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
-                          ABNotifierExecutableKey,
-                          nil];
-            [HTNotifier cacheNoticePayloadDictionary:dictionary];
-            
-            // user data
-            dictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                          ABNotifierPlatformName(), ABNotifierPlatformNameKey,
-                          ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
-                          ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-                          nil];
-#if TARGET_OS_IPHONE && defined(DEBUG)
-            [dictionary
-             setObject:[[UIDevice currentDevice] uniqueIdentifier]
-             forKey:@"UDID"];
-#endif
-            [self addEnvironmentEntriesFromDictionary:dictionary];
-            
-        }
-        
-        // start handlers
-		ABNotifierStartHandlers();
-		
-	}
-	return self;
-}
-- (void)postAllNotices {
+@end
+
+#pragma mark - poast notice utilities
+@implementation HTNotifier (PostNoticeMethods)
++ (void)postNoticesWithPaths:(NSArray *)paths {
     
     // assert
-    NSAssert1(![NSThread isMainThread], @"%@ must not be called on the main thread", NSStringFromSelector(_cmd));
+    NSAssert(![NSThread isMainThread], @"This method must not be called on the main thread");
+    NSAssert([paths count], @"No paths were provided");
     
-    // get paths
-    NSArray *paths = [HTNotifier pathsForAllNotices];
+    // get variables
+    if ([paths count] == 0) { return; }
+    id<HTNotifierDelegate> delegate = [HTNotifier delegate];
     
     // notify delegate
-    if ([paths count] && [self.delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
+    if ([delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.delegate notifierWillPostNotices];
+            [delegate notifierWillPostNotices];
         });
     }
     
     // create url
     NSString *URLString = [NSString stringWithFormat:
                            @"%@://%@/notifier_api/v2/notices",
-                           (self.useSSL) ? @"https" : @"http",
+                           (__useSSL ? @"https" : @"http"),
                            ABNotifierHostName];
     NSURL *URL = [NSURL URLWithString:URLString];
     
@@ -286,14 +389,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #endif
     
     // notify delegate
-    if ([paths count] && [self.delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
+    if ([delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.delegate notifierDidPostNotices]; 
+            [delegate notifierDidPostNotices]; 
         });
     }
 	
 }
-- (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
++ (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
+    
+    // assert
+    NSAssert(![NSThread isMainThread], @"This method must not be called on the main thread");
     
     // create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
@@ -325,7 +431,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	
 	// error checking
     if (error) {
-        ABLog(@"encountered error while posting notice\n%@", error);
+        ABLog(@"Encountered error while posting notice.");
+        ABLog(@"%@", error);
         return;
     }
     else {
@@ -334,7 +441,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	
 	// great success
 	if (statusCode == 200) {
-        ABLog(@"crash report posted");
+        ABLog(@"Crash report posted");
 	}
     
     // forbidden
@@ -350,7 +457,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // unknown
     else {
-        ABLog(@"Encountered unexpected status code:%ld", (long)statusCode);
+        ABLog(@"Encountered unexpected status code: %ld", (long)statusCode);
 #ifdef DEBUG
         NSString *responseString = [[NSString alloc]
                                     initWithData:responseBody
@@ -361,17 +468,46 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }
     
 }
-- (void)showNoticeAlert {
+@end
+
+#pragma mark - cache values
+@implementation HTNotifier (CacheMethods)
++ (void)cacheUserDataDictionary {
+    @synchronized(self) {
+        
+        // free old cached value
+        free(ab_signal_info.user_data);
+        ab_signal_info.user_data_length = 0;
+        ab_signal_info.user_data = nil;
+        
+        // cache new value
+        if (__userData) {
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:__userData];
+            unsigned long length = [data length];
+            ab_signal_info.user_data = malloc(length);
+            ab_signal_info.user_data_length = length;
+            [data getBytes:ab_signal_info.user_data length:length];
+        }
+        
+    }
+}
+@end
+
+#pragma mark - ui methods
+@implementation HTNotifier (UserInterfaceMethods)
++ (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths {
     
-    // delegate
-    if ([self.delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
-		[self.delegate notifierWillDisplayAlert];
-	}
+    // assert
+    NSAssert([NSThread isMainThread], @"This method must be called on the main thread");
+    NSAssert([paths count], @"No paths were provided");
+    
+    // get delegate
+    id<HTNotifierDelegate> delegate = [self delegate];
     
     // alert title
     NSString *title = nil;
-    if ([self.delegate respondsToSelector:@selector(titleForNoticeAlert)]) {
-        title = [self.delegate titleForNoticeAlert];
+    if ([delegate respondsToSelector:@selector(titleForNoticeAlert)]) {
+        title = [delegate titleForNoticeAlert];
     }
     if (title == nil) {
         title = HTLocalizedString(@"NOTICE_TITLE");
@@ -379,294 +515,91 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // alert body
     NSString *body = nil;
-    if ([self.delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
-        body = [self.delegate bodyForNoticeAlert];
+    if ([delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
+        body = [delegate bodyForNoticeAlert];
     }
     if (body == nil) {
-        body = HTLocalizedString(@"NOTICE_BODY");
+        body = [NSString stringWithFormat:HTLocalizedString(@"NOTICE_BODY"), ABNotifierApplicationName()];
     }
+    
+    // declare blocks
+    void (^delegateDismissBlock) () = ^{
+        if ([delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
+            [delegate notifierDidDismissAlert];
+        }
+    };
+    void (^delegatePresentBlock) () = ^{
+        if ([delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
+            [delegate notifierWillDisplayAlert];
+        }
+    };
+    void (^postNoticesBlock) () = ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self postNoticesWithPaths:paths];
+        });
+    };
+    void (^deleteNoticesBlock) () = ^{
+        NSFileManager *manager = [NSFileManager defaultManager];
+        [paths enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [manager removeItemAtPath:obj error:nil];
+        }];
+    };
+    void (^setDefaultsBlock) () = ^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:YES forKey:ABNotifierAlwaysSendKey];
+        [defaults synchronize];
+    };
     
 #if TARGET_OS_IPHONE
     
-    // show alert
-    UIAlertView *alert = [[UIAlertView alloc]
-						  initWithTitle:ABNotifierStringByReplacingAirbrakeConstantsInString(title)
-						  message:ABNotifierStringByReplacingAirbrakeConstantsInString(body)
-						  delegate:self
-						  cancelButtonTitle:HTLocalizedString(@"DONT_SEND")
-						  otherButtonTitles:HTLocalizedString(@"ALWAYS_SEND"), HTLocalizedString(@"SEND"), nil];
-	[alert show];
-	[alert release];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:body];
+    [alert addButtonWithTitle:HTLocalizedString(@"ALWAYS_SEND") action:^{
+        setDefaultsBlock();
+        postNoticesBlock();
+    }];
+    [alert addButtonWithTitle:HTLocalizedString(@"SEND") action:postNoticesBlock];
+    [alert addButtonWithTitle:HTLocalizedString(@"DONT_SEND") action:deleteNoticesBlock];
+    [alert setDidDismissAction:delegateDismissBlock];
+    [alert setWillPresentAction:delegatePresentBlock];
+    [alert setCancelButtonIndex:2];
+    [alert show];
+    [alert release];
     
 #else
     
+    // delegate
+    delegatePresentBlock();
+    
     // build alert
 	NSAlert *alert = [NSAlert
-                      alertWithMessageText:ABNotifierStringByReplacingAirbrakeConstantsInString(title)
+                      alertWithMessageText:title
                       defaultButton:HTLocalizedString(@"ALWAYS_SEND")
                       alternateButton:HTLocalizedString(@"DONT_SEND")
                       otherButton:HTLocalizedString(@"SEND")
-                      informativeTextWithFormat:ABNotifierStringByReplacingAirbrakeConstantsInString(body)];
+                      informativeTextWithFormat:body];
     
     // run alert
 	NSInteger code = [alert runModal];
     
     // don't send
     if (code == NSAlertAlternateReturn) {
-        NSFileManager *manager = [NSFileManager defaultManager];
-        [[HTNotifier pathsForAllNotices] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [manager removeItemAtPath:obj error:nil];
-        }];
+        deleteNoticesBlock();
     }
     
     // send
     else {
         if (code == NSAlertDefaultReturn) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ABNotifierAlwaysSendKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            setDefaultsBlock();
         }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self postAllNotices];
-        });
+        postNoticesBlock();
     }
     
     // delegate
-	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
-		[self.delegate notifierDidDismissAlert];
-	}
+	delegateDismissBlock();
     
 #endif
     
-    
-    
 }
-@end
-
-@implementation HTNotifier
-
-@synthesize APIKey = __APIKey;
-@synthesize useSSL = __useSSL;
-@synthesize delegate = __delegate;
-
-#pragma mark - class methods
-+ (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name {
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
-        
-        // validate
-		if (![key length]) {
-			ABLog(@"The API key must not be blank");
-			return;
-		}
-		if (![name length]) {
-			ABLog(@"The environment name must not be blank");
-			return;
-		}
-        
-        // create
-        NSString *envName = name;
-        if ([envName isEqualToString:HTNotifierAutomaticEnvironment]) {
-#ifdef DEBUG
-            envName = HTNotifierDevelopmentEnvironment;
-#else
-            envName = HTNotifierReleaseEnvironment;
-#endif
-        }
-        sharedNotifier = [[HTNotifier alloc] initWithAPIKey:key environmentName:envName];
-		
-		// log
-        if (sharedNotifier) {
-            ABLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
-            ABLog(@"Environment \"%@\"", envName);
-        }
-        else {
-            ABLog(@"Unable to create crash notifier");
-        }
-        
-    });
-    return sharedNotifier;
-}
-+ (HTNotifier *)sharedNotifier {
-	@synchronized(self) {
-		return sharedNotifier;
-	}
-}
-
-#pragma mark - environment variables
-- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key {
-    @synchronized(self) {
-        if (valueOrNil) { [__userData removeObjectForKey:key]; }
-        else { [__userData setObject:valueOrNil forKey:key]; }
-        [HTNotifier cacheUserDataDictionary:__userData];
-    }
-}
-- (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary {
-    @synchronized(self) {
-        [__userData addEntriesFromDictionary:dictionary];
-        [HTNotifier cacheUserDataDictionary:__userData];
-    }
-}
-- (NSString *)environmentValueForKey:(NSString *)key {
-    @synchronized(self) {
-        return [__userData objectForKey:key];
-    }
-}
-
-#pragma mark - test notice
-- (void)writeTestNotice {
-    @try {
-        NSArray *array = [NSArray array];
-        [array objectAtIndex:NSUIntegerMax];
-    }
-    @catch (NSException *e) {
-        [self logException:e];
-    }
-}
-
-#pragma mark - log exception
-- (void)logException:(NSException *)exception {
-    @synchronized(self) {
-        
-        // get file handle
-        NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-        NSString *path = [HTNotifier pathForNewNoticeWithName:name];
-        int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
-        
-        // write stuff
-        if (fd > -1) {
-            @try {
-                
-                // write exception
-                NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            [exception name], ABNotifierExceptionNameKey,
-                                            [exception reason], ABNotifierExceptionReasonKey,
-                                            [exception callStackSymbols], ABNotifierCallStackKey,
-#if TARGET_OS_IPHONE
-                                            ABNotifierCurrentViewController(), ABNotifierControllerKey,
-#endif
-                                            nil];
-                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-                unsigned long length = [data length];
-                write(fd, &length, sizeof(unsigned long));
-                write(fd, [data bytes], length);
-                
-            }
-            @catch (NSException *exception) {
-                
-            }
-            @finally {
-                close(fd);
-            }
-        }
-
-        
-        
-        
-//        // open file
-//        NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-//        NSString *path = [HTNotifier pathForNewNoticeWithName:name];
-//        int fd = HTOpenFile(HTExceptionNoticeType, [path UTF8String]);
-//        
-//        // write file
-//        if (fd > -1) {
-//            @try {
-//                
-//                // crash info
-//                NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:5];
-//                
-//                // addresses
-//                NSArray *symbols = [exception callStackSymbols];
-//                [dictionary setObject:symbols forKey:@"call stack"];
-//                
-//                // exception name and reason
-//                [dictionary setObject:[exception name] forKey:@"exception name"];
-//                [dictionary setObject:[exception reason] forKey:@"exception reason"];
-//                
-//                // view controller
-//                NSString *viewController = HTCurrentViewController();
-//                if (viewController != nil) {
-//                    [dictionary setObject:viewController forKey:@"view controller"];
-//                }
-//                
-//                // environment info
-//                [self setEnvironmentValue:[[exception userInfo] description] forKey:@"Exception"];
-//                [dictionary setObject:self.environmentInfo forKey:@"environment info"];
-//                
-//                // write data
-//                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-//                NSUInteger length = [data length];
-//                write(fd, &length, sizeof(unsigned long));
-//                write(fd, [data bytes], length);
-//                
-//                // notify delegate on main thread
-//                if ([self.delegate respondsToSelector:@selector(notifierDidLogException:)]) {
-//                    [self.delegate notifierDidLogException:exception];
-//                }
-//                
-//            }
-//            @catch (NSException *exception) {
-//                HTLog(@"Encountered an exception while logging an exception");
-//            }
-//            @finally {
-//                close(fd);
-//            }
-//        }
-    }
-}
-
-#pragma mark - memory management
-- (void)dealloc {
-    
-    // stop event sources
-    if (reachability) {
-        SCNetworkReachabilitySetCallback(reachability, nil, nil);
-        SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
-        CFRelease(reachability);
-        reachability = nil;
-    }
-    
-    // stop handlers
-    ABNotifierStopHandlers();
-    [HTNotifier cacheUserDataDictionary:nil];
-    [HTNotifier cacheNoticePayloadDictionary:nil];
-    free((void *)ab_signal_info.notice_path);
-    ab_signal_info.notice_path = nil;
-    
-    // free ivars
-    self.APIKey = nil;
-    
-    // super
-	[super dealloc];
-    
-}
-
-#if TARGET_OS_IPHONE
-#pragma mark - UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if ([self.delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
-		[self.delegate notifierDidDismissAlert];
-	}
-}
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex) {
-        NSFileManager *manager = [NSFileManager defaultManager];
-        [[HTNotifier pathsForAllNotices] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [manager removeItemAtPath:obj error:nil];
-        }];
-	}
-    else {
-        NSString *button = [alertView buttonTitleAtIndex:buttonIndex];
-        if ([button isEqualToString:HTLocalizedString(@"ALWAYS_SEND")]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ABNotifierAlwaysSendKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self postAllNotices];
-        });
-    }
-}
-#endif
-
 @end
 
 #pragma mark - reachability change
@@ -674,16 +607,15 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     if (flags & kSCNetworkReachabilityFlagsReachable) {
         static dispatch_once_t predicate;
         dispatch_once(&predicate, ^{
-            SCNetworkReachabilitySetCallback(target, nil, nil);
-            SCNetworkReachabilityUnscheduleFromRunLoop(target, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                if ([HTNotifier hasNotices]) {
+                NSArray *paths = [HTNotifier pathsForAllNotices];
+                if ([paths count]) {
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
-                        [[HTNotifier sharedNotifier] postAllNotices];
+                        [HTNotifier postNoticesWithPaths:paths];
                     }
                     else {
                         dispatch_sync(dispatch_get_main_queue(), ^{
-                            [[HTNotifier sharedNotifier] showNoticeAlert];
+                            [HTNotifier showNoticeAlertForNoticesWithPaths:paths];
                         });
                     }
                 }
