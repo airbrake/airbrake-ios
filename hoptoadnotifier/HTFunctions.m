@@ -80,7 +80,7 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 }
 void ht_handle_exception(NSException *exception) {
     ABNotifierStopHandlers();
-    [[HTNotifier sharedNotifier] logException:exception];
+    [HTNotifier logException:exception];
 }
 
 #pragma mark - notice file methods
@@ -160,51 +160,65 @@ NSString *ABNotifierApplicationName(void) {
 
 #pragma mark - platform accessors
 NSString *ABNotifierOperatingSystemVersion(void) {
+    static NSString *version = nil;
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
 #if TARGET_IPHONE_SIMULATOR
-	return [[UIDevice currentDevice] systemVersion];
+        version = [[[UIDevice currentDevice] systemVersion] copy];
 #else
-	return [[NSProcessInfo processInfo] operatingSystemVersionString];
+        version = [[[NSProcessInfo processInfo] operatingSystemVersionString] copy];
 #endif
+    });
+    return version;
 }
 NSString *ABNotifierMachineName(void) {
 #if TARGET_IPHONE_SIMULATOR
-	return @"iPhone Simulator";
+    return @"iPhone Simulator";
 #else
-    size_t size = 256;
-	char *machine = malloc(size);
+    static NSString *name = nil;
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
+        size_t size = 256;
+        char *machine = malloc(size);
 #if TARGET_OS_IPHONE
-    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+        sysctlbyname("hw.machine", machine, &size, NULL, 0);
 #else
-    sysctlbyname("hw.model", machine, &size, NULL, 0);
+        sysctlbyname("hw.model", machine, &size, NULL, 0);
 #endif
-    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-    free(machine);
-    return platform;
+        name = [[NSString alloc] initWithCString:machine encoding:NSUTF8StringEncoding];
+        free(machine);
+    });
+    return name;
 #endif
 }
 NSString *ABNotifierPlatformName(void) {
-    NSString *machine = ABNotifierMachineName();
-#if TARGET_OS_IPHONE
-    // iphone
-	if ([machine isEqualToString:@"iPhone1,1"]) { return @"iPhone"; }
-	else if ([machine isEqualToString:@"iPhone1,2"]) { return @"iPhone 3G"; }
-	else if ([machine isEqualToString:@"iPhone2,1"]) { return @"iPhone 3GS"; }
-	else if ([machine isEqualToString:@"iPhone3,1"]) { return @"iPhone 4 (GSM)"; }
-    else if ([machine isEqualToString:@"iPhone3,3"]) { return @"iPhone 4 (CDMA)"; }
-	// ipad
-	else if ([machine isEqualToString:@"iPad1,1"]) { return @"iPad"; }
-    else if ([machine isEqualToString:@"iPad2,1"]) { return @"iPad 2 (WiFi)"; }
-    else if ([machine isEqualToString:@"iPad2,2"]) { return @"iPad 2 (GSM)"; }
-    else if ([machine isEqualToString:@"iPad2,3"]) { return @"iPad 2 (CDMA)"; }
-	// ipod
-	else if ([machine isEqualToString:@"iPod1,1"]) { return @"iPod Touch"; }
-	else if ([machine isEqualToString:@"iPod2,1"]) { return @"iPod Touch (2nd generation)"; }
-	else if ([machine isEqualToString:@"iPod3,1"]) { return @"iPod Touch (3rd generation)"; }
-	else if ([machine isEqualToString:@"iPod4,1"]) { return @"iPod Touch (4th generation)"; }
-	// unknown
-	else { return machine; }
+#if TARGET_IPHONE_SIMULATOR || !TARGET_OS_IPHONE
+    return ABNotifierMachineName();
 #else
-    return machine;
+    static NSString *platform = nil;
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
+        NSString *machine = ABNotifierMachineName();
+        // iphone
+        if ([machine isEqualToString:@"iPhone1,1"]) { platform = @"iPhone"; }
+        else if ([machine isEqualToString:@"iPhone1,2"]) { platform = @"iPhone 3G"; }
+        else if ([machine isEqualToString:@"iPhone2,1"]) { platform = @"iPhone 3GS"; }
+        else if ([machine isEqualToString:@"iPhone3,1"]) { platform = @"iPhone 4 (GSM)"; }
+        else if ([machine isEqualToString:@"iPhone3,3"]) { platform = @"iPhone 4 (CDMA)"; }
+        // ipad
+        else if ([machine isEqualToString:@"iPad1,1"]) { platform = @"iPad"; }
+        else if ([machine isEqualToString:@"iPad2,1"]) { platform = @"iPad 2 (WiFi)"; }
+        else if ([machine isEqualToString:@"iPad2,2"]) { platform = @"iPad 2 (GSM)"; }
+        else if ([machine isEqualToString:@"iPad2,3"]) { platform = @"iPad 2 (CDMA)"; }
+        // ipod
+        else if ([machine isEqualToString:@"iPod1,1"]) { platform = @"iPod Touch"; }
+        else if ([machine isEqualToString:@"iPod2,1"]) { platform = @"iPod Touch (2nd generation)"; }
+        else if ([machine isEqualToString:@"iPod3,1"]) { platform = @"iPod Touch (3rd generation)"; }
+        else if ([machine isEqualToString:@"iPod4,1"]) { platform = @"iPod Touch (4th generation)"; }
+        // unknown
+        else { platform = machine; }
+    });
+    return platform;
 #endif
 }
 
@@ -239,29 +253,21 @@ NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *exec
     }
 }
 
-#pragma mark - string substitution
-NSString * ABNotifierStringByReplacingAirbrakeConstantsInString(NSString *string) {
-	NSString *toReturn = string;
-	toReturn = [toReturn
-				stringByReplacingOccurrencesOfString:HTNotifierBundleName
-				withString:ABNotifierApplicationName()];
-	toReturn = [toReturn
-				stringByReplacingOccurrencesOfString:HTNotifierBundleVersion
-				withString:ABNotifierApplicationVersion()];
-	return toReturn;
-}
-
 #pragma mark - get view controller
 #if TARGET_OS_IPHONE
 NSString *ABNotifierCurrentViewController(void) {
     
+    // assert
+    NSCAssert([NSThread isMainThread], @"This function must be called on the main thread");
+    
 	// view controller to inspect
 	UIViewController *rootController = nil;
-	
+    
 	// try getting view controller from notifier delegate
-	id<HTNotifierDelegate> notifierDelegate = [[HTNotifier sharedNotifier] delegate];
-	if ([notifierDelegate respondsToSelector:@selector(rootViewControllerForNotice)]) {
-		rootController = [notifierDelegate rootViewControllerForNotice];
+    
+	id<HTNotifierDelegate> delegte = [HTNotifier delegate];
+	if ([delegte respondsToSelector:@selector(rootViewControllerForNotice)]) {
+		rootController = [delegte rootViewControllerForNotice];
 	}
 	
 	// try getting view controller from window
@@ -282,6 +288,9 @@ NSString *ABNotifierCurrentViewController(void) {
 }
 
 NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *controller) {
+    
+    // assert
+    NSCAssert([NSThread isMainThread], @"This function must be called on the main thread");
 	
 	// tab bar controller
 	if ([controller isKindOfClass:[UITabBarController class]]) {
