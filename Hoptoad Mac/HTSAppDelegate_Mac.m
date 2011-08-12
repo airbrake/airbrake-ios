@@ -18,14 +18,20 @@ static NSString * HTSHoptoadAPIKey = @"";
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     // setup notifier
-    HTNotifier *notifier = [HTNotifier
-                            startNotifierWithAPIKey:HTSHoptoadAPIKey
-                            environmentName:HTNotifierAutomaticEnvironment];
+    [HTNotifier startNotifierWithAPIKey:@""
+                        environmentName:HTNotifierAutomaticEnvironment
+                                 useSSL:YES // only if your account supports it
+                               delegate:self];
+    [HTNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
+    [HTNotifier setDelegate:self];
     
-	[notifier setDelegate:self];
-	[notifier setUseSSL:YES]; // only if your account supports it
-    [notifier setEnvironmentValue:@"test value" forKey:@"test key"];
-	[notifier writeTestNotice];
+    // test notice on main thread
+    [HTNotifier writeTestNotice];
+    
+    // test notice on another thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [HTNotifier writeTestNotice];
+    });
     
 }
 
