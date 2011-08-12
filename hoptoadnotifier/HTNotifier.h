@@ -23,34 +23,25 @@
  */
 
 #import <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#ifndef __IPHONE_4_0
-#error This version of the Airbrake notifier requires iOS 4.0 or later
-#endif
-#import <UIKit/UIKit.h>
-#elif TARGET_OS_MAC
-#ifndef __MAC_10_6
-#error This version of the Airbrake notifier requires Mac OS 10.6 or later
-#endif
-#import <Cocoa/Cocoa.h>
-#else
-#error [Airbrake] unsupported platform
-#endif
 #import <SystemConfiguration/SystemConfiguration.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+    #ifndef __IPHONE_4_0
+        #error This version of the Airbrake notifier requires iOS 4.0 or later
+    #endif
+#elif TARGET_OS_MAC
+#import <Cocoa/Cocoa.h>
+    #ifndef __MAC_10_6
+        #error This version of the Airbrake notifier requires Mac OS 10.6 or later
+    #endif
+#else
+    #error [Airbrake] unsupported platform
+#endif
 
 #import "HTNotifierDelegate.h"
 
 // notifier version
 extern NSString *HTNotifierVersion;
-
-/*
- 
- use these variables in your alert title and alert body to have their values
- substituted at runtime.
- 
- */
-extern NSString *HTNotifierBundleName;      // app name
-extern NSString *HTNotifierBundleVersion;   // bundle version
 
 /*
  
