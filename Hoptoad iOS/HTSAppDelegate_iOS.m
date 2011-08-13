@@ -8,9 +8,6 @@
 
 #import "HTSAppDelegate_iOS.h"
 
-// api key
-static NSString *HTSHoptoadAPIKey = @"";
-
 @implementation HTSAppDelegate_iOS
 
 @synthesize window = __window;
