@@ -23,20 +23,20 @@
  */
 
 #import <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#ifndef __IPHONE_4_0
-#error This version of the Airbrake notifier requires iOS 4.0 or later
-#endif
-#import <UIKit/UIKit.h>
-#elif TARGET_OS_MAC
-#ifndef __MAC_10_6
-#error This version of the Airbrake notifier requires Mac OS 10.6 or later
-#endif
-#import <Cocoa/Cocoa.h>
-#else
-#error [Airbrake] unsupported platform
-#endif
 #import <SystemConfiguration/SystemConfiguration.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+    #ifndef __IPHONE_4_0
+        #error This version of the Airbrake notifier requires iOS 4.0 or later
+    #endif
+#elif TARGET_OS_MAC
+#import <Cocoa/Cocoa.h>
+    #ifndef __MAC_10_6
+        #error This version of the Airbrake notifier requires Mac OS 10.6 or later
+    #endif
+#else
+    #error [Airbrake] unsupported platform
+#endif
 
 #import "HTNotifierDelegate.h"
 
@@ -45,18 +45,9 @@ extern NSString *HTNotifierVersion;
 
 /*
  
- use these variables in your alert title and alert body to have their values
- substituted at runtime.
- 
- */
-extern NSString *HTNotifierBundleName;      // app name
-extern NSString *HTNotifierBundleVersion;   // bundle version
-
-/*
- 
- these standard environment names provide default values for you to pick from.
- the automatic environment will set development or release depending on the
- DEBUG flag.
+ These standard environment names provide default values for you to pick from.
+ The automatic environment will set development or release depending on the
+ presence of the DEBUG flag.
  
  */
 extern NSString *HTNotifierDevelopmentEnvironment;
@@ -74,23 +65,11 @@ extern NSString *HTNotifierAutomaticEnvironment;
  access the shared instance by calling `sharedNotifier`
  
  */
+@interface HTNotifier : NSObject
 #if TARGET_OS_IPHONE
-@interface HTNotifier : NSObject <UIAlertViewDelegate> {
-#else
-@interface HTNotifier : NSObject {    
+<UIAlertViewDelegate>
 #endif
-@private
-    NSString * __APIKey;
-    BOOL __useSSL;
-	SCNetworkReachabilityRef reachability;
-    id<HTNotifierDelegate> __delegate;
-    NSMutableDictionary *__userData;
-}
-
-// properties
-@property (nonatomic, readonly, copy) NSString *APIKey;
-@property (nonatomic, assign) id<HTNotifierDelegate> delegate;
-@property (nonatomic, assign) BOOL useSSL; // your account must support this feature
+{}
 
 /*
  
@@ -103,58 +82,39 @@ extern NSString *HTNotifierAutomaticEnvironment;
  include any of the above constant strings in the enviromnent name to have the
  value replaced by the library
  
- returns the shared notifier object for convenience or nil if it could not be
- created
- 
  */
-+ (HTNotifier *)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name;
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<HTNotifierDelegate>)delegate;
 
 /*
  
- access the shared notifier object.
- 
- if this is called before `startNotifierWithAPIKey:environmentName:` nil will be
- returned.
+ Methods to expose some of the inner variables used by the notifier.
  
  */
-+ (HTNotifier *)sharedNotifier;
++ (void)setDelegate:(id<HTNotifierDelegate>)delegate;
++ (id<HTNotifierDelegate>)delegate;
++ (NSString *)APIKey;
 
 /*
  
- log an exception in a new notice file
+ Log an exception.
  
  */
-- (void)logException:(NSException *)exception;
++ (void)logException:(NSException *)exception;
 
 /*
  
- set environment info key/value pair. passing nil as the value will remove the
- value for the given key.
+ Write a test notice to disk. It will be reported just like an actual crash.
  
  */
-- (void)setEnvironmentValue:(NSString *)valueOrNil forKey:(NSString *)key;
++ (void)writeTestNotice;
 
-/*
- 
- copy entries from the given dictionary into the environment info dictionary.
- these should be string key/value pairs.
- 
- */
-- (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary;
-
-/*
- 
- get environment info value for a given key.
- 
- */
-- (NSString *)environmentValueForKey:(NSString *)key;
-    
-/*
- 
- writes a test notice if one does not exist already. it will be reported just as
- an actual crash.
- 
- */
-- (void)writeTestNotice;
++ (void)setEnvironmentValue:(NSString *)value forKey:(NSString *)key;
++ (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary;
++ (NSString *)environmentValueForKey:(NSString *)key;
++ (void)removeEnvironmentValueForKey:(NSString *)key;
++ (void)removeEnvironmentValuesForKeys:(NSArray *)keys;
 
 @end

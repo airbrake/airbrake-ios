@@ -8,9 +8,6 @@
 
 #import "HTSAppDelegate_iOS.h"
 
-// api key
-static NSString *HTSHoptoadAPIKey = @"";
-
 @implementation HTSAppDelegate_iOS
 
 @synthesize window = __window;
@@ -19,13 +16,20 @@ static NSString *HTSHoptoadAPIKey = @"";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // setup notifier
-    HTNotifier *notifier = [HTNotifier
-                            startNotifierWithAPIKey:HTSHoptoadAPIKey
-                            environmentName:HTNotifierAutomaticEnvironment];
-	[notifier setDelegate:self];
-    [notifier setUseSSL:YES]; // only if your account supports it
-    [notifier setEnvironmentValue:@"test value" forKey:@"test key"];
-	[notifier writeTestNotice];
+    [HTNotifier startNotifierWithAPIKey:@""
+                        environmentName:HTNotifierAutomaticEnvironment
+                                 useSSL:YES // only if your account supports it
+                               delegate:self];
+    [HTNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
+    [HTNotifier setDelegate:self];
+    
+    // test notice on main thread
+    [HTNotifier writeTestNotice];
+    
+    // test notice on another thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [HTNotifier writeTestNotice];
+    });
     
     // show ui
     [self.window makeKeyAndVisible];

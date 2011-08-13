@@ -38,6 +38,8 @@
 		3B2E0C4E137B365E009B558C /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0C4C137B365E009B558C /* RegexKitLite.m */; };
 		3B2E0C50137B3697009B558C /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0C4F137B3697009B558C /* libicucore.dylib */; };
 		3B2E0C52137B36A4009B558C /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0C51137B36A4009B558C /* libicucore.dylib */; };
+		3B97309213F5B4FA00044F82 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B97309113F5B4FA00044F82 /* UIAlertView+Blocks.m */; };
+		3B97309313F5B4FA00044F82 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B97309113F5B4FA00044F82 /* UIAlertView+Blocks.m */; };
 		3BA58929137C871300D9C544 /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3BA58915137C871300D9C544 /* HTNotifier.strings */; };
 		3BA5892A137C871300D9C544 /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3BA58915137C871300D9C544 /* HTNotifier.strings */; };
 		3BA5892B137C871300D9C544 /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BA5891B137C871300D9C544 /* HTFunctions.m */; };
@@ -92,6 +94,8 @@
 		3B2E0C4C137B365E009B558C /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		3B2E0C4F137B3697009B558C /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = SDKs/MacOSX10.6.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
 		3B2E0C51137B36A4009B558C /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
+		3B97309013F5B4FA00044F82 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Blocks.h"; sourceTree = "<group>"; };
+		3B97309113F5B4FA00044F82 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Blocks.m"; sourceTree = "<group>"; };
 		3BA58916137C871300D9C544 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3BA58917137C871300D9C544 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3BA58918137C871300D9C544 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
@@ -280,6 +284,8 @@
 				3BA5891A137C871300D9C544 /* HTFunctions.h */,
 				3BA5891B137C871300D9C544 /* HTFunctions.m */,
 				3BA58924137C871300D9C544 /* HTNotifierDelegate.h */,
+				3B97309013F5B4FA00044F82 /* UIAlertView+Blocks.h */,
+				3B97309113F5B4FA00044F82 /* UIAlertView+Blocks.m */,
 			);
 			path = hoptoadnotifier;
 			sourceTree = "<group>";
@@ -428,6 +434,7 @@
 				3BA5892B137C871300D9C544 /* HTFunctions.m in Sources */,
 				3BA5892D137C871300D9C544 /* HTNotice.m in Sources */,
 				3BA5892F137C871300D9C544 /* HTNotifier.m in Sources */,
+				3B97309213F5B4FA00044F82 /* UIAlertView+Blocks.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +453,7 @@
 				3BA5892C137C871300D9C544 /* HTFunctions.m in Sources */,
 				3BA5892E137C871300D9C544 /* HTNotice.m in Sources */,
 				3BA58930137C871300D9C544 /* HTNotifier.m in Sources */,
+				3B97309313F5B4FA00044F82 /* UIAlertView+Blocks.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,6 +558,7 @@
 				GCC_PREFIX_HEADER = "Hoptoad Mac/Hoptoad Mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Hoptoad Mac/Hoptoad Mac-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -568,6 +577,7 @@
 				GCC_PREFIX_HEADER = "Hoptoad Mac/Hoptoad Mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Hoptoad Mac/Hoptoad Mac-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -585,7 +595,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hoptoad iOS/Hoptoad iOS-Prefix.pch";
 				INFOPLIST_FILE = "Hoptoad iOS/Hoptoad iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -603,7 +613,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hoptoad iOS/Hoptoad iOS-Prefix.pch";
 				INFOPLIST_FILE = "Hoptoad iOS/Hoptoad iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
