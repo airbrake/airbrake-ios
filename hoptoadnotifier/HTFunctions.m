@@ -27,8 +27,6 @@
 #import <unistd.h>
 #import <sys/sysctl.h>
 
-#import "RegexKitLite.h"
-
 #import "HTFunctions.h"
 #import "HTNotifier.h"
 #import "HTNotice.h"
