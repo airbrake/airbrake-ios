@@ -12,6 +12,7 @@
 
 @synthesize window = __window;
 
+#pragma mark - app delegate
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     // setup notifier
