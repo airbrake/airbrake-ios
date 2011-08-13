@@ -231,6 +231,7 @@ int ABNotifierExceptionNoticeType   = 2;
          [DDXMLElement
           attributeWithName:@"method"
           stringValue:[obj objectAtIndex:3]]];
+        [backtrace addChild:line];
     }];
 	[error addChild:backtrace];
     [notice addChild:error];
@@ -244,6 +245,7 @@ int ABNotifierExceptionNoticeType   = 2;
     [self.environmentInfo enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         DDXMLElement *entry = [DDXMLElement elementWithName:@"var" stringValue:[obj description]];
         [entry addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:[key description]]];
+        [cgi addChild:entry];
     }];
     [request addChild:cgi];
     [notice addChild:request];
