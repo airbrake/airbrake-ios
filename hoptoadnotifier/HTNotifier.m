@@ -408,7 +408,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 	// get notice payload
     HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
-    ABDebugLog(@"%@", notice);
+#ifdef DEBUG
+    ABLog(@"%@", notice);
+#endif
     NSString *XMLString = [notice hoptoadXMLString];
     if (XMLString) {
         NSData *data = [XMLString dataUsingEncoding:NSUTF8StringEncoding];
@@ -422,10 +424,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	// perform request
     NSError *error = nil;
 	NSHTTPURLResponse *response = nil;
-	NSData *responseBody = [NSURLConnection
-							sendSynchronousRequest:request
-							returningResponse:&response
-							error:&error];
+    
+#ifdef DEBUG
+    NSData *responseBody = 
+#endif
+    [NSURLConnection
+     sendSynchronousRequest:request
+     returningResponse:&response
+     error:&error];
     NSInteger statusCode = [response statusCode];
 	
 	// error checking
@@ -451,7 +457,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     // invalid post
     else if (statusCode == 422) {
         ABLog(@"The posted notice payload is invalid.");
-        ABDebugLog(@"%@", XMLString);
+#ifdef DEBUG
+        ABLog(@"%@", XMLString);
+#endif
     }
     
     // unknown
