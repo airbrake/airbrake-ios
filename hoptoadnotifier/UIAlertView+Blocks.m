@@ -6,6 +6,8 @@
 //  Copyright 2011 GUI Cocoa, LLC. All rights reserved.
 //
 
+#import <TargetConditionals.h>
+
 #if TARGET_OS_IPHONE
 
 #import <objc/runtime.h>
