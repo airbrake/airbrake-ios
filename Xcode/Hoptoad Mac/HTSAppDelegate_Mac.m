@@ -21,7 +21,6 @@
                                  useSSL:YES // only if your account supports it
                                delegate:self];
     [HTNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
-    [HTNotifier setDelegate:self];
     
     // test notice on main thread
     [HTNotifier writeTestNotice];
