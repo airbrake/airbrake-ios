@@ -26,9 +26,9 @@
 
 /*
  
- Classes that conform to this protocol can provide
- customization of the notifier at runtime. All of these
- methods are called on the main thread and are optional.
+ Classes that conform to this protocol can provide customization of the notifier
+ at runtime. All of these methods are called on the main thread and are
+ optional.
  
  */
 @protocol HTNotifierDelegate <NSObject>
@@ -36,14 +36,11 @@
 
 /*
  
- These methods allow your application to respond to alerts
- posted by the notifier to the user. They are always called
- as a pair in the order shown below.
+ These methods allow your application to respond to alerts presented to the user
+ by the notifier. They are always called as a pair in the order shown below.
  
- Treat these like
-	applicationWillResignActive:
- and
-	applicationDidBecomeActive:
+ Treat these like `applicationWillResignActive:` and
+ `applicationDidBecomeActive:`
  
  */
 - (void)notifierWillDisplayAlert;
@@ -51,10 +48,8 @@
 
 /*
  
- These methods allow your application to customize the text
- in the crash report alert. Include any of the constant
- strings listed in HTNotifier.h to have the value replaced
- automatically.
+ Customize the text seen by the user in
+ the crash report alert.
  
  */
 - (NSString *)titleForNoticeAlert;
@@ -63,8 +58,7 @@
 
 /*
  
- These methods allow your application to perform actions
- before and after notices are posted to the server.
+ Perform actions before and after notices are posted to the server.
  
  */
 - (void)notifierWillPostNotices;
@@ -72,8 +66,7 @@
 
 /*
  
- This lets the notifier delegate know that an exception
- was logged to the file system.
+ Informs the delegate that an exception was successfully logged.
  
  */
 - (void)notifierDidLogException:(NSException *)exception;
@@ -81,14 +74,12 @@
 #if TARGET_OS_IPHONE
 /*
  
- This method asks the delegate to return the root view
- controller for the app. This is used to walk the view
- hierarchy to determine what view is on screen at the time
- of a crash.
+ Asks the delegate to return the root view controller for the app. This is used
+ to walk the view hierarchy and determine what view is on screen at the time of
+ a crash.
  
- If you used the iOS 4 method from UIWindow
-	setRootViewController:
- you do not need to implement this method
+ If you used the iOS 4 method `setRootViewController:` in UIWindow you do not
+ need to implement this method.
  
  */
 - (UIViewController *)rootViewControllerForNotice;

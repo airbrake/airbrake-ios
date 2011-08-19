@@ -146,9 +146,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
               ABNotifierPlatformName(), ABNotifierPlatformNameKey,
               ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
               ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-#if TARGET_OS_IPHONE && defined (DEBUG)
-              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
-#endif
+//#if TARGET_OS_IPHONE && defined (DEBUG)
+//              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
+//#endif
               nil]];
             
             // start handlers
