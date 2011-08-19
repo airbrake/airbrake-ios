@@ -25,9 +25,10 @@
 #import <objc/runtime.h>
 #import <TargetConditionals.h>
 
-#import "HTNotice.h"
+#import "ABNotice.h"
+#import "ABNotifierFunctions.h"
+
 #import "HTNotifier.h"
-#import "HTFunctions.h"
 
 #import "DDXML.h"
 
@@ -47,7 +48,7 @@ int ABNotifierNoticeVersion         = 5;
 int ABNotifierSignalNoticeType      = 1;
 int ABNotifierExceptionNoticeType   = 2;
 
-@interface HTNotice ()
+@interface ABNotice ()
 @property (nonatomic, copy) NSString        *environmentName;
 @property (nonatomic, copy) NSString        *bundleVersion;
 @property (nonatomic, copy) NSString        *exceptionName;
@@ -60,7 +61,7 @@ int ABNotifierExceptionNoticeType   = 2;
 @property (nonatomic, copy) NSDictionary    *environmentInfo;
 @end
 
-@implementation HTNotice
+@implementation ABNotice
 
 @synthesize noticeVersion = __noticeVersion;
 @synthesize environmentName = __environmentName;
@@ -187,8 +188,8 @@ int ABNotifierExceptionNoticeType   = 2;
     }
     return self;
 }
-+ (HTNotice *)noticeWithContentsOfFile:(NSString *)path {
-    return [[[HTNotice alloc] initWithContentsOfFile:path] autorelease];
++ (ABNotice *)noticeWithContentsOfFile:(NSString *)path {
+    return [[[ABNotice alloc] initWithContentsOfFile:path] autorelease];
 }
 - (NSString *)hoptoadXMLString {
     
