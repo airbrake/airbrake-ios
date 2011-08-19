@@ -28,7 +28,7 @@
 #import "HTNotice.h"
 #import "HTFunctions.h"
 
-#import "UIAlertView+Blocks.h"
+#import "GCAlertView.h"
 
 // internal
 static SCNetworkReachabilityRef __reachability = nil;
@@ -559,15 +559,15 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 #if TARGET_OS_IPHONE
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:body];
-    [alert addButtonWithTitle:HTLocalizedString(@"ALWAYS_SEND") action:^{
+    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
+    [alert addButtonWithTitle:HTLocalizedString(@"ALWAYS_SEND") block:^{
         setDefaultsBlock();
         postNoticesBlock();
     }];
-    [alert addButtonWithTitle:HTLocalizedString(@"SEND") action:postNoticesBlock];
-    [alert addButtonWithTitle:HTLocalizedString(@"DONT_SEND") action:deleteNoticesBlock];
-    [alert setDidDismissAction:delegateDismissBlock];
-    [alert setWillPresentAction:delegatePresentBlock];
+    [alert addButtonWithTitle:HTLocalizedString(@"SEND") block:postNoticesBlock];
+    [alert addButtonWithTitle:HTLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
+    [alert setDidDismissBlock:delegateDismissBlock];
+    [alert setDidDismissBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
     [alert show];
     [alert release];
