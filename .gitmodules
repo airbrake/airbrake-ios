@@ -1,0 +1,3 @@
+[submodule "gcalertview"]
+	path = gcalertview
+	url = git://github.com/guicocoa/gcalertview.git
