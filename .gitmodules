@@ -1,6 +1,0 @@
-[submodule "gcalertview"]
-	path = gcalertview
-	url = git://github.com/guicocoa/gcalertview.git
-[submodule "kissxml"]
-	path = kissxml
-	url = https://code.google.com/p/kissxml/
