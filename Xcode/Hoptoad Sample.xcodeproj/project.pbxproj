@@ -111,7 +111,7 @@
 		3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		3B7A06CF13FEFD9B007E8CCF /* CHANGELOG */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG; path = ../CHANGELOG; sourceTree = "<group>"; };
 		3B7A06D013FEFD9B007E8CCF /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = INSTALLATION.html; path = ../INSTALLATION.html; sourceTree = "<group>"; };
-		3B7A06D113FEFD9B007E8CCF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		3B7A06D113FEFD9B007E8CCF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
