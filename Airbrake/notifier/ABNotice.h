@@ -63,14 +63,12 @@ extern int ABNotifierExceptionNoticeType;
 
 /*
  
- Instances of the HTNotice class represent a single crash
- report. It holds all of the properties that get posted to
- Hoptoad.
+ Instances of the ABNotice class represent a single crash report. It holds all
+ of the properties that get posted to Airbrake.
  
- All of the properties represented as instance variables are
- persisted in the file representation of the object. Those
- that are not are pulled from the HTNotifier at runtime
- (primarily the API key).
+ All of the properties represented as instance variables are persisted in the
+ file representation of the object. Those that are not are pulled from 
+ HTNotifier at runtime (primarily the API key).
  
  */
 @interface ABNotice : NSObject {

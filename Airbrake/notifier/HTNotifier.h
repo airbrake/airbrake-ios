@@ -60,7 +60,8 @@ extern NSString *HTNotifierAutomaticEnvironment;
  
  These notifications are designed to mirror the methods seen in 
  HTNotifierDelegate. They allow you to be aware of key events in the notifier
- outside of the single delegate. They will be posted on the main thread.
+ outside of the single delegate. They will be posted on the main thread right
+ after the associated delegate method is called.
  
  */
 extern NSString *ABNotifierWillDisplayAlertNotification;
@@ -70,11 +71,8 @@ extern NSString *ABNotifierDidPostNoticesNotification;
 
 /*
  
- HTNotifier is the primary class of the notifer library
- 
- start the notifier by calling `startNotifierWithAPIKey:environmentName:`
- 
- access the shared instance by calling `sharedNotifier`
+ HTNotifier is the primary class of the notifer library. Start the notifier by
+ calling `startNotifierWithAPIKey:environmentName:`.
  
  */
 @interface HTNotifier : NSObject
@@ -85,14 +83,8 @@ extern NSString *ABNotifierDidPostNoticesNotification;
 
 /*
  
- this method is the entry point for the library. any code executed after this
- method call is monitored for crashes and signals
- 
- the values for key and environment name must not be nil and must have a length
- greater than 0
- 
- include any of the above constant strings in the enviromnent name to have the
- value replaced by the library
+ This is the entry point for the library. Any code executed after this
+ method call is monitored for exceptions and signals.
  
  */
 + (void)startNotifierWithAPIKey:(NSString *)key
