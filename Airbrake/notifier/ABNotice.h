@@ -73,7 +73,7 @@ extern int ABNotifierExceptionNoticeType;
  (primarily the API key).
  
  */
-@interface HTNotice : NSObject {
+@interface ABNotice : NSObject {
     NSString *__environmentName;
     NSString *__bundleVersion;
     NSString *__exceptionName;
@@ -88,7 +88,7 @@ extern int ABNotifierExceptionNoticeType;
 
 // create an object representation of notice data
 - (id)initWithContentsOfFile:(NSString *)path;
-+ (HTNotice *)noticeWithContentsOfFile:(NSString *)path;
++ (ABNotice *)noticeWithContentsOfFile:(NSString *)path;
 
 // get a string representation of the hoptoad xml payload
 - (NSString *)hoptoadXMLString;

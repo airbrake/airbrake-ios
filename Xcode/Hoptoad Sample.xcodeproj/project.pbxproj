@@ -40,10 +40,10 @@
 		3B7A06BF13FEFD2E007E8CCF /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A069B13FEFD2E007E8CCF /* DDXMLNode.m */; };
 		3B7A06C013FEFD2E007E8CCF /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A069F13FEFD2E007E8CCF /* HTNotifier.strings */; };
 		3B7A06C113FEFD2E007E8CCF /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A069F13FEFD2E007E8CCF /* HTNotifier.strings */; };
-		3B7A06C213FEFD2E007E8CCF /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */; };
-		3B7A06C313FEFD2E007E8CCF /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */; };
-		3B7A06C413FEFD2E007E8CCF /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* HTNotice.m */; };
-		3B7A06C513FEFD2E007E8CCF /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* HTNotice.m */; };
+		3B7A06C213FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
+		3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
+		3B7A06C413FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
+		3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
 		3B7A06C613FEFD2E007E8CCF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */; };
 		3B7A06C713FEFD2E007E8CCF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */; };
 		3B7A06C813FEFD2E007E8CCF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */; };
@@ -96,10 +96,10 @@
 		3B7A06A113FEFD2E007E8CCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06A213FEFD2E007E8CCF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06A313FEFD2E007E8CCF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		3B7A06A413FEFD2E007E8CCF /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
-		3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
-		3B7A06A613FEFD2E007E8CCF /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
-		3B7A06A713FEFD2E007E8CCF /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
+		3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
+		3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
+		3B7A06A613FEFD2E007E8CCF /* ABNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABNotice.h; sourceTree = "<group>"; };
+		3B7A06A713FEFD2E007E8CCF /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
 		3B7A06A813FEFD2E007E8CCF /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
 		3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
 		3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
@@ -289,10 +289,10 @@
 			isa = PBXGroup;
 			children = (
 				3B7A069F13FEFD2E007E8CCF /* HTNotifier.strings */,
-				3B7A06A413FEFD2E007E8CCF /* HTFunctions.h */,
-				3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */,
-				3B7A06A613FEFD2E007E8CCF /* HTNotice.h */,
-				3B7A06A713FEFD2E007E8CCF /* HTNotice.m */,
+				3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */,
+				3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */,
+				3B7A06A613FEFD2E007E8CCF /* ABNotice.h */,
+				3B7A06A713FEFD2E007E8CCF /* ABNotice.m */,
 				3B7A06A813FEFD2E007E8CCF /* HTNotifier.h */,
 				3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */,
 				3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */,
@@ -450,8 +450,8 @@
 				3B7A06BA13FEFD2E007E8CCF /* DDXMLDocument.m in Sources */,
 				3B7A06BC13FEFD2E007E8CCF /* DDXMLElement.m in Sources */,
 				3B7A06BE13FEFD2E007E8CCF /* DDXMLNode.m in Sources */,
-				3B7A06C213FEFD2E007E8CCF /* HTFunctions.m in Sources */,
-				3B7A06C413FEFD2E007E8CCF /* HTNotice.m in Sources */,
+				3B7A06C213FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
+				3B7A06C413FEFD2E007E8CCF /* ABNotice.m in Sources */,
 				3B7A06C613FEFD2E007E8CCF /* HTNotifier.m in Sources */,
 				3B7A06C813FEFD2E007E8CCF /* RegexKitLite.m in Sources */,
 			);
@@ -469,8 +469,8 @@
 				3B7A06BB13FEFD2E007E8CCF /* DDXMLDocument.m in Sources */,
 				3B7A06BD13FEFD2E007E8CCF /* DDXMLElement.m in Sources */,
 				3B7A06BF13FEFD2E007E8CCF /* DDXMLNode.m in Sources */,
-				3B7A06C313FEFD2E007E8CCF /* HTFunctions.m in Sources */,
-				3B7A06C513FEFD2E007E8CCF /* HTNotice.m in Sources */,
+				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
+				3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */,
 				3B7A06C713FEFD2E007E8CCF /* HTNotifier.m in Sources */,
 				3B7A06C913FEFD2E007E8CCF /* RegexKitLite.m in Sources */,
 			);

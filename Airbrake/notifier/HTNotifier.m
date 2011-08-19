@@ -22,11 +22,10 @@
  
  */
 
-#import <TargetConditionals.h>
+#import "ABNotice.h"
+#import "ABNotifierFunctions.h"
 
 #import "HTNotifier.h"
-#import "HTNotice.h"
-#import "HTFunctions.h"
 
 #import "GCAlertView.h"
 
@@ -408,7 +407,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	[request setHTTPMethod:@"POST"];
     
 	// get notice payload
-    HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+    ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
 #ifdef DEBUG
     ABLog(@"%@", notice);
 #endif
