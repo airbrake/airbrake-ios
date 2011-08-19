@@ -58,6 +58,18 @@ extern NSString *HTNotifierAutomaticEnvironment;
 
 /*
  
+ These notifications are designed to mirror the methods seen in 
+ HTNotifierDelegate. They allow you to be aware of key events in the notifier
+ outside of the single delegate. They will be posted on the main thread.
+ 
+ */
+extern NSString *ABNotifierWillDisplayAlertNotification;
+extern NSString *ABNotifierDidDismissAlertNotification;
+extern NSString *ABNotifierWillPostNoticesNotification;
+extern NSString *ABNotifierDidPostNoticesNotification;
+
+/*
+ 
  HTNotifier is the primary class of the notifer library
  
  start the notifier by calling `startNotifierWithAPIKey:environmentName:`
@@ -93,7 +105,6 @@ extern NSString *HTNotifierAutomaticEnvironment;
  Methods to expose some of the inner variables used by the notifier.
  
  */
-+ (void)setDelegate:(id<HTNotifierDelegate>)delegate;
 + (id<HTNotifierDelegate>)delegate;
 + (NSString *)APIKey;
 
@@ -111,6 +122,15 @@ extern NSString *HTNotifierAutomaticEnvironment;
  */
 + (void)writeTestNotice;
 
+/*
+ 
+ This family of methods modifies the custom payload sent with each notice that
+ appears in the "Environment" tab in the Airbrake web interface. These methods
+ are proxies for an instance of NSMutableDictionary and are therefore subject
+ to the same conditions. To ensure the best presentation of your data, use only
+ string key/value pairs
+ 
+ */
 + (void)setEnvironmentValue:(NSString *)value forKey:(NSString *)key;
 + (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary;
 + (NSString *)environmentValueForKey:(NSString *)key;
