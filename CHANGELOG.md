@@ -1,4 +1,6 @@
-# 3.0
+# Airbrake iOS Notifier Changelog
+
+## 3.0
 
 - all new public API
 - all new notice file format
@@ -7,15 +9,15 @@
 - added notifications that mirror delegate callbacks
 - bug fixes
 
-# 2.2.2
+## 2.2.2
 
 - fixed compile error caused by an incorrect import when building for iOS
 
-# 2.2.1
+## 2.2.1
 
 - added automatic environment name that sets its value based on the DEBUG macro
 
-# 2.2
+## 2.2
 
 - UDID is posted in all DEBUG builds by default
 - improved error handling to makre sure corrupt notices don't cause issues
