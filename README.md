@@ -32,12 +32,10 @@ Airbrake supports a version floor for reported notices. A setting called "Latest
 1. Drag the Airbrake folder to your project
     
     - Make sure "Copy Items" and "Create Groups" are selected
-    
-    - If you are already using kissxml or regexkitlite, you do not need to include them again
 
-2. Add SystemConfiguration.framework, libicucore.dylib, and libxml2.dylib to your project
+2. Add `SystemConfiguration.framework`, `libicucore.dylib`, and `libxml2.dylib` to your project
 
-3. Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings
+3. Add the path `/usr/include/libxml2` to Header Search Paths in your project's build settings
   
     - make sure you add it under "All Configurations"
 
@@ -46,9 +44,9 @@ Please remove all of the resources used by the notifier from your project before
     
 # Running The Notifier
 
-The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
+The `HTNotifier` class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the `HTNotifierDelegate` protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
 
-To run the notifier you only need to complete two steps. First, import the HTNotifier header file in your app delegate
+To run the notifier you only need to complete two steps. First, import the `HTNotifier` header file in your app delegate
 
     #import "HTNotifier.h"
     
@@ -61,16 +59,16 @@ Next, call the main notifier method at the very beginning of your `application:d
 
 The API key argument expects your Airbrake project API key. The environment name you provide will be used to categorize received crash reports in the Airbrake web interface. The notifier provides several factory environment names that you are free to use.
 
-- HTNotifierDevelopmentEnvironment
-- HTNotifierAdHocEnvironment
-- HTNotifierAppStoreEnvironment
-- HTNotifierReleaseEnvironment
+- `HTNotifierDevelopmentEnvironment`
+- `HTNotifierAdHocEnvironment`
+- `HTNotifierAppStoreEnvironment`
+- `HTNotifierReleaseEnvironment`
 
-It also provides an environment called HTNotifierAutomaticEnvironment which will set the environment to release or development depending on the presence of the DEBUG macro
+It also provides an environment called `HTNotifierAutomaticEnvironment` which will set the environment to release or development depending on the presence of the `DEBUG` macro
 
 # Environment Variables
 
-Airbrake notices support custom environment variables. To add your own values to this part of the notice, use the "environmentValue" family of methods found in HTNotifier.h
+Airbrake notices support custom environment variables. To add your own values to this part of the notice, use the "environmentValue" family of methods found in `HTNotifier.h`
 
 # Exception Logging
 
@@ -85,15 +83,15 @@ As of version 3 of the notifier, you can log your own exceptions at any time.
 
 # Debugging
 
-To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your application:didFinishLaunchingWithOptions: to test the notifier:
+To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:
 
      [HTNotifier writeTestNotice];
 
-If you use the DEBUG macro to signify development builds the notifier will log notices and errors to the console as they are encountered to help see more details
+If you use the `DEBUG` macro to signify development builds the notifier will log notices and errors to the console as they are encountered to help see more details
 
-#Implementing the HTNotifierDelegate Protocol
+#Implementing the Delegate Protocol
 
-The HTNotifierDelegate protocol allows you to respond to actions going on inside the notifier as well as provide runtime customizations. In version 3 of the notifier a matching set of notifications are posted to NSNotificationCenter. All of the delegate methods in the HTNotifierDelegate protocol are documented in the HTNotifier header file. Here are just a few of those methods:
+The `HTNotifierDelegate` protocol allows you to respond to actions going on inside the notifier as well as provide runtime customizations. In version 3 of the notifier a matching set of notifications are posted to `NSNotificationCenter`. All of the delegate methods in the `HTNotifierDelegate` protocol are documented in the `HTNotifierDelegate.h`. Here are just a few of those methods:
 
 MyAppDelegate.h
 
