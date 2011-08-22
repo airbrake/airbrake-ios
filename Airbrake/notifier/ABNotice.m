@@ -23,7 +23,6 @@
  */
 
 #import <objc/runtime.h>
-#import <TargetConditionals.h>
 
 #import "ABNotice.h"
 #import "ABNotifierFunctions.h"
