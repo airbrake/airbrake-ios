@@ -41,6 +41,10 @@ Airbrake supports a version floor for reported notices. A setting called "Latest
   
     - make sure you add it under "All Configurations"
 
+4. Check the supported localizations of your App under your project settings
+
+    - XCode will automaticly add all languages Airbreak notifier supports to the list of supported languages of your App. So you might want to delete some of them.
+
 The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library.
 
 ##Upgrading
