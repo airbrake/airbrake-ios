@@ -125,9 +125,4 @@ NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *co
 // useful defines
 #define __ABLog(fmt, args...) NSLog(@"[Airbrake] " fmt, ##args)
 #define ABLog(fmt, args...) __ABLog(fmt, ##args)
-#ifdef DEBUG
-#define ABDebugLog(fmt, args...) __ABLog(fmt, ##args)
-#else
-#define ABDebugLog(fmt, args...)
-#endif
 #define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")

@@ -28,7 +28,7 @@
 #import "HTNotice.h"
 #import "HTFunctions.h"
 
-#import "UIAlertView+Blocks.h"
+#import "GCAlertView.h"
 
 // internal
 static SCNetworkReachabilityRef __reachability = nil;
@@ -408,7 +408,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 	// get notice payload
     HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
-    ABDebugLog(@"%@", notice);
+#ifdef DEBUG
+    ABLog(@"%@", notice);
+#endif
     NSString *XMLString = [notice hoptoadXMLString];
     if (XMLString) {
         NSData *data = [XMLString dataUsingEncoding:NSUTF8StringEncoding];
@@ -422,10 +424,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	// perform request
     NSError *error = nil;
 	NSHTTPURLResponse *response = nil;
-	NSData *responseBody = [NSURLConnection
-							sendSynchronousRequest:request
-							returningResponse:&response
-							error:&error];
+    
+#ifdef DEBUG
+    NSData *responseBody = 
+#endif
+    [NSURLConnection
+     sendSynchronousRequest:request
+     returningResponse:&response
+     error:&error];
     NSInteger statusCode = [response statusCode];
 	
 	// error checking
@@ -451,7 +457,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     // invalid post
     else if (statusCode == 422) {
         ABLog(@"The posted notice payload is invalid.");
-        ABDebugLog(@"%@", XMLString);
+#ifdef DEBUG
+        ABLog(@"%@", XMLString);
+#endif
     }
     
     // unknown
@@ -551,15 +559,15 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 #if TARGET_OS_IPHONE
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:body];
-    [alert addButtonWithTitle:HTLocalizedString(@"ALWAYS_SEND") action:^{
+    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
+    [alert addButtonWithTitle:HTLocalizedString(@"ALWAYS_SEND") block:^{
         setDefaultsBlock();
         postNoticesBlock();
     }];
-    [alert addButtonWithTitle:HTLocalizedString(@"SEND") action:postNoticesBlock];
-    [alert addButtonWithTitle:HTLocalizedString(@"DONT_SEND") action:deleteNoticesBlock];
-    [alert setDidDismissAction:delegateDismissBlock];
-    [alert setWillPresentAction:delegatePresentBlock];
+    [alert addButtonWithTitle:HTLocalizedString(@"SEND") block:postNoticesBlock];
+    [alert addButtonWithTitle:HTLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
+    [alert setDidDismissBlock:delegateDismissBlock];
+    [alert setDidDismissBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
     [alert show];
     [alert release];
