@@ -27,9 +27,10 @@
 #import <unistd.h>
 #import <sys/sysctl.h>
 
-#import "HTFunctions.h"
+#import "ABNotifierFunctions.h"
+#import "ABNotice.h"
+
 #import "HTNotifier.h"
-#import "HTNotice.h"
 
 // handled signals
 int ht_signals_count = 6;
