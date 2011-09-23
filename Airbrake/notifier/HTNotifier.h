@@ -31,7 +31,7 @@
     #endif
 #elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
-    #ifndef __MAC_10_6
+    #ifndef __MAC_10_7
         #error This version of the Airbrake notifier requires Mac OS 10.6 or later
     #endif
 #else

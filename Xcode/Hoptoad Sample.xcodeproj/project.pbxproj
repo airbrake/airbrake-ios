@@ -46,8 +46,6 @@
 		3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
 		3B7A06C613FEFD2E007E8CCF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */; };
 		3B7A06C713FEFD2E007E8CCF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */; };
-		3B7A06C813FEFD2E007E8CCF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */; };
-		3B7A06C913FEFD2E007E8CCF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -107,9 +105,7 @@
 		3B7A06AC13FEFD2E007E8CCF /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AD13FEFD2E007E8CCF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AE13FEFD2E007E8CCF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HTNotifier.strings"; sourceTree = "<group>"; };
-		3B7A06B013FEFD2E007E8CCF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
-		3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
-		3B7A06CF13FEFD9B007E8CCF /* CHANGELOG.md */ = {isa = PBXFileReference; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
+		3B7A06CF13FEFD9B007E8CCF /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		3B7A06D013FEFD9B007E8CCF /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = INSTALLATION.html; path = ../INSTALLATION.html; sourceTree = "<group>"; };
 		3B7A06D113FEFD9B007E8CCF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
@@ -227,7 +223,6 @@
 				3B7A068913FEFD2E007E8CCF /* gcalertview */,
 				3B7A068E13FEFD2E007E8CCF /* kissxml */,
 				3B7A069E13FEFD2E007E8CCF /* notifier */,
-				3B7A06AF13FEFD2E007E8CCF /* regexkitlite */,
 			);
 			name = Airbrake;
 			path = ../Airbrake;
@@ -298,15 +293,6 @@
 				3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */,
 			);
 			path = notifier;
-			sourceTree = "<group>";
-		};
-		3B7A06AF13FEFD2E007E8CCF /* regexkitlite */ = {
-			isa = PBXGroup;
-			children = (
-				3B7A06B013FEFD2E007E8CCF /* RegexKitLite.h */,
-				3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */,
-			);
-			path = regexkitlite;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -453,7 +439,6 @@
 				3B7A06C213FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
 				3B7A06C413FEFD2E007E8CCF /* ABNotice.m in Sources */,
 				3B7A06C613FEFD2E007E8CCF /* HTNotifier.m in Sources */,
-				3B7A06C813FEFD2E007E8CCF /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,7 +457,6 @@
 				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
 				3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */,
 				3B7A06C713FEFD2E007E8CCF /* HTNotifier.m in Sources */,
-				3B7A06C913FEFD2E007E8CCF /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
