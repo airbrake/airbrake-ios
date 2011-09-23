@@ -31,7 +31,7 @@
 
 // internal
 static SCNetworkReachabilityRef __reachability = nil;
-static id<HTNotifierDelegate> __delegate = nil;
+static id<ABNotifierDelegate> __delegate = nil;
 static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
@@ -86,7 +86,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
-                       delegate:(id<HTNotifierDelegate>)delegate {
+                       delegate:(id<ABNotifierDelegate>)delegate {
     [self startNotifierWithAPIKey:key
                   environmentName:name
                            useSSL:useSSL
@@ -97,7 +97,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
-                       delegate:(id<HTNotifierDelegate>)delegate
+                       delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal {
     static dispatch_once_t token;
@@ -180,7 +180,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         
     });
 }
-+ (id<HTNotifierDelegate>)delegate {
++ (id<ABNotifierDelegate>)delegate {
     @synchronized(self) {
         return __delegate;
     }
@@ -220,7 +220,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                     write(fd, [data bytes], length);
                     
                     // delegate
-                    id<HTNotifierDelegate> delegate = [self delegate];
+                    id<ABNotifierDelegate> delegate = [self delegate];
                     if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
                         [delegate notifierDidLogException:exception];
                     }
@@ -355,7 +355,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // get variables
     if ([paths count] == 0) { return; }
-    id<HTNotifierDelegate> delegate = [ABNotifier delegate];
+    id<ABNotifierDelegate> delegate = [ABNotifier delegate];
     
     // notify people
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -524,7 +524,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     NSAssert([paths count], @"No paths were provided");
     
     // get delegate
-    id<HTNotifierDelegate> delegate = [self delegate];
+    id<ABNotifierDelegate> delegate = [self delegate];
     
     // alert title
     NSString *title = nil;

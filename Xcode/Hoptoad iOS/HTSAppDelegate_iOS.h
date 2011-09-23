@@ -10,7 +10,7 @@
 
 #import "ABNotifier.h"
 
-@interface HTSAppDelegate_iOS : NSObject <UIApplicationDelegate, HTNotifierDelegate> {
+@interface HTSAppDelegate_iOS : NSObject <UIApplicationDelegate, ABNotifierDelegate> {
 
 }
 

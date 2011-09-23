@@ -86,11 +86,11 @@ extern NSString *ABNotifierDidPostNoticesNotification;
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
-                       delegate:(id<HTNotifierDelegate>)delegate;
+                       delegate:(id<ABNotifierDelegate>)delegate;
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
-                       delegate:(id<HTNotifierDelegate>)delegate
+                       delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal;
 
@@ -99,7 +99,7 @@ extern NSString *ABNotifierDidPostNoticesNotification;
  Methods to expose some of the inner variables used by the notifier.
  
  */
-+ (id<HTNotifierDelegate>)delegate;
++ (id<ABNotifierDelegate>)delegate;
 + (NSString *)APIKey;
 
 /*

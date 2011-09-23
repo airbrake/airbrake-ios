@@ -10,7 +10,7 @@
 
 #import "ABNotifier.h"
 
-@interface HTSAppDelegate_Mac : NSObject <NSApplicationDelegate, HTNotifierDelegate> {
+@interface HTSAppDelegate_Mac : NSObject <NSApplicationDelegate, ABNotifierDelegate> {
 @private
     NSWindow *__window;
 }
