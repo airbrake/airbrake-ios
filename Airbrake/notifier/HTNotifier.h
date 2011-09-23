@@ -91,6 +91,12 @@ extern NSString *ABNotifierDidPostNoticesNotification;
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<HTNotifierDelegate>)delegate;
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<HTNotifierDelegate>)delegate
+        installExceptionHandler:(BOOL)exception
+           installSignalHandler:(BOOL)signal;
 
 /*
  

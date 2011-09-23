@@ -87,8 +87,21 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<HTNotifierDelegate>)delegate {
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
+    [self startNotifierWithAPIKey:key
+                  environmentName:name
+                           useSSL:useSSL
+                         delegate:delegate
+          installExceptionHandler:YES
+             installSignalHandler:YES];
+}
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<HTNotifierDelegate>)delegate
+        installExceptionHandler:(BOOL)exception
+           installSignalHandler:(BOOL)signal {
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
         
         // register defaults
 		[[NSUserDefaults standardUserDefaults] registerDefaults:
@@ -146,13 +159,15 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
               ABNotifierPlatformName(), ABNotifierPlatformNameKey,
               ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
               ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-//#if TARGET_OS_IPHONE && defined (DEBUG)
-//              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
-//#endif
               nil]];
             
             // start handlers
-            ABNotifierStartHandlers();
+            if (exception) {
+                ABNotifierStartExceptionHandler();
+            }
+            if (signal) {
+                ABNotifierStartSignalHandler();
+            }
             
             // log
             ABLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
