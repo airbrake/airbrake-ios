@@ -29,11 +29,9 @@ Airbrake supports a version floor for reported notices. A setting called "Latest
 
 # Installation
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
-2. Add `SystemConfiguration.framework`, `libicucore.dylib`, and `libxml2.dylib` to your project
+2. Add `SystemConfiguration.framework` and `libxml2.dylib` to your project
 3. Add the path `/usr/include/libxml2` to Header Search Paths in your project's build settings under "All Configurations"
-
 4. Check the supported localizations of your App under your project settings
-
     - XCode will automaticly add all languages Airbreak notifier supports to the list of supported languages of your App. So you might want to delete some of them.
 
 The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library.
@@ -51,10 +49,12 @@ To run the notifier you only need to complete two steps. First, import the `HTNo
     
 Next, call the main notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
-    [HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                        environmentName:@"<# environment name #>"
-                                 useSSL:YES // only if your account supports it
-                               delegate:self];
+```objc
+[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                    environmentName:@"<# environment name #>"
+                             useSSL:YES // only if your account supports it
+                           delegate:self];
+```
 
 The API key argument expects your Airbrake project API key. The environment name you provide will be used to categorize received crash reports in the Airbrake web interface. The notifier provides several factory environment names that you are free to use.
 
