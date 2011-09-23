@@ -100,7 +100,7 @@
 		3B7A06A713FEFD2E007E8CCF /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
 		3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABNotifier.h; sourceTree = "<group>"; };
 		3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifier.m; sourceTree = "<group>"; };
-		3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
+		3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
 		3B7A06AB13FEFD2E007E8CCF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AC13FEFD2E007E8CCF /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AD13FEFD2E007E8CCF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
@@ -290,7 +290,7 @@
 				3B7A06A713FEFD2E007E8CCF /* ABNotice.m */,
 				3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */,
 				3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */,
-				3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */,
+				3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */,
 			);
 			path = notifier;
 			sourceTree = "<group>";

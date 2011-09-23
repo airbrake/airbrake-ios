@@ -208,7 +208,7 @@ int ABNotifierExceptionNoticeType   = 2;
     DDXMLElement *notifier = [DDXMLElement elementWithName:@"notifier"];
     [notifier addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
     [notifier addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
-	[notifier addChild:[DDXMLElement elementWithName:@"version" stringValue:HTNotifierVersion]];
+	[notifier addChild:[DDXMLElement elementWithName:@"version" stringValue:ABNotifierVersion]];
 	[notice addChild:notifier];
     
 	// set error information

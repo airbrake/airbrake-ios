@@ -38,10 +38,10 @@
     #error [Airbrake] unsupported platform
 #endif
 
-#import "HTNotifierDelegate.h"
+#import "ABNotifierDelegate.h"
 
 // notifier version
-extern NSString *HTNotifierVersion;
+extern NSString *ABNotifierVersion;
 
 /*
  
@@ -50,11 +50,11 @@ extern NSString *HTNotifierVersion;
  presence of the DEBUG flag.
  
  */
-extern NSString *HTNotifierDevelopmentEnvironment;
-extern NSString *HTNotifierAdHocEnvironment;
-extern NSString *HTNotifierAppStoreEnvironment;
-extern NSString *HTNotifierReleaseEnvironment;
-extern NSString *HTNotifierAutomaticEnvironment;
+extern NSString *ABNotifierDevelopmentEnvironment;
+extern NSString *ABNotifierAdHocEnvironment;
+extern NSString *ABNotifierAppStoreEnvironment;
+extern NSString *ABNotifierReleaseEnvironment;
+extern NSString *ABNotifierAutomaticEnvironment;
 
 /*
  

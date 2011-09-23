@@ -43,15 +43,15 @@ NSString *ABNotifierWillDisplayAlertNotification    = @"ABNotifierWillDisplayAle
 NSString *ABNotifierDidDismissAlertNotification     = @"ABNotifierDidDismissAlert";
 NSString *ABNotifierWillPostNoticesNotification     = @"ABNotifierWillPostNotices";
 NSString *ABNotifierDidPostNoticesNotification      = @"ABNotifierDidPostNotices";
-NSString *HTNotifierVersion                         = @"3.0 beta";
-NSString *HTNotifierDevelopmentEnvironment          = @"Development";
-NSString *HTNotifierAdHocEnvironment                = @"Ad Hoc";
-NSString *HTNotifierAppStoreEnvironment             = @"App Store";
-NSString *HTNotifierReleaseEnvironment              = @"Release";
+NSString *ABNotifierVersion                         = @"3.0 beta";
+NSString *ABNotifierDevelopmentEnvironment          = @"Development";
+NSString *ABNotifierAdHocEnvironment                = @"Ad Hoc";
+NSString *ABNotifierAppStoreEnvironment             = @"App Store";
+NSString *ABNotifierReleaseEnvironment              = @"Release";
 #ifdef DEBUG
-NSString *HTNotifierAutomaticEnvironment            = @"Development";
+NSString *ABNotifierAutomaticEnvironment            = @"Development";
 #else
-NSString *HTNotifierAutomaticEnvironment            = @"Release";
+NSString *ABNotifierAutomaticEnvironment            = @"Release";
 #endif
 
 // reachability callback
@@ -170,7 +170,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             }
             
             // log
-            ABLog(@"Notifier %@ ready to catch errors", HTNotifierVersion);
+            ABLog(@"Notifier %@ ready to catch errors", ABNotifierVersion);
             ABLog(@"Environment \"%@\"", name);
             
         }
@@ -259,13 +259,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (void)setEnvironmentValue:(NSString *)value forKey:(NSString *)key {
     @synchronized(self) {
         [__userData setObject:value forKey:key];
-        [HTNotifier cacheUserDataDictionary];
+        [ABNotifier cacheUserDataDictionary];
     }
 }
 + (void)addEnvironmentEntriesFromDictionary:(NSDictionary *)dictionary {
     @synchronized(self) {
         [__userData addEntriesFromDictionary:dictionary];
-        [HTNotifier cacheUserDataDictionary];
+        [ABNotifier cacheUserDataDictionary];
     }
 }
 + (NSString *)environmentValueForKey:(NSString *)key {
@@ -276,13 +276,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (void)removeEnvironmentValueForKey:(NSString *)key {
     @synchronized(self) {
         [__userData removeObjectForKey:key];
-        [HTNotifier cacheUserDataDictionary];
+        [ABNotifier cacheUserDataDictionary];
     }
 }
 + (void)removeEnvironmentValuesForKeys:(NSArray *)keys {
     @synchronized(self) {
         [__userData removeObjectsForKeys:keys];
-        [HTNotifier cacheUserDataDictionary];
+        [ABNotifier cacheUserDataDictionary];
     }
 }
 
