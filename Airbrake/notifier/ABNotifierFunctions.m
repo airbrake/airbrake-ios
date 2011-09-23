@@ -78,7 +78,8 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
     
 }
 void ht_handle_exception(NSException *exception) {
-    ABNotifierStopHandlers();
+    ABNotifierStopSignalHandler();
+    ABNotifierStopExceptionHandler();
     [HTNotifier logException:exception];
 }
 
@@ -106,8 +107,10 @@ int ABNotifierOpenNewNoticeFile(const char *path, int type) {
 }
 
 #pragma mark - modify handler state
-void ABNotifierStartHandlers(void) {
+void ABNotifierStartExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(&ht_handle_exception);
+}
+void ABNotifierStartSignalHandler(void) {
     for (int i = 0; i < ht_signals_count; i++) {
 		int signal = ht_signals[i];
 		struct sigaction action;
@@ -118,10 +121,6 @@ void ABNotifierStartHandlers(void) {
             ABLog(@"unable to register signal handler for %s", strsignal(signal));
 		}
 	}
-}
-void ABNotifierStopHandlers(void) {
-    ABNotifierStopExceptionHandler();
-    ABNotifierStopSignalHandler();
 }
 void ABNotifierStopExceptionHandler(void) {
     NSSetUncaughtExceptionHandler(NULL);

@@ -38,10 +38,10 @@
 int ABNotifierOpenNewNoticeFile(const char *path, int type);
 
 // start handlers
-void ABNotifierStartHandlers(void);
+void ABNotifierStartExceptionHandler(void);
+void ABNotifierStartSignalHandler(void);
 
 // stop handlers
-void ABNotifierStopHandlers(void);
 void ABNotifierStopExceptionHandler(void);
 void ABNotifierStopSignalHandler(void);
 
