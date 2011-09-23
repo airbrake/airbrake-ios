@@ -22,11 +22,10 @@
  
  */
 
-#import <TargetConditionals.h>
+#import "ABNotice.h"
+#import "ABNotifierFunctions.h"
 
 #import "HTNotifier.h"
-#import "HTNotice.h"
-#import "HTFunctions.h"
 
 #import "GCAlertView.h"
 
@@ -38,17 +37,21 @@ static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 
 // constant strings
-static NSString *ABNotifierHostName         = @"airbrakeapp.com";
-static NSString *ABNotifierAlwaysSendKey    = @"AlwaysSendCrashReports";
-NSString *HTNotifierVersion                 = @"3.0 beta";
-NSString *HTNotifierDevelopmentEnvironment  = @"Development";
-NSString *HTNotifierAdHocEnvironment        = @"Ad Hoc";
-NSString *HTNotifierAppStoreEnvironment     = @"App Store";
-NSString *HTNotifierReleaseEnvironment      = @"Release";
+static NSString *ABNotifierHostName                 = @"airbrakeapp.com";
+static NSString *ABNotifierAlwaysSendKey            = @"AlwaysSendCrashReports";
+NSString *ABNotifierWillDisplayAlertNotification    = @"ABNotifierWillDisplayAlert";
+NSString *ABNotifierDidDismissAlertNotification     = @"ABNotifierDidDismissAlert";
+NSString *ABNotifierWillPostNoticesNotification     = @"ABNotifierWillPostNotices";
+NSString *ABNotifierDidPostNoticesNotification      = @"ABNotifierDidPostNotices";
+NSString *HTNotifierVersion                         = @"3.0 beta";
+NSString *HTNotifierDevelopmentEnvironment          = @"Development";
+NSString *HTNotifierAdHocEnvironment                = @"Ad Hoc";
+NSString *HTNotifierAppStoreEnvironment             = @"App Store";
+NSString *HTNotifierReleaseEnvironment              = @"Release";
 #ifdef DEBUG
-NSString *HTNotifierAutomaticEnvironment    = @"Development";
+NSString *HTNotifierAutomaticEnvironment            = @"Development";
 #else
-NSString *HTNotifierAutomaticEnvironment    = @"Release";
+NSString *HTNotifierAutomaticEnvironment            = @"Release";
 #endif
 
 // reachability callback
@@ -93,7 +96,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         
         // capture vars
         __userData = [[NSMutableDictionary alloc] init];
-        [self setDelegate:delegate];
+        __delegate = delegate;
         __useSSL = useSSL;
         
         // switch on api key
@@ -143,9 +146,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
               ABNotifierPlatformName(), ABNotifierPlatformNameKey,
               ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
               ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-#if TARGET_OS_IPHONE && defined (DEBUG)
-              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
-#endif
+//#if TARGET_OS_IPHONE && defined (DEBUG)
+//              [[UIDevice currentDevice] uniqueIdentifier], @"UDID",
+//#endif
               nil]];
             
             // start handlers
@@ -161,11 +164,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         }
         
     });
-}
-+ (void)setDelegate:(id<HTNotifierDelegate>)delegate {
-    @synchronized(self) {
-        __delegate = delegate;
-    }
 }
 + (id<HTNotifierDelegate>)delegate {
     @synchronized(self) {
@@ -344,12 +342,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     if ([paths count] == 0) { return; }
     id<HTNotifierDelegate> delegate = [HTNotifier delegate];
     
-    // notify delegate
-    if ([delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
+    // notify people
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        if ([delegate respondsToSelector:@selector(notifierWillPostNotices)]) {
             [delegate notifierWillPostNotices];
-        });
-    }
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABNotifierWillPostNoticesNotification object:self];
+    });
     
     // create url
     NSString *URLString = [NSString stringWithFormat:
@@ -387,12 +386,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 #endif
     
-    // notify delegate
-    if ([delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [delegate notifierDidPostNotices]; 
-        });
-    }
+    // notify people
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        if ([delegate respondsToSelector:@selector(notifierDidPostNotices)]) {
+            [delegate notifierDidPostNotices];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABNotifierDidPostNoticesNotification object:self];
+    });
 	
 }
 + (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
@@ -407,7 +407,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	[request setHTTPMethod:@"POST"];
     
 	// get notice payload
-    HTNotice *notice = [HTNotice noticeWithContentsOfFile:path];
+    ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
 #ifdef DEBUG
     ABLog(@"%@", notice);
 #endif
@@ -534,11 +534,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         if ([delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
             [delegate notifierDidDismissAlert];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABNotifierDidDismissAlertNotification object:self];
     };
     void (^delegatePresentBlock) () = ^{
         if ([delegate respondsToSelector:@selector(notifierWillDisplayAlert)]) {
             [delegate notifierWillDisplayAlert];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABNotifierWillDisplayAlertNotification object:self];
     };
     void (^postNoticesBlock) () = ^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

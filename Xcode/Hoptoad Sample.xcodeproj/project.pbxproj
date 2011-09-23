@@ -26,8 +26,6 @@
 		3B2E0BD4137A1718009B558C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0BD3137A1718009B558C /* libxml2.dylib */; };
 		3B2E0C50137B3697009B558C /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0C4F137B3697009B558C /* libicucore.dylib */; };
 		3B2E0C52137B36A4009B558C /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0C51137B36A4009B558C /* libicucore.dylib */; };
-		3B7A06B213FEFD2E007E8CCF /* GCActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068B13FEFD2E007E8CCF /* GCActionSheet.m */; };
-		3B7A06B313FEFD2E007E8CCF /* GCActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068B13FEFD2E007E8CCF /* GCActionSheet.m */; };
 		3B7A06B413FEFD2E007E8CCF /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
 		3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
 		3B7A06B613FEFD2E007E8CCF /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A069113FEFD2E007E8CCF /* DDXMLElementAdditions.m */; };
@@ -42,14 +40,12 @@
 		3B7A06BF13FEFD2E007E8CCF /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A069B13FEFD2E007E8CCF /* DDXMLNode.m */; };
 		3B7A06C013FEFD2E007E8CCF /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A069F13FEFD2E007E8CCF /* HTNotifier.strings */; };
 		3B7A06C113FEFD2E007E8CCF /* HTNotifier.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A069F13FEFD2E007E8CCF /* HTNotifier.strings */; };
-		3B7A06C213FEFD2E007E8CCF /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */; };
-		3B7A06C313FEFD2E007E8CCF /* HTFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */; };
-		3B7A06C413FEFD2E007E8CCF /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* HTNotice.m */; };
-		3B7A06C513FEFD2E007E8CCF /* HTNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* HTNotice.m */; };
+		3B7A06C213FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
+		3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
+		3B7A06C413FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
+		3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
 		3B7A06C613FEFD2E007E8CCF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */; };
 		3B7A06C713FEFD2E007E8CCF /* HTNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */; };
-		3B7A06C813FEFD2E007E8CCF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */; };
-		3B7A06C913FEFD2E007E8CCF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,8 +76,6 @@
 		3B2E0BD3137A1718009B558C /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
 		3B2E0C4F137B3697009B558C /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = SDKs/MacOSX10.6.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
 		3B2E0C51137B36A4009B558C /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
-		3B7A068A13FEFD2E007E8CCF /* GCActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCActionSheet.h; sourceTree = "<group>"; };
-		3B7A068B13FEFD2E007E8CCF /* GCActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCActionSheet.m; sourceTree = "<group>"; };
 		3B7A068C13FEFD2E007E8CCF /* GCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAlertView.h; sourceTree = "<group>"; };
 		3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAlertView.m; sourceTree = "<group>"; };
 		3B7A069013FEFD2E007E8CCF /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
@@ -100,10 +94,10 @@
 		3B7A06A113FEFD2E007E8CCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06A213FEFD2E007E8CCF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06A313FEFD2E007E8CCF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		3B7A06A413FEFD2E007E8CCF /* HTFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTFunctions.h; sourceTree = "<group>"; };
-		3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTFunctions.m; sourceTree = "<group>"; };
-		3B7A06A613FEFD2E007E8CCF /* HTNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotice.h; sourceTree = "<group>"; };
-		3B7A06A713FEFD2E007E8CCF /* HTNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotice.m; sourceTree = "<group>"; };
+		3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
+		3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
+		3B7A06A613FEFD2E007E8CCF /* ABNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotice.h; sourceTree = "<group>"; };
+		3B7A06A713FEFD2E007E8CCF /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
 		3B7A06A813FEFD2E007E8CCF /* HTNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifier.h; sourceTree = "<group>"; };
 		3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTNotifier.m; sourceTree = "<group>"; };
 		3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTNotifierDelegate.h; sourceTree = "<group>"; };
@@ -111,11 +105,9 @@
 		3B7A06AC13FEFD2E007E8CCF /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AD13FEFD2E007E8CCF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AE13FEFD2E007E8CCF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HTNotifier.strings"; sourceTree = "<group>"; };
-		3B7A06B013FEFD2E007E8CCF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
-		3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		3B7A06CF13FEFD9B007E8CCF /* CHANGELOG */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG; path = ../CHANGELOG; sourceTree = "<group>"; };
 		3B7A06D013FEFD9B007E8CCF /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = INSTALLATION.html; path = ../INSTALLATION.html; sourceTree = "<group>"; };
-		3B7A06D113FEFD9B007E8CCF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		3B7A06D113FEFD9B007E8CCF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,7 +141,7 @@
 		3B2E0B18137A11B1009B558C = {
 			isa = PBXGroup;
 			children = (
-				3B7A06CF13FEFD9B007E8CCF /* CHANGELOG */,
+				3B7A06CF13FEFD9B007E8CCF /* CHANGELOG.md */,
 				3B7A06D013FEFD9B007E8CCF /* INSTALLATION.html */,
 				3B7A06D113FEFD9B007E8CCF /* README.md */,
 				3B7A068813FEFD2E007E8CCF /* Airbrake */,
@@ -231,7 +223,6 @@
 				3B7A068913FEFD2E007E8CCF /* gcalertview */,
 				3B7A068E13FEFD2E007E8CCF /* kissxml */,
 				3B7A069E13FEFD2E007E8CCF /* notifier */,
-				3B7A06AF13FEFD2E007E8CCF /* regexkitlite */,
 			);
 			name = Airbrake;
 			path = ../Airbrake;
@@ -240,8 +231,6 @@
 		3B7A068913FEFD2E007E8CCF /* gcalertview */ = {
 			isa = PBXGroup;
 			children = (
-				3B7A068A13FEFD2E007E8CCF /* GCActionSheet.h */,
-				3B7A068B13FEFD2E007E8CCF /* GCActionSheet.m */,
 				3B7A068C13FEFD2E007E8CCF /* GCAlertView.h */,
 				3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */,
 			);
@@ -295,24 +284,15 @@
 			isa = PBXGroup;
 			children = (
 				3B7A069F13FEFD2E007E8CCF /* HTNotifier.strings */,
-				3B7A06A413FEFD2E007E8CCF /* HTFunctions.h */,
-				3B7A06A513FEFD2E007E8CCF /* HTFunctions.m */,
-				3B7A06A613FEFD2E007E8CCF /* HTNotice.h */,
-				3B7A06A713FEFD2E007E8CCF /* HTNotice.m */,
+				3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */,
+				3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */,
+				3B7A06A613FEFD2E007E8CCF /* ABNotice.h */,
+				3B7A06A713FEFD2E007E8CCF /* ABNotice.m */,
 				3B7A06A813FEFD2E007E8CCF /* HTNotifier.h */,
 				3B7A06A913FEFD2E007E8CCF /* HTNotifier.m */,
 				3B7A06AA13FEFD2E007E8CCF /* HTNotifierDelegate.h */,
 			);
 			path = notifier;
-			sourceTree = "<group>";
-		};
-		3B7A06AF13FEFD2E007E8CCF /* regexkitlite */ = {
-			isa = PBXGroup;
-			children = (
-				3B7A06B013FEFD2E007E8CCF /* RegexKitLite.h */,
-				3B7A06B113FEFD2E007E8CCF /* RegexKitLite.m */,
-			);
-			path = regexkitlite;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -450,17 +430,15 @@
 			files = (
 				3B2E0B55137A11E1009B558C /* main.m in Sources */,
 				3B2E0B5B137A11E1009B558C /* HTSAppDelegate_Mac.m in Sources */,
-				3B7A06B213FEFD2E007E8CCF /* GCActionSheet.m in Sources */,
 				3B7A06B413FEFD2E007E8CCF /* GCAlertView.m in Sources */,
 				3B7A06B613FEFD2E007E8CCF /* DDXMLElementAdditions.m in Sources */,
 				3B7A06B813FEFD2E007E8CCF /* NSString+DDXML.m in Sources */,
 				3B7A06BA13FEFD2E007E8CCF /* DDXMLDocument.m in Sources */,
 				3B7A06BC13FEFD2E007E8CCF /* DDXMLElement.m in Sources */,
 				3B7A06BE13FEFD2E007E8CCF /* DDXMLNode.m in Sources */,
-				3B7A06C213FEFD2E007E8CCF /* HTFunctions.m in Sources */,
-				3B7A06C413FEFD2E007E8CCF /* HTNotice.m in Sources */,
+				3B7A06C213FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
+				3B7A06C413FEFD2E007E8CCF /* ABNotice.m in Sources */,
 				3B7A06C613FEFD2E007E8CCF /* HTNotifier.m in Sources */,
-				3B7A06C813FEFD2E007E8CCF /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,17 +448,15 @@
 			files = (
 				3B2E0B73137A11F9009B558C /* main.m in Sources */,
 				3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */,
-				3B7A06B313FEFD2E007E8CCF /* GCActionSheet.m in Sources */,
 				3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */,
 				3B7A06B713FEFD2E007E8CCF /* DDXMLElementAdditions.m in Sources */,
 				3B7A06B913FEFD2E007E8CCF /* NSString+DDXML.m in Sources */,
 				3B7A06BB13FEFD2E007E8CCF /* DDXMLDocument.m in Sources */,
 				3B7A06BD13FEFD2E007E8CCF /* DDXMLElement.m in Sources */,
 				3B7A06BF13FEFD2E007E8CCF /* DDXMLNode.m in Sources */,
-				3B7A06C313FEFD2E007E8CCF /* HTFunctions.m in Sources */,
-				3B7A06C513FEFD2E007E8CCF /* HTNotice.m in Sources */,
+				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
+				3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */,
 				3B7A06C713FEFD2E007E8CCF /* HTNotifier.m in Sources */,
-				3B7A06C913FEFD2E007E8CCF /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

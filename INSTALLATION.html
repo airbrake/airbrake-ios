@@ -4,10 +4,9 @@
   <ol>
     <li>Download the notifier from <a href="Github">https://github.com/guicocoa/hoptoad-ios</a>.</li>
     <li>
-      Drag the hoptoadnotifier, kissxml, and regexkitlite folders to your project
+      Drag the Airbrake folder to your project
       <ul>
         <li>Make sure "Copy Items" and "Create Groups" are selected</li>
-        <li>If you are already using kissxml or regexkitlite, you don't need to include them again</li>
       </ul>
     </li>
     <li>Add SystemConfiguration.framework, libicucore.dylib, and libxml2.dylib to your project</li>
@@ -24,12 +23,14 @@
   <pre>#import "HTNotifier.h"</pre>
   <p>Call the main notifier method at the very beginning of your <code>application:didFinishLaunchingWithOptions:</code></p>
   <pre>
-[HTNotifier startNotifierWithAPIKey:(API KEY)
-                    environmentName:HTNotifierDevelopmentEnvironment];
+[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
+                    environmentName:@"<# environment name #>"
+                             useSSL:YES
+                           delegate:self];
   </pre>
 
   <h3>Testing</h3>
   <p>To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:</p>
-  <pre>[[HTNotifier sharedNotifier] writeTestNotice];</pre>
+  <pre>[HTNotifier writeTestNotice];</pre>
   
 </div>
