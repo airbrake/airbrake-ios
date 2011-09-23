@@ -75,11 +75,7 @@ extern NSString *ABNotifierDidPostNoticesNotification;
  calling `startNotifierWithAPIKey:environmentName:`.
  
  */
-@interface HTNotifier : NSObject
-#if TARGET_OS_IPHONE
-<UIAlertViewDelegate>
-#endif
-{}
+@interface ABNotifier : NSObject
 
 /*
  

@@ -16,18 +16,18 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     // setup notifier
-    [HTNotifier startNotifierWithAPIKey:@""
+    [ABNotifier startNotifierWithAPIKey:@""
                         environmentName:HTNotifierAutomaticEnvironment
                                  useSSL:YES // only if your account supports it
                                delegate:self];
-    [HTNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
+    [ABNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
     
     // test notice on main thread
-    [HTNotifier writeTestNotice];
+    [ABNotifier writeTestNotice];
     
     // test notice on another thread
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [HTNotifier writeTestNotice];
+        [ABNotifier writeTestNotice];
     });
     
 }

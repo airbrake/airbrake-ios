@@ -25,7 +25,7 @@
 #import "ABNotice.h"
 #import "ABNotifierFunctions.h"
 
-#import "HTNotifier.h"
+#import "ABNotifier.h"
 
 #import "GCAlertView.h"
 
@@ -58,29 +58,29 @@ NSString *HTNotifierAutomaticEnvironment            = @"Release";
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 #pragma mark - file path utilities
-@interface HTNotifier (FilePathMethods)
+@interface ABNotifier (FilePathMethods)
 + (NSString *)pathForNoticesDirectory;
 + (NSString *)pathForNewNoticeWithName:(NSString *)name;
 + (NSArray *)pathsForAllNotices;
 @end
 
 #pragma mark - post notice utilities
-@interface HTNotifier (PostNoticeMethods)
+@interface ABNotifier (PostNoticeMethods)
 + (void)postNoticesWithPaths:(NSArray *)paths;
 + (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL;
 @end
 
 #pragma mark - cache values
-@interface HTNotifier (CacheMethods)
+@interface ABNotifier (CacheMethods)
 + (void)cacheUserDataDictionary;
 @end
 
 #pragma mark - ui methods
-@interface HTNotifier (UserInterfaceMethods)
+@interface ABNotifier (UserInterfaceMethods)
 + (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths;
 @end
 
-@implementation HTNotifier
+@implementation ABNotifier
 
 #pragma mark - class methods
 + (void)startNotifierWithAPIKey:(NSString *)key
@@ -134,7 +134,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // cache signal notice file path
             NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
-            const char *filePath = [[HTNotifier pathForNewNoticeWithName:fileName] UTF8String];
+            const char *filePath = [[ABNotifier pathForNewNoticeWithName:fileName] UTF8String];
             length = (strlen(filePath) + 1);
             ab_signal_info.notice_path = malloc(length);
             memcpy((void *)ab_signal_info.notice_path, filePath, length);
@@ -289,7 +289,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @end
 
 #pragma mark - file path utilities
-@implementation HTNotifier (FilePathMethods)
+@implementation ABNotifier (FilePathMethods)
 + (NSString *)pathForNoticesDirectory {
     static NSString *path = nil;
     static dispatch_once_t token;
@@ -346,7 +346,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @end
 
 #pragma mark - poast notice utilities
-@implementation HTNotifier (PostNoticeMethods)
+@implementation ABNotifier (PostNoticeMethods)
 + (void)postNoticesWithPaths:(NSArray *)paths {
     
     // assert
@@ -355,7 +355,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // get variables
     if ([paths count] == 0) { return; }
-    id<HTNotifierDelegate> delegate = [HTNotifier delegate];
+    id<HTNotifierDelegate> delegate = [ABNotifier delegate];
     
     // notify people
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -493,7 +493,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @end
 
 #pragma mark - cache values
-@implementation HTNotifier (CacheMethods)
+@implementation ABNotifier (CacheMethods)
 + (void)cacheUserDataDictionary {
     @synchronized(self) {
         
@@ -516,7 +516,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @end
 
 #pragma mark - ui methods
-@implementation HTNotifier (UserInterfaceMethods)
+@implementation ABNotifier (UserInterfaceMethods)
 + (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths {
     
     // assert
@@ -632,14 +632,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         static dispatch_once_t predicate;
         dispatch_once(&predicate, ^{
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSArray *paths = [HTNotifier pathsForAllNotices];
+                NSArray *paths = [ABNotifier pathsForAllNotices];
                 if ([paths count]) {
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
-                        [HTNotifier postNoticesWithPaths:paths];
+                        [ABNotifier postNoticesWithPaths:paths];
                     }
                     else {
                         dispatch_sync(dispatch_get_main_queue(), ^{
-                            [HTNotifier showNoticeAlertForNoticesWithPaths:paths];
+                            [ABNotifier showNoticeAlertForNoticesWithPaths:paths];
                         });
                     }
                 }

@@ -27,7 +27,7 @@
 #import "ABNotice.h"
 #import "ABNotifierFunctions.h"
 
-#import "HTNotifier.h"
+#import "ABNotifier.h"
 
 #import "DDXML.h"
 
@@ -200,7 +200,7 @@ int ABNotifierExceptionNoticeType   = 2;
     [notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.1"]];
     
     // set api key
-    NSString *APIKey = [HTNotifier APIKey];
+    NSString *APIKey = [ABNotifier APIKey];
     if (APIKey == nil) { APIKey = @""; }
     [notice addChild:[DDXMLElement elementWithName:@"api-key" stringValue:APIKey]];
     

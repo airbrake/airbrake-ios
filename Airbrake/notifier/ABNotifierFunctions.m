@@ -30,7 +30,7 @@
 #import "ABNotifierFunctions.h"
 #import "ABNotice.h"
 
-#import "HTNotifier.h"
+#import "ABNotifier.h"
 
 // handled signals
 int ht_signals_count = 6;
@@ -80,7 +80,7 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 void ht_handle_exception(NSException *exception) {
     ABNotifierStopSignalHandler();
     ABNotifierStopExceptionHandler();
-    [HTNotifier logException:exception];
+    [ABNotifier logException:exception];
 }
 
 #pragma mark - notice file methods

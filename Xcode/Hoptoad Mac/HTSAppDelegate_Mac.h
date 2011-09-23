@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "HTNotifier.h"
+#import "ABNotifier.h"
 
 @interface HTSAppDelegate_Mac : NSObject <NSApplicationDelegate, HTNotifierDelegate> {
 @private

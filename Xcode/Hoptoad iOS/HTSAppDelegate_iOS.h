@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HTNotifier.h"
+#import "ABNotifier.h"
 
 @interface HTSAppDelegate_iOS : NSObject <UIApplicationDelegate, HTNotifierDelegate> {
 
