@@ -7,6 +7,7 @@
 - new method to log your own exceptions
 - use asynch reachability events
 - add notifications that mirror delegate callbacks
+- UDID is no longer automatically transmitted because it is [deprecated](http://blog.guicocoa.com/post/9137000491/what-apple-should-have-done-with-udid)
 - bug fixes
 
 ## 2.2.2
