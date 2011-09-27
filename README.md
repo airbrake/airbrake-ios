@@ -4,7 +4,7 @@ The Airbrake iOS Notifier is designed to give developers instant notification of
 
 To see how this might help you check out [this screencast](http://guicocoa.com/hoptoad#screencast). If you have questions or need support please visit [Airbrake support](http://help.airbrakeapp.com/discussions/ios-notifier)
 
-#Signals
+# Signals
 
 The notifier handles all unhandled exceptions, and a select list of Unix signals:
 
@@ -31,54 +31,57 @@ Airbrake supports a version floor for reported notices. A setting called "Latest
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
 2. Add `SystemConfiguration.framework` and `libxml2.dylib` to your project
 3. Add the path `/usr/include/libxml2` to Header Search Paths in your project's build settings under "All Configurations"
-4. Check the supported localizations of your App under your project settings
-    - XCode will automaticly add all languages Airbreak notifier supports to the list of supported languages of your App. So you might want to delete some of them.
-
-The HTNotifier class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the HTNotifierDelegate protocol are documented in their headers. Please read through the header files for a complete reference of the library.
+4. Check the supported localizations of your app under your project settings. Xcode will automatically add all languages that the Airbrake notifier supports to the list of supported languages of your app. So you might want to delete some of them.
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist
     
 # Running The Notifier
 
-The `HTNotifier` class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the `HTNotifierDelegate` protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
+The `ABNotifier` class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the `ABNotifierDelegate` protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
 
 To run the notifier you only need to complete two steps. First, import the `HTNotifier` header file in your app delegate
 
-    #import "HTNotifier.h"
+````objc
+#import "HTNotifier.h"
+````
     
-Next, call the main notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
+Next, call the start notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
-```objc
-[HTNotifier startNotifierWithAPIKey:@"<# api key #>"
-                    environmentName:@"<# environment name #>"
+````objective-c
+[HTNotifier startNotifierWithAPIKey:@"key"
+                    environmentName:HTNotifierAutomaticEnvironment
                              useSSL:YES // only if your account supports it
                            delegate:self];
-```
+````
 
 The API key argument expects your Airbrake project API key. The environment name you provide will be used to categorize received crash reports in the Airbrake web interface. The notifier provides several factory environment names that you are free to use.
 
-- `HTNotifierDevelopmentEnvironment`
-- `HTNotifierAdHocEnvironment`
-- `HTNotifierAppStoreEnvironment`
-- `HTNotifierReleaseEnvironment`
+````objective-c
+extern NSString *ABNotifierDevelopmentEnvironment;
+extern NSString *ABNotifierAdHocEnvironment;
+extern NSString *ABNotifierAppStoreEnvironment;
+extern NSString *ABNotifierReleaseEnvironment;
+````
 
-It also provides an environment called `HTNotifierAutomaticEnvironment` which will set the environment to release or development depending on the presence of the `DEBUG` macro
+It also provides an environment called `ABNotifierAutomaticEnvironment` which will set the environment to release or development depending on the presence of the `DEBUG` macro
 
 # Environment Variables
 
-Airbrake notices support custom environment variables. To add your own values to this part of the notice, use the "environmentValue" family of methods found in `HTNotifier.h`
+Airbrake notices support custom environment variables. To add your own values to this part of the notice, use the "environmentValue" family of methods found in `ABNotifier.h`
 
 # Exception Logging
 
 As of version 3 of the notifier, you can log your own exceptions at any time.
 
-    @try {
-        // something dangerous
-    }
-    @catch (NSException *e) {
-        [HTNotifier logException:e];
-    }
+````objective-c
+@try {
+    // something dangerous
+}
+@catch (NSException *e) {
+    [ABNotifier logException:e];
+}
+````
 
 # Debugging
 
@@ -94,42 +97,46 @@ The `HTNotifierDelegate` protocol allows you to respond to actions going on insi
 
 MyAppDelegate.h
 
-    #import HTNotifier.h
-    
-    @interface MyAppDelegate : NSObject <UIApplicationDelegate, HTNotifierDelegate> {
-      // your ivars
-    }
-    
-    // your properties and methods
-    
-    @end  
+````objective-c
+#import HTNotifier.h
+
+@interface MyAppDelegate : NSObject <UIApplicationDelegate, HTNotifierDelegate> {
+  // your ivars
+}
+
+// your properties and methods
+
+@end
+````
 
 MyAppDelegate.m
 
-    @implementation MyAppDelegate
-      
-      // your other methods
-      
-      #pragma mark - HTNotifierDelegate
-      /*
-        These are only a few of the delegate methods you can implement
-        The rest are documented in HTNotifierDelegate.h
-        All of the delegate methods are optional
-      */
-      - (void)notifierWillDisplayAlert {
-        [gameController pause];
-      }
-      - (void)notifierDidDismissAlert {
-        [gameController resume];
-      }
-      - (NSString *)titleForNoticeAlert {
-        return @"Oh Noes!";
-      }
-      - (NSString *)bodyForNoticeAlert {
-        return @"MyApp has detected unreported crashes, would you like to send a report to the developer?";
-      }
-      
-    @end
+````objective-c
+@implementation MyAppDelegate
+  
+  // your other methods
+  
+  #pragma mark - HTNotifierDelegate
+  /*
+    These are only a few of the delegate methods you can implement
+    The rest are documented in HTNotifierDelegate.h
+    All of the delegate methods are optional
+  */
+  - (void)notifierWillDisplayAlert {
+    [gameController pause];
+  }
+  - (void)notifierDidDismissAlert {
+    [gameController resume];
+  }
+  - (NSString *)titleForNoticeAlert {
+    return @"Oh Noes!";
+  }
+  - (NSString *)bodyForNoticeAlert {
+    return @"MyApp has detected unreported crashes, would you like to send a report to the developer?";
+  }
+  
+@end
+````
 
 #Contributors
 
