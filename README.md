@@ -99,11 +99,9 @@ The `ABNotifierDelegate` protocol allows you to respond to actions going on insi
 **MyAppDelegate.h**
 
 ````objective-c
-#import HTNotifier.h
+#import ABNotifier.h
 
-@interface MyAppDelegate : NSObject <UIApplicationDelegate, HTNotifierDelegate> {
-  // your ivars
-}
+@interface MyAppDelegate : NSObject <UIApplicationDelegate, ABNotifierDelegate>
 
 // your properties and methods
 
@@ -115,26 +113,26 @@ The `ABNotifierDelegate` protocol allows you to respond to actions going on insi
 ````objective-c
 @implementation MyAppDelegate
   
-  // your other methods
+// your other methods
 
 #pragma mark - HTNotifierDelegate
-  /*
-    These are only a few of the delegate methods you can implement.
-    The rest are documented in ABNotifierDelegate.h. All of the
-    delegate methods are optional.
-  */
-  - (void)notifierWillDisplayAlert {
-    [gameController pause];
-  }
-  - (void)notifierDidDismissAlert {
-    [gameController resume];
-  }
-  - (NSString *)titleForNoticeAlert {
-    return @"Oh Noes!";
-  }
-  - (NSString *)bodyForNoticeAlert {
-    return @"MyApp has detected unreported crashes, would you like to send a report to the developer?";
-  }
+/*
+  These are only a few of the delegate methods you can implement.
+  The rest are documented in ABNotifierDelegate.h. All of the
+  delegate methods are optional.
+*/
+- (void)notifierWillDisplayAlert {
+  [gameController pause];
+}
+- (void)notifierDidDismissAlert {
+  [gameController resume];
+}
+- (NSString *)titleForNoticeAlert {
+  return @"Oh Noes!";
+}
+- (NSString *)bodyForNoticeAlert {
+  return @"MyApp has detected unreported crashes, would you like to send a report to the developer?";
+}
   
 @end
 ````
