@@ -5,8 +5,8 @@
 - all new public API
 - all new notice file format
 - new method to log your own exceptions
-- uses asynch reachability events
-- added notifications that mirror delegate callbacks
+- use asynch reachability events
+- add notifications that mirror delegate callbacks
 - bug fixes
 
 ## 2.2.2
