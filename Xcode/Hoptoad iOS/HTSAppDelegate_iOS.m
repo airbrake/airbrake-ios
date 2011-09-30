@@ -17,7 +17,7 @@
     
     // setup notifier
     [ABNotifier startNotifierWithAPIKey:@""
-                        environmentName:HTNotifierAutomaticEnvironment
+                        environmentName:ABNotifierAutomaticEnvironment
                                  useSSL:YES // only if your account supports it
                                delegate:self];
     [ABNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
