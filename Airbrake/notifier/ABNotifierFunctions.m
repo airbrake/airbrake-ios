@@ -224,14 +224,13 @@ NSString *ABNotifierPlatformName(void) {
 NSArray *ABNotifierParseCallStack(NSArray *callStack) {
     static NSString *pattern = @"^(\\d+)\\s+(\\S.*?)\\s+((0x[0-9a-f]+)\\s+.*)$";
     NSMutableArray *parsed = [NSMutableArray arrayWithCapacity:[callStack count]];
-    [callStack enumerateObjectsUsingBlock:^(NSString *line, NSUInteger lineIndex, BOOL *stop) {
-        NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
-        NSArray *components = [regularExpression matchesInString:line options:NSMatchingReportCompletion range:NSMakeRange(0, line.length)];
+    [callStack enumerateObjectsUsingBlock:^(id line, NSUInteger idx, BOOL *stop) {
+        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
+        NSArray *components = [expression matchesInString:line options:NSMatchingReportCompletion range:NSMakeRange(0, [line length])];
         NSMutableArray *frame = [NSMutableArray arrayWithCapacity:[components count]];
-        [components enumerateObjectsUsingBlock:^(NSTextCheckingResult *result, NSUInteger resultIndex, BOOL *stopComponents) {
-            for (NSUInteger j = 0; j < [result numberOfRanges]; j++) {
-                NSString *item = [line substringWithRange:[result rangeAtIndex:j]];
-                [frame addObject:item];
+        [components enumerateObjectsUsingBlock:^(id result, NSUInteger idx, BOOL *stop) {
+            for (NSUInteger i = 0; i < [result numberOfRanges]; i++) {
+                [frame addObject:[line substringWithRange:[result rangeAtIndex:i]]];
             }
         }];
         [parsed addObject:frame];
