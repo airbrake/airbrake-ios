@@ -41,7 +41,7 @@
 #import "ABNotifierDelegate.h"
 
 // notifier version
-extern NSString *ABNotifierVersion;
+extern NSString * const ABNotifierVersion;
 
 /*
  
@@ -50,11 +50,11 @@ extern NSString *ABNotifierVersion;
  presence of the DEBUG flag.
  
  */
-extern NSString *ABNotifierDevelopmentEnvironment;
-extern NSString *ABNotifierAdHocEnvironment;
-extern NSString *ABNotifierAppStoreEnvironment;
-extern NSString *ABNotifierReleaseEnvironment;
-extern NSString *ABNotifierAutomaticEnvironment;
+extern NSString * const ABNotifierDevelopmentEnvironment;
+extern NSString * const ABNotifierAdHocEnvironment;
+extern NSString * const ABNotifierAppStoreEnvironment;
+extern NSString * const ABNotifierReleaseEnvironment;
+extern NSString * const ABNotifierAutomaticEnvironment;
 
 /*
  
@@ -64,10 +64,10 @@ extern NSString *ABNotifierAutomaticEnvironment;
  after the associated delegate method is called.
  
  */
-extern NSString *ABNotifierWillDisplayAlertNotification;
-extern NSString *ABNotifierDidDismissAlertNotification;
-extern NSString *ABNotifierWillPostNoticesNotification;
-extern NSString *ABNotifierDidPostNoticesNotification;
+extern NSString * const ABNotifierWillDisplayAlertNotification;
+extern NSString * const ABNotifierDidDismissAlertNotification;
+extern NSString * const ABNotifierWillPostNoticesNotification;
+extern NSString * const ABNotifierDidPostNoticesNotification;
 
 /*
  
@@ -96,7 +96,7 @@ extern NSString *ABNotifierDidPostNoticesNotification;
 
 /*
  
- Methods to expose some of the inner variables used by the notifier.
+ Methods to expose some variables used by the notifier.
  
  */
 + (id<ABNotifierDelegate>)delegate;

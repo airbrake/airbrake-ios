@@ -37,52 +37,54 @@ static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 
 // constant strings
-static NSString *ABNotifierHostName                 = @"airbrakeapp.com";
-static NSString *ABNotifierAlwaysSendKey            = @"AlwaysSendCrashReports";
-NSString *ABNotifierWillDisplayAlertNotification    = @"ABNotifierWillDisplayAlert";
-NSString *ABNotifierDidDismissAlertNotification     = @"ABNotifierDidDismissAlert";
-NSString *ABNotifierWillPostNoticesNotification     = @"ABNotifierWillPostNotices";
-NSString *ABNotifierDidPostNoticesNotification      = @"ABNotifierDidPostNotices";
-NSString *ABNotifierVersion                         = @"3.0 RC 1";
-NSString *ABNotifierDevelopmentEnvironment          = @"Development";
-NSString *ABNotifierAdHocEnvironment                = @"Ad Hoc";
-NSString *ABNotifierAppStoreEnvironment             = @"App Store";
-NSString *ABNotifierReleaseEnvironment              = @"Release";
+static NSString * const ABNotifierHostName                  = @"airbrakeapp.com";
+static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
+NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
+NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
+NSString * const ABNotifierWillPostNoticesNotification      = @"ABNotifierWillPostNotices";
+NSString * const ABNotifierDidPostNoticesNotification       = @"ABNotifierDidPostNotices";
+NSString * const ABNotifierVersion                          = @"3.0 RC 1";
+NSString * const ABNotifierDevelopmentEnvironment           = @"Development";
+NSString * const ABNotifierAdHocEnvironment                 = @"Ad Hoc";
+NSString * const ABNotifierAppStoreEnvironment              = @"App Store";
+NSString * const ABNotifierReleaseEnvironment               = @"Release";
 #ifdef DEBUG
-NSString *ABNotifierAutomaticEnvironment            = @"Development";
+NSString * const ABNotifierAutomaticEnvironment             = @"Development";
 #else
-NSString *ABNotifierAutomaticEnvironment            = @"Release";
+NSString * const ABNotifierAutomaticEnvironment             = @"Release";
 #endif
 
 // reachability callback
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
-#pragma mark - file path utilities
-@interface ABNotifier (FilePathMethods)
+@interface ABNotifier ()
+
+// get the path where notices are stored
 + (NSString *)pathForNoticesDirectory;
+
+// get the path for a new notice given the file name
 + (NSString *)pathForNewNoticeWithName:(NSString *)name;
+
+// get the paths for all valid notices
 + (NSArray *)pathsForAllNotices;
-@end
 
-#pragma mark - post notice utilities
-@interface ABNotifier (PostNoticeMethods)
+// post all provided notices to airbrake
 + (void)postNoticesWithPaths:(NSArray *)paths;
+
+// post the given notice to the given URL
 + (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL;
-@end
 
-#pragma mark - cache values
-@interface ABNotifier (CacheMethods)
+// caches user data to store that can be read at signal time
 + (void)cacheUserDataDictionary;
-@end
 
-#pragma mark - ui methods
-@interface ABNotifier (UserInterfaceMethods)
+// pop a notice alert and perform necessary actions
 + (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths;
+
 @end
 
 @implementation ABNotifier
 
-#pragma mark - class methods
+#pragma mark - initialize the notifier
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
@@ -100,86 +102,93 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal {
-    static dispatch_once_t token;
-    dispatch_once(&token, ^{
-        
-        // register defaults
-		[[NSUserDefaults standardUserDefaults] registerDefaults:
-         [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
-        
-        // capture vars
-        __userData = [[NSMutableDictionary alloc] init];
-        __delegate = delegate;
-        __useSSL = useSSL;
-        
-        // switch on api key
-        if ([key length]) {
-            __APIKey = [key copy];
-            __reachability = SCNetworkReachabilityCreateWithName(NULL, [ABNotifierHostName UTF8String]);
-            if (SCNetworkReachabilitySetCallback(__reachability, ABNotifierReachabilityDidChange, nil)) {
-                if (!SCNetworkReachabilityScheduleWithRunLoop(__reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
-                    ABLog(@"Reachability could not be configired. No notices will be posted.");
+    @synchronized(self) {
+        static BOOL token = YES;
+        if (token) {
+            
+            // change token5
+            token = NO;
+            
+            // register defaults
+            [[NSUserDefaults standardUserDefaults] registerDefaults:
+             [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
+            
+            // capture vars
+            __userData = [[NSMutableDictionary alloc] init];
+            __delegate = delegate;
+            __useSSL = useSSL;
+            
+            // switch on api key
+            if ([key length]) {
+                __APIKey = [key copy];
+                __reachability = SCNetworkReachabilityCreateWithName(NULL, [ABNotifierHostName UTF8String]);
+                if (SCNetworkReachabilitySetCallback(__reachability, ABNotifierReachabilityDidChange, nil)) {
+                    if (!SCNetworkReachabilityScheduleWithRunLoop(__reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
+                        ABLog(@"Reachability could not be configired. No notices will be posted.");
+                    }
                 }
             }
-        }
-        else {
-            ABLog(@"The API key must not be blank. No notices will be posted.");
-        }
-        
-        // switch on environment name
-        if ([name length]) {
-            
-            // vars
-            unsigned long length;
-            
-            // cache signal notice file path
-            NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
-            const char *filePath = [[ABNotifier pathForNewNoticeWithName:fileName] UTF8String];
-            length = (strlen(filePath) + 1);
-            ab_signal_info.notice_path = malloc(length);
-            memcpy((void *)ab_signal_info.notice_path, filePath, length);
-            
-            // cache notice payload
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
-                            [NSDictionary dictionaryWithObjectsAndKeys:
-                             name, ABNotifierEnvironmentNameKey,
-                             [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
-                             ABNotifierBundleVersionKey,
-                             [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
-                             ABNotifierExecutableKey,
-                             nil]];
-            length = [data length];
-            ab_signal_info.notice_payload = malloc(length);
-            memcpy(ab_signal_info.notice_payload, [data bytes], length);
-            ab_signal_info.notice_payload_length = length;
-            
-            // cache user data
-            [self addEnvironmentEntriesFromDictionary:
-             [NSMutableDictionary dictionaryWithObjectsAndKeys:
-              ABNotifierPlatformName(), ABNotifierPlatformNameKey,
-              ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
-              ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-              nil]];
-            
-            // start handlers
-            if (exception) {
-                ABNotifierStartExceptionHandler();
-            }
-            if (signal) {
-                ABNotifierStartSignalHandler();
+            else {
+                ABLog(@"The API key must not be blank. No notices will be posted.");
             }
             
-            // log
-            ABLog(@"Notifier %@ ready to catch errors", ABNotifierVersion);
-            ABLog(@"Environment \"%@\"", name);
+            // switch on environment name
+            if ([name length]) {
+                
+                // vars
+                unsigned long length;
+                
+                // cache signal notice file path
+                NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
+                const char *filePath = [[ABNotifier pathForNewNoticeWithName:fileName] UTF8String];
+                length = (strlen(filePath) + 1);
+                ab_signal_info.notice_path = malloc(length);
+                memcpy((void *)ab_signal_info.notice_path, filePath, length);
+                
+                // cache notice payload
+                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
+                                [NSDictionary dictionaryWithObjectsAndKeys:
+                                 name, ABNotifierEnvironmentNameKey,
+                                 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
+                                 ABNotifierBundleVersionKey,
+                                 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
+                                 ABNotifierExecutableKey,
+                                 nil]];
+                length = [data length];
+                ab_signal_info.notice_payload = malloc(length);
+                memcpy(ab_signal_info.notice_payload, [data bytes], length);
+                ab_signal_info.notice_payload_length = length;
+                
+                // cache user data
+                [self addEnvironmentEntriesFromDictionary:
+                 [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                  ABNotifierPlatformName(), ABNotifierPlatformNameKey,
+                  ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
+                  ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
+                  nil]];
+                
+                // start handlers
+                if (exception) {
+                    ABNotifierStartExceptionHandler();
+                }
+                if (signal) {
+                    ABNotifierStartSignalHandler();
+                }
+                
+                // log
+                ABLog(@"Notifier %@ ready to catch errors", ABNotifierVersion);
+                ABLog(@"Environment \"%@\"", name);
+                
+            }
+            else {
+                ABLog(@"The environment name must not be blank. No new notices will be logged");
+            }
             
         }
-        else {
-            ABLog(@"The environment name must not be blank. No new notices will be logged");
-        }
-        
-    });
+    }
 }
+
+#pragma mark - accessors
 + (id<ABNotifierDelegate>)delegate {
     @synchronized(self) {
         return __delegate;
@@ -190,9 +199,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         return __APIKey;
     }
 }
+
+#pragma mark - write data
 + (void)logException:(NSException *)exception {
-    static NSString *logExceptionLock = @"logExceptionLock";
-    @synchronized(logExceptionLock) {
+    static NSString *lock = @"lock";
+    @synchronized(lock) {
         
         void (^block) (void) = ^{
             
@@ -286,10 +297,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }
 }
 
-@end
-
-#pragma mark - file path utilities
-@implementation ABNotifier (FilePathMethods)
+#pragma mark - file utilities
 + (NSString *)pathForNoticesDirectory {
     static NSString *path = nil;
     static dispatch_once_t token;
@@ -343,10 +351,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }];
     return paths;
 }
-@end
 
-#pragma mark - poast notice utilities
-@implementation ABNotifier (PostNoticeMethods)
+#pragma mark - post notices
 + (void)postNoticesWithPaths:(NSArray *)paths {
     
     // assert
@@ -490,10 +496,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }
     
 }
-@end
 
-#pragma mark - cache values
-@implementation ABNotifier (CacheMethods)
+#pragma mark - cache methods
 + (void)cacheUserDataDictionary {
     @synchronized(self) {
         
@@ -513,10 +517,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         
     }
 }
-@end
 
-#pragma mark - ui methods
-@implementation ABNotifier (UserInterfaceMethods)
+#pragma mark - user interface
 + (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths {
     
     // assert
@@ -532,7 +534,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         title = [delegate titleForNoticeAlert];
     }
     if (title == nil) {
-        title = HTLocalizedString(@"NOTICE_TITLE");
+        title = ABLocalizedString(@"NOTICE_TITLE");
     }
     
     // alert body
@@ -541,7 +543,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         body = [delegate bodyForNoticeAlert];
     }
     if (body == nil) {
-        body = [NSString stringWithFormat:HTLocalizedString(@"NOTICE_BODY"), ABNotifierApplicationName()];
+        body = [NSString stringWithFormat:ABLocalizedString(@"NOTICE_BODY"), ABNotifierApplicationName()];
     }
     
     // declare blocks
@@ -577,12 +579,12 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #if TARGET_OS_IPHONE
     
     GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
-    [alert addButtonWithTitle:HTLocalizedString(@"ALWAYS_SEND") block:^{
+    [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
         setDefaultsBlock();
         postNoticesBlock();
     }];
-    [alert addButtonWithTitle:HTLocalizedString(@"SEND") block:postNoticesBlock];
-    [alert addButtonWithTitle:HTLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
+    [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
+    [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
     [alert setDidDismissBlock:delegateDismissBlock];
     [alert setDidDismissBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
@@ -597,9 +599,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     // build alert
 	NSAlert *alert = [NSAlert
                       alertWithMessageText:title
-                      defaultButton:HTLocalizedString(@"ALWAYS_SEND")
-                      alternateButton:HTLocalizedString(@"DONT_SEND")
-                      otherButton:HTLocalizedString(@"SEND")
+                      defaultButton:ABLocalizedString(@"ALWAYS_SEND")
+                      alternateButton:ABLocalizedString(@"DONT_SEND")
+                      otherButton:ABLocalizedString(@"SEND")
                       informativeTextWithFormat:body];
     
     // run alert
@@ -624,26 +626,25 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #endif
     
 }
+
 @end
 
 #pragma mark - reachability change
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     if (flags & kSCNetworkReachabilityFlagsReachable) {
-        static dispatch_once_t predicate;
-        dispatch_once(&predicate, ^{
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSArray *paths = [ABNotifier pathsForAllNotices];
-                if ([paths count]) {
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
+        static dispatch_once_t token;
+        dispatch_once(&token, ^{
+            NSArray *paths = [ABNotifier pathsForAllNotices];
+            if ([paths count]) {
+                if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         [ABNotifier postNoticesWithPaths:paths];
-                    }
-                    else {
-                        dispatch_sync(dispatch_get_main_queue(), ^{
-                            [ABNotifier showNoticeAlertForNoticesWithPaths:paths];
-                        });
-                    }
+                    });
                 }
-            });
+                else {
+                    [ABNotifier showNoticeAlertForNoticesWithPaths:paths];
+                }
+            }
         });
     }
 }
