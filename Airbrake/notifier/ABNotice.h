@@ -42,24 +42,24 @@ typedef struct ab_signal_info_t {
 ab_signal_info_t ab_signal_info;
 
 // notice payload keys
-extern NSString *ABNotifierOperatingSystemVersionKey;
-extern NSString *ABNotifierApplicationVersionKey;
-extern NSString *ABNotifierPlatformNameKey;
-extern NSString *ABNotifierEnvironmentNameKey;
-extern NSString *ABNotifierBundleVersionKey;
-extern NSString *ABNotifierExceptionNameKey;
-extern NSString *ABNotifierExceptionReasonKey;
-extern NSString *ABNotifierCallStackKey;
-extern NSString *ABNotifierControllerKey;
-extern NSString *ABNotifierExecutableKey;
+extern NSString * const ABNotifierOperatingSystemVersionKey;
+extern NSString * const ABNotifierApplicationVersionKey;
+extern NSString * const ABNotifierPlatformNameKey;
+extern NSString * const ABNotifierEnvironmentNameKey;
+extern NSString * const ABNotifierBundleVersionKey;
+extern NSString * const ABNotifierExceptionNameKey;
+extern NSString * const ABNotifierExceptionReasonKey;
+extern NSString * const ABNotifierCallStackKey;
+extern NSString * const ABNotifierControllerKey;
+extern NSString * const ABNotifierExecutableKey;
 
 // notice file extension
-extern NSString *ABNotifierNoticePathExtension;
+extern NSString * const ABNotifierNoticePathExtension;
 
 // file flags
-extern int ABNotifierNoticeVersion;
-extern int ABNotifierSignalNoticeType;
-extern int ABNotifierExceptionNoticeType;
+extern const int ABNotifierNoticeVersion;
+extern const int ABNotifierSignalNoticeType;
+extern const int ABNotifierExceptionNoticeType;
 
 /*
  
