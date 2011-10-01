@@ -4,6 +4,7 @@
 
 - all new public API
 - all new notice file format
+- raised support floor to iOS 4.0 and Mac OS 10.7
 - new method to log your own exceptions
 - use asynch reachability events
 - add notifications that mirror delegate callbacks
@@ -12,11 +13,11 @@
 
 ## 2.2.2
 
-- fixed compile error caused by an incorrect import when building for iOS
+- fix compile error caused by an incorrect import when building for iOS
 
 ## 2.2.1
 
-- added automatic environment name that sets its value based on the DEBUG macro
+- add automatic environment name that sets its value based on the DEBUG macro
 
 ## 2.2
 

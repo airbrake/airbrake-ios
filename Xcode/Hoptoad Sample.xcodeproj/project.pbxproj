@@ -98,16 +98,16 @@
 		3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
 		3B7A06A613FEFD2E007E8CCF /* ABNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotice.h; sourceTree = "<group>"; };
 		3B7A06A713FEFD2E007E8CCF /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
-		3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABNotifier.h; sourceTree = "<group>"; };
+		3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifier.h; sourceTree = "<group>"; };
 		3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifier.m; sourceTree = "<group>"; };
-		3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
+		3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
 		3B7A06AB13FEFD2E007E8CCF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AC13FEFD2E007E8CCF /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AD13FEFD2E007E8CCF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
 		3B7A06AE13FEFD2E007E8CCF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HTNotifier.strings"; sourceTree = "<group>"; };
 		3BCEC490142CD54B00AAD825 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		3BCEC491142CD54B00AAD825 /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = INSTALLATION.html; path = ../INSTALLATION.html; sourceTree = "<group>"; };
-		3BCEC492142CD54B00AAD825 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		3BCEC492142CD54B00AAD825 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
