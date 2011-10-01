@@ -4,6 +4,8 @@ The Airbrake iOS Notifier is designed to give developers instant notification of
 
 To see how this might help you, check out [this screencast](http://guicocoa.com/hoptoad#screencast). If you have questions or need support, please visit [Airbrake support](http://help.airbrakeapp.com/discussions/ios-notifier)
 
+The notifier requires iOS 4.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects.
+
 # Signals
 
 The notifier handles all unhandled exceptions, and a select list of Unix signals:
