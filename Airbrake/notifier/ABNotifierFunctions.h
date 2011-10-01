@@ -1,5 +1,5 @@
 /*
- 
+
  Copyright (C) 2011 GUI Cocoa, LLC.
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,10 +30,8 @@
 #endif
 
 /*
- 
  Open a notice file at the given path and populates it with the default header
  values. Returns a file descriptor to the file. Call this in handler functions.
- 
  */
 int ABNotifierOpenNewNoticeFile(const char *path, int type);
 
@@ -50,51 +48,40 @@ NSString *ABNotifierApplicationVersion(void);
 NSString *ABNotifierApplicationName(void);
 
 /*
- 
  Get the current operating system version.
- 
  */
 NSString *ABNotifierOperatingSystemVersion(void);
 
 /*
- 
  Returns the value retrived from `sysctlbyname`. You will see a value like
  "iPhone4,1" or "MacBookPro7,1".
- 
  */
 NSString *ABNotifierMachineName(void);
 
 /*
- 
  Returns the common device name for iOS devices, e.g. "iPhone 4 (GSM)". Returns
  the value of `ABNotifierMachineName` for other products.
- 
  */
 NSString *ABNotifierPlatformName(void);
 
 /*
- 
  Parse a call stack and return an array of the following components:
  0 - matched line
  1 - frame number
  2 - binary name
  3 - description
  4 - address
- 
  */
 NSArray *ABNotifierParseCallStack(NSArray *callStack);
 
 /*
- 
  Returns the method name of the highest entry in the callstack that matches
  the given executable name.
- 
  */
 NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *executable);
 
 #if TARGET_OS_IPHONE
 /*
- 
  Get the class name of the on-screen view controller. This does not indicate the
  controller where the crash occured, simply the one that has a view on screen.
  
@@ -108,7 +95,6 @@ NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *exec
 NSString *ABNotifierCurrentViewController(void);
 
 /*
- 
  Get the name of the visible view controller given a starting view controller.
  
  This method makes assumptions about tab bar and navigation controllers and will
@@ -117,12 +103,10 @@ NSString *ABNotifierCurrentViewController(void);
  called directly from your code.
  
  This method must be called on the main thread.
- 
  */
 NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *controller);
 #endif
 
 // useful defines
-#define __ABLog(fmt, args...) NSLog(@"[Airbrake] " fmt, ##args)
-#define ABLog(fmt, args...) __ABLog(fmt, ##args)
-#define HTLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")
+#define ABLog(fmt, args...) NSLog(@"[Airbrake] " fmt, ##args)
+#define ABLocalizedString(key) NSLocalizedStringFromTable((key), @"HTNotifier", @"")

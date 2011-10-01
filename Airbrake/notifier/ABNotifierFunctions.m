@@ -137,23 +137,31 @@ void ABNotifierStopSignalHandler(void) {
 
 #pragma mark - Info.plist accessors
 NSString *ABNotifierApplicationVersion(void) {
-    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-	NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-	if (bundleVersion != nil && versionString != nil) {
-		return [NSString stringWithFormat:@"%@ (%@)", versionString, bundleVersion];
-	}
-	else if (bundleVersion != nil) { return bundleVersion; }
-	else if (versionString != nil) { return versionString; }
-	else { return nil; }
+    static NSString *version = nil;
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
+        NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+        NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        if (bundleVersion != nil && versionString != nil) {
+            version = [[NSString alloc] initWithFormat:@"%@ (%@)", versionString, bundleVersion];
+        }
+        else if (bundleVersion != nil) { version = [bundleVersion copy]; }
+        else if (versionString != nil) { version = [versionString copy]; }
+    });
+    return version;
 }
 NSString *ABNotifierApplicationName(void) {
-	NSString *displayName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSString *identifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-	if (displayName != nil) { return displayName; }
-	else if (bundleName != nil) { return bundleName; }
-	else if (identifier != nil) { return identifier; }
-	else { return nil; }
+    static NSString *name = nil;
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
+        NSString *displayName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+        NSString *identifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+        if (displayName != nil) { name = [displayName copy]; }
+        else if (bundleName != nil) { name = [bundleName copy]; }
+        else if (identifier != nil) { name = [identifier copy]; }
+    });
+    return name;
 }
 
 #pragma mark - platform accessors
@@ -239,24 +247,13 @@ NSArray *ABNotifierParseCallStack(NSArray *callStack) {
 }
 NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *executable) {
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bindings) {
-        
-        // check binary
-        if (![[obj objectAtIndex:2] isEqualToString:executable]) {
-            return NO;
-        }
-        
-        // check method name
+        if (![[obj objectAtIndex:2] isEqualToString:executable]) { return NO; }
         NSRange range = [[obj objectAtIndex:3] rangeOfString:@"ht_handle_signal"];
         return range.location == NSNotFound;
-        
     }];
     NSArray *matching = [callStack filteredArrayUsingPredicate:predicate];
-    if ([matching count]) {
-        return [[matching objectAtIndex:0] objectAtIndex:3];
-    }
-    else {
-        return nil;
-    }
+    if ([matching count]) { return [[matching objectAtIndex:0] objectAtIndex:3]; }
+    else { return nil; }
 }
 
 #pragma mark - get view controller
