@@ -27,6 +27,10 @@
 #import <unistd.h>
 #import <sys/sysctl.h>
 
+#import <mach/task.h>
+#import <mach/task_info.h>
+#import <mach/mach_init.h>
+
 #import "HTFunctions.h"
 #import "HTNotifier.h"
 #import "HTNotice.h"
@@ -75,6 +79,11 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 	raise(signal);
 }
 void ht_handle_exception(NSException *exception) {
+
+#if TARGET_OS_IPHONE
+    HTSetEnvironmentMemoryInfo();
+#endif
+    
     HTStopHandlers();
     [[HTNotifier sharedNotifier] logException:exception];
 }
@@ -146,9 +155,50 @@ void HTStopSignalHandler(void) {
 	}
 }
 
+#if TARGET_OS_IPHONE
+
+#pragma mark - 
+#pragma mark Memory Handling
+
+#define BYTES_PER_MB 1048576
+
+ht_memory_result_t HTMemoryUsedInMB(ht_memory_t *mb) {
+    
+    struct task_basic_info basic;
+    mach_msg_type_number_t count = TASK_BASIC_INFO_COUNT;
+    kern_return_t result = task_info(mach_task_self(), TASK_BASIC_INFO , (task_info_t)&basic , &count );
+    
+    if(result == KERN_SUCCESS){
+        vm_size_t totalBytes = basic.resident_size;
+        *mb = (float)totalBytes/BYTES_PER_MB;
+        return HT_MEMORY_SUCCESS;
+    }
+    
+    return HT_MEMORY_INVALID;
+}
+
+void HTSetEnvironmentMemoryInfo() {
+    
+    ht_memory_t mem;
+    ht_memory_result_t result = HTMemoryUsedInMB(&mem);
+    
+    NSString *memory= @"";
+    
+    if(result == HT_MEMORY_SUCCESS){
+        memory = [NSString stringWithFormat:@"%0.2f MB",mem];
+    }else{
+        memory = @"invalid";
+    }
+    
+    [[HTNotifier sharedNotifier].environmentInfo setObject:memory forKey:@"Used Memory"];
+}
+
+#endif
+
 #pragma mark - Info.plist accessors
+
 id HTInfoPlistValueForKey(NSString *key) {
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:key];
 }
 NSString *HTExecutableName(void) {
 	return HTInfoPlistValueForKey(@"CFBundleExecutable");
@@ -411,6 +461,7 @@ NSString *HTActionFromParsedCallstack(NSArray *callStack) {
 
 #pragma mark - string substitution
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *string) {
+
 	NSString *toReturn = string;
 	
 	toReturn = [toReturn
@@ -452,21 +503,21 @@ NSString * HTCurrentViewController(void) {
 }
 
 NSString * HTVisibleViewControllerWithViewController(UIViewController *controller) {
-	
-	// tab bar controller
-	if ([controller isKindOfClass:[UITabBarController class]]) {
-		UIViewController *visibleController = [(UITabBarController *)controller selectedViewController];
-		return HTVisibleViewControllerWithViewController(visibleController);
-	}
-	// navigation controller
-	else if ([controller isKindOfClass:[UINavigationController class]]) {
-		UIViewController *visibleController = [(UINavigationController *)controller visibleViewController];
-		return HTVisibleViewControllerWithViewController(visibleController);
-	}
-	// other type
-	else {
-		return NSStringFromClass([controller class]);
-	}
-	
+    
+    // tab bar controller
+    if ([controller isKindOfClass:[UITabBarController class]]) {
+        UIViewController *visibleController = [(UITabBarController *)controller selectedViewController];
+        return HTVisibleViewControllerWithViewController(visibleController);
+    }
+    // navigation controller
+    else if ([controller isKindOfClass:[UINavigationController class]]) {
+        UIViewController *visibleController = [(UINavigationController *)controller visibleViewController];
+        return HTVisibleViewControllerWithViewController(visibleController);
+    }
+    // other type
+    else {
+        return NSStringFromClass([controller class]);
+    }
+    
 }
 #endif

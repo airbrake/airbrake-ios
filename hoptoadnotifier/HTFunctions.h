@@ -49,6 +49,15 @@ NSString *HTApplicationVersion(void);
 NSString *HTBundleVersion(void);
 NSString *HTApplicationName(void);
 
+//result of memory probing
+typedef enum {
+    HT_MEMORY_SUCCESS = 0,
+    HT_MEMORY_INVALID,
+}ht_memory_result_t;
+
+//the return type for the memory analysis functions
+typedef double ht_memory_t;
+
 // get platform values
 NSString *HTOperatingSystemVersion(void);
 NSString *HTMachine(void);
@@ -77,6 +86,25 @@ NSString *HTActionFromParsedCallstack(NSArray *);
 NSString * HTStringByReplacingHoptoadVariablesInString(NSString *);
 
 #if TARGET_OS_IPHONE
+
+/* 
+ return the amount of memory used in megabytes.
+ 
+ ios only for now until i can test in another environment. also
+ should not be used within the signal handler until more testing is done.
+
+ */
+
+ht_memory_result_t HTMemoryUsedInMB(ht_memory_t *mb);
+
+
+/* 
+ populate the current environment with a snapshot of the current 
+ memory usage
+ */
+
+void HTSetEnvironmentMemoryInfo();
+
 /*
  
  return the class name of the on screen view controller.
@@ -109,6 +137,7 @@ NSString * HTCurrentViewController(void);
  
  */
 NSString * HTVisibleViewControllerWithViewController(UIViewController *);
+
 #endif
 
 // useful defines
