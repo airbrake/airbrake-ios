@@ -221,8 +221,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 // create parameters
                 NSMutableDictionary *exceptionParameters = [NSMutableDictionary dictionary];
                 if ([parameters count]) { [exceptionParameters addEntriesFromDictionary:parameters]; }
-                [exceptionParameters setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Usage"];
-                [exceptionParameters setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Usage"];
+                [exceptionParameters setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Size"];
+                [exceptionParameters setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Size"];
                 
                 // write exception
                 NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:

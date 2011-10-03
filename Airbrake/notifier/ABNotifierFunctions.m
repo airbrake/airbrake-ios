@@ -259,8 +259,6 @@ NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *exec
     else { return nil; }
 }
 
-#if TARGET_OS_IPHONE
-
 #pragma mark - memory usage
 NSString *ABNotifierResidentMemoryUsage(void) {
     struct task_basic_info basic;
@@ -286,6 +284,8 @@ NSString *ABNotifierVirtualMemoryUsage(void) {
         return @"Unknown";
     }
 }
+
+#if TARGET_OS_IPHONE
 
 #pragma mark - view controller
 NSString *ABNotifierCurrentViewController(void) {
