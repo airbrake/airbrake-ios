@@ -202,59 +202,60 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 
 #pragma mark - write data
 + (void)logException:(NSException *)exception {
-    static NSString *lock = @"lock";
-    @synchronized(lock) {
+
+    // declare block that will perform logging
+    void (^block) (void) = ^{
         
-        void (^block) (void) = ^{
-            
-            // get file handle
-            NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-            NSString *path = [self pathForNewNoticeWithName:name];
-            int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
-            
-            // write stuff
-            if (fd > -1) {
-                @try {
-                    
-                    // write exception
-                    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                [exception name], ABNotifierExceptionNameKey,
-                                                [exception reason], ABNotifierExceptionReasonKey,
-                                                [exception callStackSymbols], ABNotifierCallStackKey,
-#if TARGET_OS_IPHONE
-                                                ABNotifierCurrentViewController(), ABNotifierControllerKey,
-#endif
-                                                nil];
-                    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-                    unsigned long length = [data length];
-                    write(fd, &length, sizeof(unsigned long));
-                    write(fd, [data bytes], length);
-                    
-                    // delegate
-                    id<ABNotifierDelegate> delegate = [self delegate];
-                    if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
-                        [delegate notifierDidLogException:exception];
-                    }
-                    
-                }
-                @catch (NSException *exception) {
-                    ABLog(@"Exception encountered while logging exception");
-                }
-                @finally {
-                    close(fd);
-                }
-            }
+        // get file handle
+        NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
+        NSString *path = [self pathForNewNoticeWithName:name];
+        int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
+        
+        // write stuff
+        if (fd > -1) {
+            @try {
                 
-        };
-        
-        if ([NSThread isMainThread]) {
-            block();
+                // write exception
+                NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            [exception name], ABNotifierExceptionNameKey,
+                                            [exception reason], ABNotifierExceptionReasonKey,
+                                            [exception callStackSymbols], ABNotifierCallStackKey,
+#if TARGET_OS_IPHONE
+                                            ABNotifierCurrentViewController(), ABNotifierControllerKey,
+#endif
+                                            nil];
+                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+                unsigned long length = [data length];
+                write(fd, &length, sizeof(unsigned long));
+                write(fd, [data bytes], length);
+                
+                // delegate
+                id<ABNotifierDelegate> delegate = [self delegate];
+                if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
+                    [delegate notifierDidLogException:exception];
+                }
+                
+            }
+            @catch (NSException *exception) {
+                ABLog(@"Exception encountered while logging exception");
+            }
+            @finally {
+                close(fd);
+            }
         }
-        else {
-            dispatch_sync(dispatch_get_main_queue(), block);
-        }
         
+    };
+    
+    // run the task if we are on the main thread
+    if ([NSThread isMainThread]) {
+        block();
     }
+    
+    // dispatch to main thread and wait
+    else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+    
 }
 + (void)writeTestNotice {
     @try {
