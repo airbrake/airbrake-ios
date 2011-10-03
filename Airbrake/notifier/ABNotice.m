@@ -169,6 +169,10 @@ const int ABNotifierExceptionNoticeType   = 2;
                 self.exceptionReason = [dictionary objectForKey:ABNotifierExceptionReasonKey];
                 self.callStack = [dictionary objectForKey:ABNotifierCallStackKey];
                 self.controller = [dictionary objectForKey:ABNotifierControllerKey];
+                NSMutableDictionary *parameters = [self.environmentInfo mutableCopy];
+                [parameters addEntriesFromDictionary:[dictionary objectForKey:ABNotifierExceptionParametersKey]];
+                self.environmentInfo = parameters;
+                [parameters release];
                 
             }
             
