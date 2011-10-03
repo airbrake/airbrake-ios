@@ -268,7 +268,7 @@ NSString *ABNotifierResidentMemoryUsage(void) {
     if (task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&basic, &count) == KERN_SUCCESS) {
         vm_size_t b = basic.resident_size;
         double mb = (float)b / 1048576.0;
-        return [NSString stringWithFormat:@"0.2f MB", mb];
+        return [NSString stringWithFormat:@"%0.2f MB", mb];
     }
     else {
         return @"Unknown";
@@ -280,7 +280,7 @@ NSString *ABNotifierVirtualMemoryUsage(void) {
     if (task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&basic, &count) == KERN_SUCCESS) {
         vm_size_t b = basic.virtual_size;
         double mb = (float)b / 1048576.0;
-        return [NSString stringWithFormat:@"0.2f MB", mb];
+        return [NSString stringWithFormat:@"%0.2f MB", mb];
     }
     else {
         return @"Unknown";
