@@ -52,6 +52,7 @@ extern NSString * const ABNotifierExceptionReasonKey;
 extern NSString * const ABNotifierCallStackKey;
 extern NSString * const ABNotifierControllerKey;
 extern NSString * const ABNotifierExecutableKey;
+extern NSString * const ABNotifierExceptionParametersKey;
 
 // notice file extension
 extern NSString * const ABNotifierNoticePathExtension;

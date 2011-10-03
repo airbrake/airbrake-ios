@@ -32,17 +32,18 @@
 #import "DDXML.h"
 
 // library constants
-NSString * const ABNotifierOperatingSystemVersionKey   = @"Operating System";
-NSString * const ABNotifierApplicationVersionKey       = @"Application Version";
-NSString * const ABNotifierPlatformNameKey             = @"Platform";
-NSString * const ABNotifierEnvironmentNameKey          = @"Environment Name";
-NSString * const ABNotifierBundleVersionKey            = @"Bundle Version";
-NSString * const ABNotifierExceptionNameKey            = @"Exception Name";
-NSString * const ABNotifierExceptionReasonKey          = @"Exception Reason";
-NSString * const ABNotifierCallStackKey                = @"Call Stack";
-NSString * const ABNotifierControllerKey               = @"Controller";
-NSString * const ABNotifierExecutableKey               = @"Executable";
-NSString * const ABNotifierNoticePathExtension         = @"htnotice";
+NSString * const ABNotifierOperatingSystemVersionKey    = @"Operating System";
+NSString * const ABNotifierApplicationVersionKey        = @"Application Version";
+NSString * const ABNotifierPlatformNameKey              = @"Platform";
+NSString * const ABNotifierEnvironmentNameKey           = @"Environment Name";
+NSString * const ABNotifierBundleVersionKey             = @"Bundle Version";
+NSString * const ABNotifierExceptionNameKey             = @"Exception Name";
+NSString * const ABNotifierExceptionReasonKey           = @"Exception Reason";
+NSString * const ABNotifierCallStackKey                 = @"Call Stack";
+NSString * const ABNotifierControllerKey                = @"Controller";
+NSString * const ABNotifierExecutableKey                = @"Executable";
+NSString * const ABNotifierExceptionParametersKey       = @"Exception Parameters";
+NSString * const ABNotifierNoticePathExtension          = @"htnotice";
 const int ABNotifierNoticeVersion         = 5;
 const int ABNotifierSignalNoticeType      = 1;
 const int ABNotifierExceptionNoticeType   = 2;
