@@ -704,7 +704,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     if ([ABNotifier isReachable:flags]) {
         static dispatch_once_t token;
         dispatch_once(&token, ^{
-            ABLog(@"flags: %u", flags);
             NSArray *paths = [ABNotifier pathsForAllNotices];
             if ([paths count]) {
                 if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
