@@ -26,6 +26,9 @@
 #import <fcntl.h>
 #import <unistd.h>
 #import <sys/sysctl.h>
+#import <mach/task.h>
+#import <mach/task_info.h>
+#import <mach/mach_init.h>
 
 #import "ABNotifierFunctions.h"
 #import "ABNotice.h"
@@ -256,8 +259,35 @@ NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *exec
     else { return nil; }
 }
 
-#pragma mark - get view controller
 #if TARGET_OS_IPHONE
+
+#pragma mark - memory usage
+NSString *ABNotifierResidentMemoryUsage(void) {
+    struct task_basic_info basic;
+    mach_msg_type_number_t count = TASK_BASIC_INFO_COUNT;
+    if (task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&basic, &count) == KERN_SUCCESS) {
+        vm_size_t b = basic.resident_size;
+        double mb = (float)b / 1048576.0;
+        return [NSString stringWithFormat:@"0.2f MB", mb];
+    }
+    else {
+        return @"Unknown";
+    }
+}
+NSString *ABNotifierVirtualMemoryUsage(void) {
+    struct task_basic_info basic;
+    mach_msg_type_number_t count = TASK_BASIC_INFO_COUNT;
+    if (task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&basic, &count) == KERN_SUCCESS) {
+        vm_size_t b = basic.virtual_size;
+        double mb = (float)b / 1048576.0;
+        return [NSString stringWithFormat:@"0.2f MB", mb];
+    }
+    else {
+        return @"Unknown";
+    }
+}
+
+#pragma mark - view controller
 NSString *ABNotifierCurrentViewController(void) {
     
     // assert

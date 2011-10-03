@@ -72,6 +72,12 @@ NSString *ABNotifierMachineName(void);
  */
 NSString *ABNotifierPlatformName(void);
 
+// Get the amount of resident memory in use in a formatted string.
+NSString *ABNotifierResidentMemoryUsage(void);
+
+// Get the amount of virtual memory in use in a formatted string.
+NSString *ABNotifierVirtualMemoryUsage(void);
+
 /*
  
  Parse a call stack and return an array of the following components:
