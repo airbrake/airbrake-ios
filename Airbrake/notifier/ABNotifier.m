@@ -201,8 +201,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 
 #pragma mark - write data
-+ (void)logException:(NSException *)exception {
-
++ (void)logException:(NSException *)exception parameters:(NSDictionary *)parameters {
+    
     // declare block that will perform logging
     void (^block) (void) = ^{
         
@@ -215,11 +215,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         if (fd > -1) {
             @try {
                 
+                // create parameters
+                NSMutableDictionary *exceptionParameters = [parameters mutableCopy];
+                [exception setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Usage"];
+                [exception setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Usage"];
+                
                 // write exception
                 NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                             [exception name], ABNotifierExceptionNameKey,
                                             [exception reason], ABNotifierExceptionReasonKey,
                                             [exception callStackSymbols], ABNotifierCallStackKey,
+                                            exceptionParameters, ABNotifierExceptionReasonKey,
 #if TARGET_OS_IPHONE
                                             ABNotifierCurrentViewController(), ABNotifierControllerKey,
 #endif
@@ -256,6 +262,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         dispatch_sync(dispatch_get_main_queue(), block);
     }
     
+}
++ (void)logException:(NSException *)exception {
+    [self logException:exception parameters:nil];
 }
 + (void)writeTestNotice {
     @try {

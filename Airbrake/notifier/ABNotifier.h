@@ -104,9 +104,13 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
 
 /*
  
- Log an exception.
+ Log an exception and optionally save parameters with this exception. These
+ parameters will be shown along with the environment key/value pairs on the
+ "Environment" tab on Airbrake. Values passed in here will be used for this
+ exception only and will override values stored in the environment info.
  
  */
++ (void)logException:(NSException *)exception parameters:(NSDictionary *)parameters;
 + (void)logException:(NSException *)exception;
 
 /*
