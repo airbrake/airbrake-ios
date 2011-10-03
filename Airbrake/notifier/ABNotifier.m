@@ -80,6 +80,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 // pop a notice alert and perform necessary actions
 + (void)showNoticeAlertForNoticesWithPaths:(NSArray *)paths;
 
+// determine if we are reachable with given flags
++ (BOOL)isReachable:(SCNetworkReachabilityFlags)flags;
+
 @end
 
 @implementation ABNotifier
@@ -639,13 +642,69 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 }
 
+#pragma mark - reachability
++ (BOOL)isReachable:(SCNetworkReachabilityFlags)flags {
+    if ((flags & kSCNetworkReachabilityFlagsReachable) == 0) {
+        return NO;
+    }
+    if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
+        return YES;
+    }
+    if (((flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0) ||
+        ((flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0)) {
+        if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
+            return YES;
+        }
+    }
+    return NO;
+#if 0
+    if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
+	{
+		// if target host is not reachable
+		return NotReachable;
+	}
+    
+	BOOL retVal = NotReachable;
+	
+	if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
+	{
+		// if target host is reachable and no connection is required
+		//  then we'll assume (for now) that your on Wi-Fi
+		retVal = ReachableViaWiFi;
+	}
+	
+	
+	if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
+         (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
+	{
+        // ... and the connection is on-demand (or on-traffic) if the
+        //     calling application is using the CFSocketStream or higher APIs
+        
+        if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
+        {
+            // ... and no [user] intervention is needed
+            retVal = ReachableViaWiFi;
+        }
+    }
+	
+	if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
+	{
+		// ... but WWAN connections are OK if the calling application
+		//     is using the CFNetwork (CFSocketStream?) APIs.
+		retVal = ReachableViaWWAN;
+	}
+	return retVal;
+#endif
+}
+
 @end
 
 #pragma mark - reachability change
 void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
-    if (flags & kSCNetworkReachabilityFlagsReachable) {
+    if ([ABNotifier isReachable:flags]) {
         static dispatch_once_t token;
         dispatch_once(&token, ^{
+            ABLog(@"flags: %u", flags);
             NSArray *paths = [ABNotifier pathsForAllNotices];
             if ([paths count]) {
                 if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {

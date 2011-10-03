@@ -121,7 +121,7 @@ void ABNotifierStartSignalHandler(void) {
 		action.sa_flags = SA_SIGINFO;
 		action.sa_sigaction = ht_handle_signal;
 		if (sigaction(signal, &action, NULL) != 0) {
-            ABLog(@"unable to register signal handler for %s", strsignal(signal));
+            ABLog(@"Unable to register signal handler for %s", strsignal(signal));
 		}
 	}
 }
