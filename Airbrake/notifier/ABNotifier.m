@@ -216,16 +216,17 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             @try {
                 
                 // create parameters
-                NSMutableDictionary *exceptionParameters = [parameters mutableCopy];
-                [exception setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Usage"];
-                [exception setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Usage"];
+                NSMutableDictionary *exceptionParameters = [NSMutableDictionary dictionary];
+                if ([parameters count]) { [exceptionParameters addEntriesFromDictionary:parameters]; }
+                [exceptionParameters setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Usage"];
+                [exceptionParameters setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Usage"];
                 
                 // write exception
                 NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                             [exception name], ABNotifierExceptionNameKey,
                                             [exception reason], ABNotifierExceptionReasonKey,
                                             [exception callStackSymbols], ABNotifierCallStackKey,
-                                            exceptionParameters, ABNotifierExceptionReasonKey,
+                                            exceptionParameters, ABNotifierExceptionParametersKey,
 #if TARGET_OS_IPHONE
                                             ABNotifierCurrentViewController(), ABNotifierControllerKey,
 #endif
@@ -244,6 +245,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             }
             @catch (NSException *exception) {
                 ABLog(@"Exception encountered while logging exception");
+                ABLog(@"%@", exception);
             }
             @finally {
                 close(fd);
