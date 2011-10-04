@@ -206,65 +206,58 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #pragma mark - write data
 + (void)logException:(NSException *)exception parameters:(NSDictionary *)parameters {
     
-    // declare block that will perform logging
-    void (^block) (void) = ^{
-        
-        // get file handle
-        NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
-        NSString *path = [self pathForNewNoticeWithName:name];
-        int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
-        
-        // write stuff
-        if (fd > -1) {
-            @try {
-                
-                // create parameters
-                NSMutableDictionary *exceptionParameters = [NSMutableDictionary dictionary];
-                if ([parameters count]) { [exceptionParameters addEntriesFromDictionary:parameters]; }
-                [exceptionParameters setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Size"];
-                [exceptionParameters setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Size"];
-                
-                // write exception
-                NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            [exception name], ABNotifierExceptionNameKey,
-                                            [exception reason], ABNotifierExceptionReasonKey,
-                                            [exception callStackSymbols], ABNotifierCallStackKey,
-                                            exceptionParameters, ABNotifierExceptionParametersKey,
-#if TARGET_OS_IPHONE
-                                            ABNotifierCurrentViewController(), ABNotifierControllerKey,
-#endif
-                                            nil];
-                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
-                unsigned long length = [data length];
-                write(fd, &length, sizeof(unsigned long));
-                write(fd, [data bytes], length);
-                
-                // delegate
-                id<ABNotifierDelegate> delegate = [self delegate];
-                if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
-                    [delegate notifierDidLogException:exception];
-                }
-                
-            }
-            @catch (NSException *exception) {
-                ABLog(@"Exception encountered while logging exception");
-                ABLog(@"%@", exception);
-            }
-            @finally {
-                close(fd);
-            }
-        }
-        
-    };
-    
-    // run the task if we are on the main thread
-    if ([NSThread isMainThread]) {
-        block();
+    // force all activity onto main thread
+    if (![NSThread isMainThread]) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self logException:exception parameters:parameters];
+        });
+        return;
     }
     
-    // dispatch to main thread and wait
-    else {
-        dispatch_sync(dispatch_get_main_queue(), block);
+    // get file handle
+    NSString *name = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *path = [self pathForNewNoticeWithName:name];
+    int fd = ABNotifierOpenNewNoticeFile([path UTF8String], ABNotifierExceptionNoticeType);
+    
+    // write stuff
+    if (fd > -1) {
+        @try {
+            
+            // create parameters
+            NSMutableDictionary *exceptionParameters = [NSMutableDictionary dictionary];
+            if ([parameters count]) { [exceptionParameters addEntriesFromDictionary:parameters]; }
+            [exceptionParameters setValue:ABNotifierResidentMemoryUsage() forKey:@"Resident Memory Size"];
+            [exceptionParameters setValue:ABNotifierVirtualMemoryUsage() forKey:@"Virtual Memory Size"];
+            
+            // write exception
+            NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        [exception name], ABNotifierExceptionNameKey,
+                                        [exception reason], ABNotifierExceptionReasonKey,
+                                        [exception callStackSymbols], ABNotifierCallStackKey,
+                                        exceptionParameters, ABNotifierExceptionParametersKey,
+#if TARGET_OS_IPHONE
+                                        ABNotifierCurrentViewController(), ABNotifierControllerKey,
+#endif
+                                        nil];
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dictionary];
+            unsigned long length = [data length];
+            write(fd, &length, sizeof(unsigned long));
+            write(fd, [data bytes], length);
+            
+            // delegate
+            id<ABNotifierDelegate> delegate = [self delegate];
+            if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
+                [delegate notifierDidLogException:exception];
+            }
+            
+        }
+        @catch (NSException *exception) {
+            ABLog(@"Exception encountered while logging exception");
+            ABLog(@"%@", exception);
+        }
+        @finally {
+            close(fd);
+        }
     }
     
 }
