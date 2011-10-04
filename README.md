@@ -117,7 +117,7 @@ The `ABNotifierDelegate` protocol allows you to respond to actions going on insi
   
 // your other methods
 
-#pragma mark - HTNotifierDelegate
+#pragma mark - notifier delegate
 /*
   These are only a few of the delegate methods you can implement.
   The rest are documented in ABNotifierDelegate.h. All of the
