@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Absturz-Benachrichtigung";
+"NOTICE_BODY" = "%@ hat festgestellt, dass Ihre App kürzlich abgestürzt ist. Möchten Sie den Entwickler davon in Kenntnis setzen?";
+"SEND" = "Senden";
+"DONT_SEND" = "Nicht senden";
+"ALWAYS_SEND" = "Immer senden";

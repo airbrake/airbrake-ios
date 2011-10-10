@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "當機回報";
+"NOTICE_BODY" = "%@ 偵測到一個尚未回報的當機錯誤，是否將資訊傳送給開發者？";
+"SEND" = "傳送";
+"DONT_SEND" = "不傳送";
+"ALWAYS_SEND" = "總是傳送";

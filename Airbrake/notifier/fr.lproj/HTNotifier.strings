@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Rapport d'erreurs";
+"NOTICE_BODY" = "%@ a détecté une erreur inconnue, voulez-vous envoyer un rapport d'erreur au developpeur?";
+"SEND" = "Envoyer";
+"DONT_SEND" = "Ne pas envoyer";
+"ALWAYS_SEND" = "Envoyer automatiquement";

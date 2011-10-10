@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Raport de prăbuşire";
+"NOTICE_BODY" = "%@ a detectat prăbuşiri neraportate. Aţi dori să trimiteţi un raport dezvoltatorului aplicaţiei?";
+"SEND" = "Trimite";
+"DONT_SEND" = "Nu trimite";
+"ALWAYS_SEND" = "Trimite întotdeauna";

@@ -3,38 +3,25 @@
   <h3>Setting up your iOS project</h3>
   <ol>
     <li>Download the notifier from <a href="Github">https://github.com/guicocoa/hoptoad-ios</a>.</li>
-    <li>
-      Drag the hoptoadnotifier, kissxml, and regexkitlite folders to your project
-      <ul>
-        <li>Make sure "Copy Items" and "Create Groups" are selected</li>
-        <li>If you are already using kissxml or regexkitlite, you don't need to include them again</li>
-      </ul>
-    </li>
-    <li>Add SystemConfiguration.framework, libicucore.dylib, and libxml2.dylib to your project</li>
-    <li>
-      Add the path /usr/include/libxml2 to Header Search Paths in your project's build settings.
-      <ul>
-        <li>Make sure you add it under "All Configurations".</li>
-      </ul>
-    </li>
-    <li>
-      Check the supported localizations of your App under your project settings
-      <ul>
-        <li>XCode will automaticly add all languages Airbreak notifier supports to the list of supported languages of your App. So you might want to delete some of them.</li>
-      </ul>
+    <li>Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected</li>
+    <li>Add <code>SystemConfiguration.framework</code> and <code>libxml2.dylib</code> to your project</li>
+    <li>Add the path `/usr/include/libxml2` to Header Search Paths in your project's build settings under "All Configurations"</li>
+    <li>Check the supported localizations of your app under your project settings. Xcode will automatically add all languages that the Airbrake notifier supports to the list of supported languages of your app, so you might want to delete some of them.</li>
   </ol>
   
   <h3>Running the notifier</h3>
   <p>Import the notifier header file</p>
-  <pre>#import "HTNotifier.h"</pre>
+  <pre>#import "ABNotifier.h"</pre>
   <p>Call the main notifier method at the very beginning of your <code>application:didFinishLaunchingWithOptions:</code></p>
   <pre>
-[HTNotifier startNotifierWithAPIKey:(API KEY)
-                    environmentName:HTNotifierDevelopmentEnvironment];
+[ABNotifier startNotifierWithAPIKey:@"key"
+                    environmentName:ABNotifierAutomaticEnvironment
+                             useSSL:YES
+                           delegate:self];
   </pre>
 
-  <h3>Testing</h3>
+  <h3>Debugging</h3>
   <p>To test that the notifier is working inside your application, a simple test method is provided. This method raises an exception, catches it, and reports it as if a real crash happened. Add this code to your `application:didFinishLaunchingWithOptions:` to test the notifier:</p>
-  <pre>[[HTNotifier sharedNotifier] writeTestNotice];</pre>
+  <pre>[ABNotifier writeTestNotice];</pre>
   
 </div>

@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Foutrapportage";
+"NOTICE_BODY" = "%@ heeft nog niet verzonden foutrapportages gevonden, wil je deze nu naar de ontwikkelaar verzenden?";
+"SEND" = "Verzend";
+"DONT_SEND" = "Niet verzenden";
+"ALWAYS_SEND" = "Altijd verzenden";

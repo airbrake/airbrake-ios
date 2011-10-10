@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Reporte de Fallo";
+"NOTICE_BODY" = "%@ ha detectado fallos no reportados, le gustaría enviar un reporte al programador?";
+"SEND" = "Enviar";
+"DONT_SEND" = "No Envies";
+"ALWAYS_SEND" = "Enviar Siempre";

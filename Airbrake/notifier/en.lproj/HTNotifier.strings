@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Crash Report";
+"NOTICE_BODY" = "%@ has detected unreported crashes, would you like to send a report to the developer?";
+"SEND" = "Send";
+"DONT_SEND" = "Don't Send";
+"ALWAYS_SEND" = "Always Send";
