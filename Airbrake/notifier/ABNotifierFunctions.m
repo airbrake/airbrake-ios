@@ -214,6 +214,7 @@ NSString *ABNotifierPlatformName(void) {
         else if ([machine isEqualToString:@"iPhone2,1"]) { platform = @"iPhone 3GS"; }
         else if ([machine isEqualToString:@"iPhone3,1"]) { platform = @"iPhone 4 (GSM)"; }
         else if ([machine isEqualToString:@"iPhone3,3"]) { platform = @"iPhone 4 (CDMA)"; }
+        else if ([machine isEqualToString:@"iPhone4,1"]) { platform = @"iPhone 4S"; }
         // ipad
         else if ([machine isEqualToString:@"iPad1,1"]) { platform = @"iPad"; }
         else if ([machine isEqualToString:@"iPad2,1"]) { platform = @"iPad 2 (WiFi)"; }
