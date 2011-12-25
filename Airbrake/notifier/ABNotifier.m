@@ -37,7 +37,7 @@ static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 
 // constant strings
-static NSString * const ABNotifierHostName                  = @"airbrakeapp.com";
+static NSString * const ABNotifierHostName                  = @"airbrake.io";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
