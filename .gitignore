@@ -16,3 +16,5 @@ profile
 
 # Finder
 .DS_Store
+
+Xcode/build/
