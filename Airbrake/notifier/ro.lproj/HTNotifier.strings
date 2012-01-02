@@ -3,3 +3,4 @@
 "SEND" = "Trimite";
 "DONT_SEND" = "Nu trimite";
 "ALWAYS_SEND" = "Trimite întotdeauna";
+"NEVER_SEND" = "Niciodată trimite";

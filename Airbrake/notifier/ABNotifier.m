@@ -29,6 +29,10 @@
 
 #import "GCAlertView.h"
 
+#define kUnsetSendCrashReports      0 
+#define kAlwaysSendCrashReports     1
+#define kNeverSendCrashReports      2
+
 // internal
 static SCNetworkReachabilityRef __reachability = nil;
 static id<ABNotifierDelegate> __delegate = nil;
@@ -111,10 +115,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // change token5
             token = NO;
-            
-            // register defaults
-            [[NSUserDefaults standardUserDefaults] registerDefaults:
-             [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
             
             // capture vars
             __userData = [[NSMutableDictionary alloc] init];
@@ -578,61 +578,66 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [manager removeItemAtPath:obj error:nil];
         }];
     };
-    void (^setDefaultsBlock) (void) = ^{
+    void (^setDefaultsBlock) (int) = ^(int i){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setBool:YES forKey:ABNotifierAlwaysSendKey];
+        [defaults setInteger:i forKey:ABNotifierAlwaysSendKey];
         [defaults synchronize];
     };
     
-#if TARGET_OS_IPHONE
+    NSInteger iVal = [[NSUserDefaults standardUserDefaults] integerForKey:ABNotifierAlwaysSendKey];
     
-    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
-    [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
-        setDefaultsBlock();
-        postNoticesBlock();
-    }];
-    [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
-    [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
-    [alert setDidDismissBlock:delegateDismissBlock];
-    [alert setDidDismissBlock:delegatePresentBlock];
-    [alert setCancelButtonIndex:2];
-    [alert show];
-    [alert release];
-    
-#else
-    
-    // delegate
-    delegatePresentBlock();
-    
-    // build alert
-	NSAlert *alert = [NSAlert
-                      alertWithMessageText:title
-                      defaultButton:ABLocalizedString(@"ALWAYS_SEND")
-                      alternateButton:ABLocalizedString(@"DONT_SEND")
-                      otherButton:ABLocalizedString(@"SEND")
-                      informativeTextWithFormat:body];
-    
-    // run alert
-	NSInteger code = [alert runModal];
-    
-    // don't send
-    if (code == NSAlertAlternateReturn) {
-        deleteNoticesBlock();
+    if ( iVal == kUnsetSendCrashReports || iVal == kAlwaysSendCrashReports ) {
+        #if TARGET_OS_IPHONE
+            
+            GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
+            [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
+                setDefaultsBlock(kAlwaysSendCrashReports);
+                postNoticesBlock();
+            }];
+            [alert addButtonWithTitle:ABLocalizedString(@"NEVER_SEND") block:^{
+                setDefaultsBlock(kNeverSendCrashReports);
+                deleteNoticesBlock();
+            }];
+
+            [alert setDidDismissBlock:delegateDismissBlock];
+            [alert setDidDismissBlock:delegatePresentBlock];
+            [alert setCancelButtonIndex:2];
+            [alert show];
+            [alert release];
+            
+        #else
+            
+            // delegate
+            delegatePresentBlock();
+            
+            // build alert
+            NSAlert *alert = [NSAlert
+                              alertWithMessageText:title
+                              defaultButton:ABLocalizedString(@"ALWAYS_SEND")
+                              alternateButton:ABLocalizedString(@"NEVER_SEND")
+                              otherButton:nil
+                              informativeTextWithFormat:body];
+            
+            // run alert
+            NSInteger code = [alert runModal];
+            
+            // don't send
+            if (code == NSAlertAlternateReturn) {
+                setDefaultsBlock(kNeverSendCrashReports);
+                deleteNoticesBlock();
+            }
+            
+            // send
+            else if (code == NSAlertDefaultReturn) {
+                    setDefaultsBlock(kAlwaysSendCrashReports);
+                    postNoticesBlock();
+            }
+            
+            // delegate
+            delegateDismissBlock();
+            
+        #endif
     }
-    
-    // send
-    else {
-        if (code == NSAlertDefaultReturn) {
-            setDefaultsBlock();
-        }
-        postNoticesBlock();
-    }
-    
-    // delegate
-	delegateDismissBlock();
-    
-#endif
-    
 }
 
 #pragma mark - reachability
@@ -699,7 +704,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         dispatch_once(&token, ^{
             NSArray *paths = [ABNotifier pathsForAllNotices];
             if ([paths count]) {
-                if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
+                if ([[NSUserDefaults standardUserDefaults] integerForKey:ABNotifierAlwaysSendKey] == kAlwaysSendCrashReports) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         [ABNotifier postNoticesWithPaths:paths];
                     });
