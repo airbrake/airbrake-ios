@@ -330,7 +330,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
         }
 #endif
-        NSFileManager *manager = [NSFileManager defaultManager];
+        NSFileManager *manager = [[NSFileManager alloc] init];
         if (![manager fileExistsAtPath:path]) {
             [manager
              createDirectoryAtPath:path
@@ -339,6 +339,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              error:nil];
         }
         [path retain];
+        [manager release];
     });
     return path;
 }
@@ -349,7 +350,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 + (NSArray *)pathsForAllNotices {
     NSString *path = [self pathForNoticesDirectory];
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    NSFileManager* manager = [[NSFileManager alloc] init];
+    NSArray *contents = [manager contentsOfDirectoryAtPath:path error:nil];
     NSMutableArray *paths = [NSMutableArray arrayWithCapacity:[contents count]];
     [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
@@ -357,6 +359,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [paths addObject:noticePath];
         }
     }];
+    [manager release];
     return paths;
 }
 
@@ -446,7 +449,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         [request setHTTPBody:data];
     }
     else {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        NSFileManager* manager = [[NSFileManager alloc] init];
+        [manager removeItemAtPath:path error:nil];
+        [manager release];
         return;
     }
 	
@@ -470,7 +475,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         return;
     }
     else {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        NSFileManager* manager = [[NSFileManager alloc] init];
+        [manager removeItemAtPath:path error:nil];
+        [manager release];
     }
 	
 	// great success
@@ -573,10 +580,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         });
     };
     void (^deleteNoticesBlock) (void) = ^{
-        NSFileManager *manager = [NSFileManager defaultManager];
+        NSFileManager *manager = [[NSFileManager alloc] init];
         [paths enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             [manager removeItemAtPath:obj error:nil];
         }];
+        [manager release];
     };
     void (^setDefaultsBlock) (void) = ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
