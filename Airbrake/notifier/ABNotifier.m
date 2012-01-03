@@ -49,10 +49,12 @@ NSString * const ABNotifierDevelopmentEnvironment           = @"Development";
 NSString * const ABNotifierAdHocEnvironment                 = @"Ad Hoc";
 NSString * const ABNotifierAppStoreEnvironment              = @"App Store";
 NSString * const ABNotifierReleaseEnvironment               = @"Release";
-#ifdef DEBUG
+#if defined (DEBUG) || defined (DEVELOPMENT)
 NSString * const ABNotifierAutomaticEnvironment             = @"Development";
+#elif defined (TEST) || defined (TESTING)
+NSString * const ABNotifierAutomaticEnvironment             = @"Test";
 #else
-NSString * const ABNotifierAutomaticEnvironment             = @"Release";
+NSString * const ABNotifierAutomaticEnvironment             = @"Production";
 #endif
 
 // reachability callback
