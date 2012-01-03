@@ -80,7 +80,17 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
 /*
  
  This is the entry point for the library. Any code executed after this
- method call is monitored for exceptions and signals.
+ method call is monitored for exceptions and signals. There parameters seen
+ here are as follows:
+ 
+ API Key: your Airbrake project API key
+ Environment Name: the name of the environment to collect notices in
+ SSL: set this to enable secure reporting if your Airbrake account supports it
+ Delegate: the object that wishes to receive events from the notifier
+ Exception Handler: choose whether or not to install the exception handler
+ Signal Handler: choose whether or not to install the signal handler
+ Display Prompt: choose whether or not a prompt will be shown to the user
+    before notices are posted
  
  */
 + (void)startNotifierWithAPIKey:(NSString *)key
@@ -93,6 +103,13 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal;
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<ABNotifierDelegate>)delegate
+        installExceptionHandler:(BOOL)exception
+           installSignalHandler:(BOOL)signal
+              displayUserPrompt:(BOOL)display;
 
 /*
  
