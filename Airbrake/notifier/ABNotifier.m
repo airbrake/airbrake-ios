@@ -594,7 +594,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 #if TARGET_OS_IPHONE
     
-    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
+    GCAlertView *alert = [[[GCAlertView alloc] initWithTitle:title message:body] autorelease];
     [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
         setDefaultsBlock();
         postNoticesBlock();
@@ -604,9 +604,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     [alert setDidDismissBlock:delegateDismissBlock];
     [alert setDidDismissBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
-    [alert show];
-    [alert release];
-    
+    [alert performSelector:@selector(show) withObject:nil afterDelay:0.];
+
 #else
     
     // delegate
