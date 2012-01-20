@@ -57,15 +57,8 @@
 		9224BAE514561F000017ADCC /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
 		9224BAE614561F000017ADCC /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
 		9224BAE714561F000017ADCC /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
-		9224BAE914561F000017ADCC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAEA14561F000017ADCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAEB14561F000017ADCC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAEC14561F000017ADCC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAED14561F000017ADCC /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAEE14561F000017ADCC /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAEF14561F000017ADCC /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HTNotifier.strings; sourceTree = "<group>"; };
-		9224BAF014561F000017ADCC /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HTNotifier.strings"; sourceTree = "<group>"; };
 		9224BB0614561F390017ADCC /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		927F236814C973F0005FAB76 /* Airbrake.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Airbrake.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,7 +183,7 @@
 				9224BAE714561F000017ADCC /* ABNotifierFunctions.m */,
 				9224BAE614561F000017ADCC /* ABNotifierFunctions.h */,
 				9224BAE514561F000017ADCC /* ABNotifierDelegate.h */,
-				9224BAE814561F000017ADCC /* HTNotifier.strings */,
+				927F236814C973F0005FAB76 /* Airbrake.bundle */,
 			);
 			name = notifier;
 			path = ../../../Airbrake/notifier;
@@ -289,24 +282,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		9224BAE814561F000017ADCC /* HTNotifier.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9224BAE914561F000017ADCC /* de */,
-				9224BAEA14561F000017ADCC /* en */,
-				9224BAEB14561F000017ADCC /* es */,
-				9224BAEC14561F000017ADCC /* fr */,
-				9224BAED14561F000017ADCC /* nl */,
-				9224BAEE14561F000017ADCC /* ro */,
-				9224BAEF14561F000017ADCC /* ru */,
-				9224BAF014561F000017ADCC /* zh-Hant */,
-			);
-			name = HTNotifier.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		9224BAC814561EF40017ADCC /* Debug */ = {
