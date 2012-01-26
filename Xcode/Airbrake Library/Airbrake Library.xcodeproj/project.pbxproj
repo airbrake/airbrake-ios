@@ -329,7 +329,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_BIT)";
-				DSTROOT = /tmp/Airbrake_Library.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Airbrake Library/Airbrake Library-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -348,7 +347,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_BIT)";
-				DSTROOT = /tmp/Airbrake_Library.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Airbrake Library/Airbrake Library-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
