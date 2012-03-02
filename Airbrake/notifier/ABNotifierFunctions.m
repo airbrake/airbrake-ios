@@ -240,7 +240,7 @@ NSArray *ABNotifierParseCallStack(NSArray *callStack) {
         NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
         NSArray *components = [expression matchesInString:line options:NSMatchingReportCompletion range:NSMakeRange(0, [line length])];
         NSMutableArray *frame = [NSMutableArray arrayWithCapacity:[components count]];
-        [components enumerateObjectsUsingBlock:^(id result, NSUInteger idx, BOOL *stop) {
+        [components enumerateObjectsUsingBlock:^(id result, NSUInteger index, BOOL *s) {
             for (NSUInteger i = 0; i < [result numberOfRanges]; i++) {
                 [frame addObject:[line substringWithRange:[result rangeAtIndex:i]]];
             }
