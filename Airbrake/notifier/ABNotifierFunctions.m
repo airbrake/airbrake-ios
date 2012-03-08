@@ -251,12 +251,12 @@ NSArray *ABNotifierParseCallStack(NSArray *callStack) {
 }
 NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *executable) {
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bindings) {
-        if (![[obj objectAtIndex:2] isEqualToString:executable]) { return NO; }
-        NSRange range = [[obj objectAtIndex:3] rangeOfString:@"ht_handle_signal"];
+        if (![[(NSArray *)obj objectAtIndex:2] isEqualToString:executable]) { return NO; }
+        NSRange range = [[(NSArray *)obj objectAtIndex:3] rangeOfString:@"ht_handle_signal"];
         return range.location == NSNotFound;
     }];
     NSArray *matching = [callStack filteredArrayUsingPredicate:predicate];
-    if ([matching count]) { return [[matching objectAtIndex:0] objectAtIndex:3]; }
+    if ([matching count]) { return [(NSArray *)[matching objectAtIndex:0] objectAtIndex:3]; }
     else { return nil; }
 }
 
