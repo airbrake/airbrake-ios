@@ -3,3 +3,4 @@
 "SEND" = "傳送";
 "DONT_SEND" = "不傳送";
 "ALWAYS_SEND" = "總是傳送";
+"NEVER_SEND" = "从来没傳送";

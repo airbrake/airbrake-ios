@@ -3,3 +3,4 @@
 "SEND" = "Verzend";
 "DONT_SEND" = "Niet verzenden";
 "ALWAYS_SEND" = "Altijd verzenden";
+"NEVER_SEND" = "Nooit verzenden";
