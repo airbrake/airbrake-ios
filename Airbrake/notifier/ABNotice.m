@@ -227,15 +227,15 @@ const int ABNotifierExceptionNoticeType   = 2;
         [line addAttribute:
          [DDXMLElement
           attributeWithName:@"number"
-          stringValue:[obj objectAtIndex:1]]];
+          stringValue:[(NSArray *)obj objectAtIndex:1]]];
         [line addAttribute:
          [DDXMLElement
           attributeWithName:@"file"
-          stringValue:[obj objectAtIndex:2]]];
+          stringValue:[(NSArray *)obj objectAtIndex:2]]];
         [line addAttribute:
          [DDXMLElement
           attributeWithName:@"method"
-          stringValue:[obj objectAtIndex:3]]];
+          stringValue:[(NSArray *)obj objectAtIndex:3]]];
         [backtrace addChild:line];
     }];
 	[error addChild:backtrace];
