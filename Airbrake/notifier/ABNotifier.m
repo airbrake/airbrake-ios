@@ -35,6 +35,7 @@ static id<ABNotifierDelegate> __delegate = nil;
 static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
+static BOOL __displayPrompt = YES;
 
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
@@ -43,15 +44,17 @@ NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDi
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
 NSString * const ABNotifierWillPostNoticesNotification      = @"ABNotifierWillPostNotices";
 NSString * const ABNotifierDidPostNoticesNotification       = @"ABNotifierDidPostNotices";
-NSString * const ABNotifierVersion                          = @"3.0";
+NSString * const ABNotifierVersion                          = @"3.1";
 NSString * const ABNotifierDevelopmentEnvironment           = @"Development";
 NSString * const ABNotifierAdHocEnvironment                 = @"Ad Hoc";
 NSString * const ABNotifierAppStoreEnvironment              = @"App Store";
 NSString * const ABNotifierReleaseEnvironment               = @"Release";
-#ifdef DEBUG
+#if defined (DEBUG) || defined (DEVELOPMENT)
 NSString * const ABNotifierAutomaticEnvironment             = @"Development";
+#elif defined (TEST) || defined (TESTING)
+NSString * const ABNotifierAutomaticEnvironment             = @"Test";
 #else
-NSString * const ABNotifierAutomaticEnvironment             = @"Release";
+NSString * const ABNotifierAutomaticEnvironment             = @"Production";
 #endif
 
 // reachability callback
@@ -97,7 +100,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                            useSSL:useSSL
                          delegate:delegate
           installExceptionHandler:YES
-             installSignalHandler:YES];
+             installSignalHandler:YES
+                displayUserPrompt:YES];
 }
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
@@ -105,6 +109,21 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal {
+    [self startNotifierWithAPIKey:key
+                  environmentName:name
+                           useSSL:useSSL
+                         delegate:delegate
+          installExceptionHandler:exception
+             installSignalHandler:signal
+                displayUserPrompt:YES];
+}
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<ABNotifierDelegate>)delegate
+        installExceptionHandler:(BOOL)exception
+           installSignalHandler:(BOOL)signal
+              displayUserPrompt:(BOOL)display {
     @synchronized(self) {
         static BOOL token = YES;
         if (token) {
@@ -120,6 +139,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             __userData = [[NSMutableDictionary alloc] init];
             __delegate = delegate;
             __useSSL = useSSL;
+            __displayPrompt = display;
             
             // switch on api key
             if ([key length]) {
@@ -650,44 +670,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         }
     }
     return NO;
-#if 0
-    if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
-	{
-		// if target host is not reachable
-		return NotReachable;
-	}
-    
-	BOOL retVal = NotReachable;
-	
-	if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
-	{
-		// if target host is reachable and no connection is required
-		//  then we'll assume (for now) that your on Wi-Fi
-		retVal = ReachableViaWiFi;
-	}
-	
-	
-	if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
-         (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
-	{
-        // ... and the connection is on-demand (or on-traffic) if the
-        //     calling application is using the CFSocketStream or higher APIs
-        
-        if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
-        {
-            // ... and no [user] intervention is needed
-            retVal = ReachableViaWiFi;
-        }
-    }
-	
-	if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
-	{
-		// ... but WWAN connections are OK if the calling application
-		//     is using the CFNetwork (CFSocketStream?) APIs.
-		retVal = ReachableViaWWAN;
-	}
-	return retVal;
-#endif
 }
 
 @end
@@ -699,7 +681,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         dispatch_once(&token, ^{
             NSArray *paths = [ABNotifier pathsForAllNotices];
             if ([paths count]) {
-                if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey]) {
+                if ([[NSUserDefaults standardUserDefaults] boolForKey:ABNotifierAlwaysSendKey] ||
+                    !__displayPrompt) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         [ABNotifier postNoticesWithPaths:paths];
                     });

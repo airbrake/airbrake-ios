@@ -1,5 +1,10 @@
 # Airbrake iOS Notifier Changelog
 
+## 3.1
+
+- add new environment strings to differentiate between development and testing
+- add parameter to main start method to control display of crash prompt
+
 ## 3.0
 
 - all new public API
@@ -8,7 +13,7 @@
 - new method to log your own exceptions
 - use asynch reachability events
 - add notifications that mirror delegate callbacks
-- UDID is no longer automatically transmitted because it is [deprecated](http://blog.guicocoa.com/post/9137000491/what-apple-should-have-done-with-udid)
+- UDID is no longer automatically transmitted because it is [deprecated](http://caleb.dvnprt.me/blog/2011-08-19-udid.html)
 - bug fixes
 
 ## 2.2.2
