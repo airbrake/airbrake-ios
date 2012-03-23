@@ -71,6 +71,20 @@
  */
 - (void)notifierDidLogException:(NSException *)exception;
 
+/*
+
+ Informs the delegate that an exception was encountered
+
+ */
+- (void)notifierDidRecieveException:(NSException *)exception;
+
+/*
+
+ Informs the delegate that a signal was raised
+
+ */
+- (void)notifierDidRecieveSignal:(int)signal;
+
 #if TARGET_OS_IPHONE
 /*
  
