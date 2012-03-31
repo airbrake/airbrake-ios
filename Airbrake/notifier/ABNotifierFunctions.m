@@ -214,6 +214,7 @@ NSString *ABNotifierPlatformName(void) {
         else if ([machine isEqualToString:@"iPhone2,1"]) { platform = @"iPhone 3GS"; }
         else if ([machine isEqualToString:@"iPhone3,1"]) { platform = @"iPhone 4 (GSM)"; }
         else if ([machine isEqualToString:@"iPhone3,3"]) { platform = @"iPhone 4 (CDMA)"; }
+        else if ([machine isEqualToString:@"iPhone4,1"]) { platform = @"iPhone 4S"; }
         // ipad
         else if ([machine isEqualToString:@"iPad1,1"]) { platform = @"iPad"; }
         else if ([machine isEqualToString:@"iPad2,1"]) { platform = @"iPad 2 (WiFi)"; }
@@ -239,7 +240,7 @@ NSArray *ABNotifierParseCallStack(NSArray *callStack) {
         NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
         NSArray *components = [expression matchesInString:line options:NSMatchingReportCompletion range:NSMakeRange(0, [line length])];
         NSMutableArray *frame = [NSMutableArray arrayWithCapacity:[components count]];
-        [components enumerateObjectsUsingBlock:^(id result, NSUInteger idx, BOOL *stop) {
+        [components enumerateObjectsUsingBlock:^(id result, NSUInteger index, BOOL *s) {
             for (NSUInteger i = 0; i < [result numberOfRanges]; i++) {
                 [frame addObject:[line substringWithRange:[result rangeAtIndex:i]]];
             }
@@ -250,12 +251,12 @@ NSArray *ABNotifierParseCallStack(NSArray *callStack) {
 }
 NSString *ABNotifierActionFromParsedCallStack(NSArray *callStack, NSString *executable) {
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bindings) {
-        if (![[obj objectAtIndex:2] isEqualToString:executable]) { return NO; }
-        NSRange range = [[obj objectAtIndex:3] rangeOfString:@"ht_handle_signal"];
+        if (![[(NSArray *)obj objectAtIndex:2] isEqualToString:executable]) { return NO; }
+        NSRange range = [[(NSArray *)obj objectAtIndex:3] rangeOfString:@"ht_handle_signal"];
         return range.location == NSNotFound;
     }];
     NSArray *matching = [callStack filteredArrayUsingPredicate:predicate];
-    if ([matching count]) { return [[matching objectAtIndex:0] objectAtIndex:3]; }
+    if ([matching count]) { return [(NSArray *)[matching objectAtIndex:0] objectAtIndex:3]; }
     else { return nil; }
 }
 
