@@ -10,18 +10,6 @@
 		9224BAC114561EF40017ADCC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9224BAC014561EF40017ADCC /* Foundation.framework */; };
 		9224BAF114561F000017ADCC /* GCAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BACE14561F000017ADCC /* GCAlertView.h */; };
 		9224BAF214561F000017ADCC /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BACF14561F000017ADCC /* GCAlertView.m */; };
-		9224BAF314561F000017ADCC /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAD214561F000017ADCC /* DDXMLElementAdditions.h */; };
-		9224BAF414561F000017ADCC /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAD314561F000017ADCC /* DDXMLElementAdditions.m */; };
-		9224BAF514561F000017ADCC /* NSString+DDXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAD514561F000017ADCC /* NSString+DDXML.h */; };
-		9224BAF614561F000017ADCC /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAD614561F000017ADCC /* NSString+DDXML.m */; };
-		9224BAF714561F000017ADCC /* DDXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAD714561F000017ADCC /* DDXML.h */; };
-		9224BAF814561F000017ADCC /* DDXMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAD814561F000017ADCC /* DDXMLDocument.h */; };
-		9224BAF914561F000017ADCC /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAD914561F000017ADCC /* DDXMLDocument.m */; };
-		9224BAFA14561F000017ADCC /* DDXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BADA14561F000017ADCC /* DDXMLElement.h */; };
-		9224BAFB14561F000017ADCC /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BADB14561F000017ADCC /* DDXMLElement.m */; };
-		9224BAFC14561F000017ADCC /* DDXMLNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BADC14561F000017ADCC /* DDXMLNode.h */; };
-		9224BAFD14561F000017ADCC /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BADD14561F000017ADCC /* DDXMLNode.m */; };
-		9224BAFE14561F000017ADCC /* DDXMLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BADF14561F000017ADCC /* DDXMLPrivate.h */; };
 		9224BAFF14561F000017ADCC /* ABNotice.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE114561F000017ADCC /* ABNotice.h */; };
 		9224BB0014561F000017ADCC /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAE214561F000017ADCC /* ABNotice.m */; };
 		9224BB0114561F000017ADCC /* ABNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE314561F000017ADCC /* ABNotifier.h */; };
@@ -29,7 +17,12 @@
 		9224BB0314561F000017ADCC /* ABNotifierDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE514561F000017ADCC /* ABNotifierDelegate.h */; };
 		9224BB0414561F000017ADCC /* ABNotifierFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE614561F000017ADCC /* ABNotifierFunctions.h */; };
 		9224BB0514561F000017ADCC /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAE714561F000017ADCC /* ABNotifierFunctions.m */; };
-		9224BB0714561F390017ADCC /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9224BB0614561F390017ADCC /* libxml2.dylib */; };
+		92D2BF4D152A534B0015BD35 /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF4C152A534B0015BD35 /* DDXMLElementAdditions.h */; };
+		92D2BF54152A53620015BD35 /* DDXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF50152A53620015BD35 /* DDXML.h */; };
+		92D2BF55152A53620015BD35 /* DDXMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF51152A53620015BD35 /* DDXMLDocument.h */; };
+		92D2BF56152A53620015BD35 /* DDXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF52152A53620015BD35 /* DDXMLElement.h */; };
+		92D2BF57152A53620015BD35 /* DDXMLNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF53152A53620015BD35 /* DDXMLNode.h */; };
+		92D2BF59152A536C0015BD35 /* DDXMLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF58152A536C0015BD35 /* DDXMLPrivate.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,18 +31,6 @@
 		9224BAC414561EF40017ADCC /* Airbrake Library-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Airbrake Library-Prefix.pch"; sourceTree = "<group>"; };
 		9224BACE14561F000017ADCC /* GCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAlertView.h; sourceTree = "<group>"; };
 		9224BACF14561F000017ADCC /* GCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAlertView.m; sourceTree = "<group>"; };
-		9224BAD214561F000017ADCC /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
-		9224BAD314561F000017ADCC /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
-		9224BAD514561F000017ADCC /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
-		9224BAD614561F000017ADCC /* NSString+DDXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DDXML.m"; sourceTree = "<group>"; };
-		9224BAD714561F000017ADCC /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
-		9224BAD814561F000017ADCC /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
-		9224BAD914561F000017ADCC /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
-		9224BADA14561F000017ADCC /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElement.h; sourceTree = "<group>"; };
-		9224BADB14561F000017ADCC /* DDXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElement.m; sourceTree = "<group>"; };
-		9224BADC14561F000017ADCC /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
-		9224BADD14561F000017ADCC /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
-		9224BADF14561F000017ADCC /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
 		9224BAE114561F000017ADCC /* ABNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotice.h; sourceTree = "<group>"; };
 		9224BAE214561F000017ADCC /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
 		9224BAE314561F000017ADCC /* ABNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifier.h; sourceTree = "<group>"; };
@@ -57,8 +38,14 @@
 		9224BAE514561F000017ADCC /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
 		9224BAE614561F000017ADCC /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
 		9224BAE714561F000017ADCC /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
-		9224BB0614561F390017ADCC /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		927F236814C973F0005FAB76 /* Airbrake.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Airbrake.bundle; sourceTree = "<group>"; };
+		92D2BF3A152A52B20015BD35 /* KissXML.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KissXML.xcodeproj; path = ../../../Airbrake/KissXML.xcodeproj; sourceTree = "<group>"; };
+		92D2BF4C152A534B0015BD35 /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLElementAdditions.h; path = ../../../Airbrake/KissXML/Additions/DDXMLElementAdditions.h; sourceTree = "<group>"; };
+		92D2BF50152A53620015BD35 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXML.h; path = ../../../Airbrake/KissXML/DDXML.h; sourceTree = "<group>"; };
+		92D2BF51152A53620015BD35 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLDocument.h; path = ../../../Airbrake/KissXML/DDXMLDocument.h; sourceTree = "<group>"; };
+		92D2BF52152A53620015BD35 /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLElement.h; path = ../../../Airbrake/KissXML/DDXMLElement.h; sourceTree = "<group>"; };
+		92D2BF53152A53620015BD35 /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLNode.h; path = ../../../Airbrake/KissXML/DDXMLNode.h; sourceTree = "<group>"; };
+		92D2BF58152A536C0015BD35 /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLPrivate.h; path = ../../../Airbrake/KissXML/Private/DDXMLPrivate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +53,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9224BB0714561F390017ADCC /* libxml2.dylib in Frameworks */,
 				9224BAC114561EF40017ADCC /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,7 +80,6 @@
 		9224BABF14561EF40017ADCC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9224BB0614561F390017ADCC /* libxml2.dylib */,
 				9224BAC014561EF40017ADCC /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -103,8 +88,8 @@
 		9224BAC214561EF40017ADCC /* Airbrake Library */ = {
 			isa = PBXGroup;
 			children = (
+				92D2BF4A152A53350015BD35 /* KissXML */,
 				9224BACD14561F000017ADCC /* gcalertview */,
-				9224BAD014561F000017ADCC /* kissxml */,
 				9224BAE014561F000017ADCC /* notifier */,
 				9224BAC314561EF40017ADCC /* Supporting Files */,
 			);
@@ -129,50 +114,6 @@
 			path = ../../../Airbrake/gcalertview;
 			sourceTree = "<group>";
 		};
-		9224BAD014561F000017ADCC /* kissxml */ = {
-			isa = PBXGroup;
-			children = (
-				9224BAD114561F000017ADCC /* Additions */,
-				9224BAD414561F000017ADCC /* Categories */,
-				9224BAD914561F000017ADCC /* DDXMLDocument.m */,
-				9224BAD814561F000017ADCC /* DDXMLDocument.h */,
-				9224BADB14561F000017ADCC /* DDXMLElement.m */,
-				9224BADA14561F000017ADCC /* DDXMLElement.h */,
-				9224BADD14561F000017ADCC /* DDXMLNode.m */,
-				9224BADC14561F000017ADCC /* DDXMLNode.h */,
-				9224BAD714561F000017ADCC /* DDXML.h */,
-				9224BADE14561F000017ADCC /* Private */,
-			);
-			name = kissxml;
-			path = ../../../Airbrake/kissxml;
-			sourceTree = "<group>";
-		};
-		9224BAD114561F000017ADCC /* Additions */ = {
-			isa = PBXGroup;
-			children = (
-				9224BAD314561F000017ADCC /* DDXMLElementAdditions.m */,
-				9224BAD214561F000017ADCC /* DDXMLElementAdditions.h */,
-			);
-			path = Additions;
-			sourceTree = "<group>";
-		};
-		9224BAD414561F000017ADCC /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				9224BAD614561F000017ADCC /* NSString+DDXML.m */,
-				9224BAD514561F000017ADCC /* NSString+DDXML.h */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		9224BADE14561F000017ADCC /* Private */ = {
-			isa = PBXGroup;
-			children = (
-				9224BADF14561F000017ADCC /* DDXMLPrivate.h */,
-			);
-			path = Private;
-			sourceTree = "<group>";
-		};
 		9224BAE014561F000017ADCC /* notifier */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +130,28 @@
 			path = ../../../Airbrake/notifier;
 			sourceTree = "<group>";
 		};
+		92D2BF4A152A53350015BD35 /* KissXML */ = {
+			isa = PBXGroup;
+			children = (
+				92D2BF4B152A53410015BD35 /* Headers */,
+				92D2BF3A152A52B20015BD35 /* KissXML.xcodeproj */,
+			);
+			name = KissXML;
+			sourceTree = "<group>";
+		};
+		92D2BF4B152A53410015BD35 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				92D2BF50152A53620015BD35 /* DDXML.h */,
+				92D2BF51152A53620015BD35 /* DDXMLDocument.h */,
+				92D2BF52152A53620015BD35 /* DDXMLElement.h */,
+				92D2BF53152A53620015BD35 /* DDXMLNode.h */,
+				92D2BF4C152A534B0015BD35 /* DDXMLElementAdditions.h */,
+				92D2BF58152A536C0015BD35 /* DDXMLPrivate.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -197,17 +160,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				9224BAF114561F000017ADCC /* GCAlertView.h in Headers */,
-				9224BAF314561F000017ADCC /* DDXMLElementAdditions.h in Headers */,
-				9224BAF514561F000017ADCC /* NSString+DDXML.h in Headers */,
-				9224BAF714561F000017ADCC /* DDXML.h in Headers */,
-				9224BAF814561F000017ADCC /* DDXMLDocument.h in Headers */,
-				9224BAFA14561F000017ADCC /* DDXMLElement.h in Headers */,
-				9224BAFC14561F000017ADCC /* DDXMLNode.h in Headers */,
-				9224BAFE14561F000017ADCC /* DDXMLPrivate.h in Headers */,
 				9224BAFF14561F000017ADCC /* ABNotice.h in Headers */,
 				9224BB0114561F000017ADCC /* ABNotifier.h in Headers */,
 				9224BB0314561F000017ADCC /* ABNotifierDelegate.h in Headers */,
 				9224BB0414561F000017ADCC /* ABNotifierFunctions.h in Headers */,
+				92D2BF4D152A534B0015BD35 /* DDXMLElementAdditions.h in Headers */,
+				92D2BF54152A53620015BD35 /* DDXML.h in Headers */,
+				92D2BF55152A53620015BD35 /* DDXMLDocument.h in Headers */,
+				92D2BF56152A53620015BD35 /* DDXMLElement.h in Headers */,
+				92D2BF57152A53620015BD35 /* DDXMLNode.h in Headers */,
+				92D2BF59152A536C0015BD35 /* DDXMLPrivate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,11 +232,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9224BAF214561F000017ADCC /* GCAlertView.m in Sources */,
-				9224BAF414561F000017ADCC /* DDXMLElementAdditions.m in Sources */,
-				9224BAF614561F000017ADCC /* NSString+DDXML.m in Sources */,
-				9224BAF914561F000017ADCC /* DDXMLDocument.m in Sources */,
-				9224BAFB14561F000017ADCC /* DDXMLElement.m in Sources */,
-				9224BAFD14561F000017ADCC /* DDXMLNode.m in Sources */,
 				9224BB0014561F000017ADCC /* ABNotice.m in Sources */,
 				9224BB0214561F000017ADCC /* ABNotifier.m in Sources */,
 				9224BB0514561F000017ADCC /* ABNotifierFunctions.m in Sources */,
