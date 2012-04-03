@@ -25,6 +25,16 @@
 		92D2BF59152A536C0015BD35 /* DDXMLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D2BF58152A536C0015BD35 /* DDXMLPrivate.h */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9238665C152B723E000CBEBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92D2BF3A152A52B20015BD35 /* KissXML.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 927DAC89152A44EB00402510;
+			remoteInfo = KissXML;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		9224BABD14561EF40017ADCC /* libAirbrake Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAirbrake Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9224BAC014561EF40017ADCC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -130,6 +140,14 @@
 			path = ../../../Airbrake/notifier;
 			sourceTree = "<group>";
 		};
+		92386659152B723E000CBEBA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9238665D152B723E000CBEBA /* libKissXML.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		92D2BF4A152A53350015BD35 /* KissXML */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,12 +237,28 @@
 			mainGroup = 9224BAB214561EF40017ADCC;
 			productRefGroup = 9224BABE14561EF40017ADCC /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 92386659152B723E000CBEBA /* Products */;
+					ProjectRef = 92D2BF3A152A52B20015BD35 /* KissXML.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				9224BABC14561EF40017ADCC /* Airbrake Library */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9238665D152B723E000CBEBA /* libKissXML.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libKissXML.a;
+			remoteRef = 9238665C152B723E000CBEBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9224BAB914561EF40017ADCC /* Sources */ = {
