@@ -33,7 +33,6 @@ Airbrake supports a version floor for reported notices. A setting called "Latest
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
 2. Add `SystemConfiguration.framework` and `libxml2.dylib` to your project
 3. Add the path `/usr/include/libxml2` to Header Search Paths in your project's build settings under "All Configurations"
-4. Check the supported localizations of your app under your project settings. Xcode will automatically add all languages that the Airbrake notifier supports to the list of supported languages of your app, so you might want to delete some of them.
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
