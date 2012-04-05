@@ -358,8 +358,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              attributes:nil
              error:nil];
         }
-        [path retain];
-        [manager release];
     });
     return path;
 }
@@ -379,7 +377,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             [paths addObject:noticePath];
         }
     }];
-    [manager release];
     return paths;
 }
 
@@ -471,7 +468,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     else {
         NSFileManager* manager = [[NSFileManager alloc] init];
         [manager removeItemAtPath:path error:nil];
-        [manager release];
         return;
     }
 	
@@ -497,7 +493,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     else {
         NSFileManager* manager = [[NSFileManager alloc] init];
         [manager removeItemAtPath:path error:nil];
-        [manager release];
     }
 	
 	// great success
@@ -604,7 +599,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         [paths enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             [manager removeItemAtPath:obj error:nil];
         }];
-        [manager release];
     };
     void (^setDefaultsBlock) (void) = ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -614,7 +608,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 #if TARGET_OS_IPHONE
     
-    GCAlertView *alert = [[[GCAlertView alloc] initWithTitle:title message:body] autorelease];
+    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
     [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
         setDefaultsBlock();
         postNoticesBlock();
