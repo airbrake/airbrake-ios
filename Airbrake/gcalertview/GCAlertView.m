@@ -39,40 +39,50 @@ static NSString *GCAlertViewDidDismissKey = @"GCAlertViewDidDismissAction";
     }
     return self;
 }
-- (void)addButtonWithTitle:(NSString *)title block:(void (^) (void))block {
+- (void)addButtonWithTitle:(NSString *)title block:(GCAlertBlock)block {
     if ([actions objectForKey:title]) { return; }
     [self addButtonWithTitle:title];
     if (block) {
+		GCAlertBlock action = ((__bridge GCAlertBlock)Block_copy(((__bridge const void *)block)));
         [actions setObject:block forKey:title];
+		Block_release(((__bridge const void *)action));
     }
 }
-- (void)setWillPresentBlock:(void (^) (void))block {
+- (void)setWillPresentBlock:(GCAlertBlock)block {
     if (block) {
+		GCAlertBlock action = ((__bridge GCAlertBlock)Block_copy(((__bridge const void *)block)));
         [actions setObject:block forKey:GCAlertViewWillPresentKey];
+		Block_release(((__bridge const void *)action));
     }
     else {
         [actions removeObjectForKey:GCAlertViewWillPresentKey];
     }
 }
-- (void)setDidPresentBlock:(void (^) (void))block {
+- (void)setDidPresentBlock:(GCAlertBlock)block {
     if (block) {
+		GCAlertBlock action = ((__bridge GCAlertBlock)Block_copy(((__bridge const void *)block)));
         [actions setObject:block forKey:GCAlertViewDidPresentKey];
+		Block_release(((__bridge const void *)action));
     }
     else {
         [actions removeObjectForKey:GCAlertViewDidPresentKey];
     }
 }
-- (void)setWillDismissBlock:(void (^) (void))block {
+- (void)setWillDismissBlock:(GCAlertBlock)block {
     if (block) {
+		GCAlertBlock action = ((__bridge GCAlertBlock)Block_copy(((__bridge const void *)block)));
         [actions setObject:block forKey:GCAlertViewWillDismissKey];
+		Block_release(((__bridge const void *)action));
     }
     else {
         [actions removeObjectForKey:GCAlertViewWillDismissKey];
     }
 }
-- (void)setDidDismissBlock:(void (^) (void))block {
+- (void)setDidDismissBlock:(GCAlertBlock)block {
     if (block) {
+		GCAlertBlock action = ((__bridge GCAlertBlock)Block_copy(((__bridge const void *)block)));
         [actions setObject:block forKey:GCAlertViewDidDismissKey];
+		Block_release(((__bridge const void *)action));
     }
     else {
         [actions removeObjectForKey:GCAlertViewDidDismissKey];

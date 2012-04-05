@@ -29,6 +29,8 @@
 #endif
 #import <UIKit/UIKit.h>
 
+typedef void (^GCAlertBlock)(void);
+
 @interface GCAlertView : UIAlertView <UIAlertViewDelegate> {
 @private
     NSMutableDictionary *actions;
