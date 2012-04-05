@@ -57,7 +57,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 @property (nonatomic, copy) NSString        *action;
 @property (nonatomic, copy) NSString        *executable;
 @property (nonatomic, copy) NSArray         *callStack;
-@property (unsafe_unretained, unsafe_unretained, nonatomic) NSNumber      *noticeVersion;
+@property (nonatomic) NSNumber      *noticeVersion;
 @property (nonatomic, copy) NSDictionary    *environmentInfo;
 @end
 

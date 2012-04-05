@@ -82,7 +82,7 @@ extern const int ABNotifierExceptionNoticeType;
     NSString *__executable;
     NSDictionary *__environmentInfo;
     NSArray *__callStack;
-    NSNumber *__unsafe_unretained __noticeVersion;
+    NSNumber *__noticeVersion;
 }
 
 // create an object representation of notice data
