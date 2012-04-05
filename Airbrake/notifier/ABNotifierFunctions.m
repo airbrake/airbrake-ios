@@ -344,3 +344,13 @@ NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *co
 	
 }
 #endif
+
+NSString* ABLocalizedString(NSString* key) {
+    static NSBundle* bundle = nil;
+    if (nil == bundle) {
+        NSString* path = [[[NSBundle mainBundle] resourcePath]
+                          stringByAppendingPathComponent:@"ABNotifier.bundle"];
+        bundle = [[NSBundle bundleWithPath:path] retain];
+    }
+    return [bundle localizedStringForKey:key value:key table:nil];
+}
