@@ -39,16 +39,25 @@ static NSString *GCAlertViewDidDismissKey = @"GCAlertViewDidDismissAction";
     }
     return self;
 }
+- (void)dealloc {
+    [actions release];
+    actions = nil;
+    [super dealloc];
+}
 - (void)addButtonWithTitle:(NSString *)title block:(void (^) (void))block {
     if ([actions objectForKey:title]) { return; }
     [self addButtonWithTitle:title];
     if (block) {
-        [actions setObject:block forKey:title];
+        void (^action) () = Block_copy(block);
+        [actions setObject:action forKey:title];
+        Block_release(action);
     }
 }
 - (void)setWillPresentBlock:(void (^) (void))block {
     if (block) {
-        [actions setObject:block forKey:GCAlertViewWillPresentKey];
+        void (^action) () = Block_copy(block);
+        [actions setObject:action forKey:GCAlertViewWillPresentKey];
+        Block_release(action);
     }
     else {
         [actions removeObjectForKey:GCAlertViewWillPresentKey];
@@ -56,7 +65,9 @@ static NSString *GCAlertViewDidDismissKey = @"GCAlertViewDidDismissAction";
 }
 - (void)setDidPresentBlock:(void (^) (void))block {
     if (block) {
-        [actions setObject:block forKey:GCAlertViewDidPresentKey];
+        void (^action) () = Block_copy(block);
+        [actions setObject:action forKey:GCAlertViewDidPresentKey];
+        Block_release(action);
     }
     else {
         [actions removeObjectForKey:GCAlertViewDidPresentKey];
@@ -64,7 +75,9 @@ static NSString *GCAlertViewDidDismissKey = @"GCAlertViewDidDismissAction";
 }
 - (void)setWillDismissBlock:(void (^) (void))block {
     if (block) {
-        [actions setObject:block forKey:GCAlertViewWillDismissKey];
+        void (^action) () = Block_copy(block);
+        [actions setObject:action forKey:GCAlertViewWillDismissKey];
+        Block_release(action);
     }
     else {
         [actions removeObjectForKey:GCAlertViewWillDismissKey];
@@ -72,7 +85,9 @@ static NSString *GCAlertViewDidDismissKey = @"GCAlertViewDidDismissAction";
 }
 - (void)setDidDismissBlock:(void (^) (void))block {
     if (block) {
-        [actions setObject:block forKey:GCAlertViewDidDismissKey];
+        void (^action) () = Block_copy(block);
+        [actions setObject:action forKey:GCAlertViewDidDismissKey];
+        Block_release(action);
     }
     else {
         [actions removeObjectForKey:GCAlertViewDidDismissKey];
