@@ -344,3 +344,12 @@ NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *co
 	
 }
 #endif
+
+NSString *ABLocalizedString(NSString *key) {
+	static NSBundle *resourceBundle = nil;
+	if (!resourceBundle) {
+		resourceBundle = [[NSBundle alloc] initWithPath:[[NSBundle mainBundle].resourcePath stringByAppendingPathComponent:@"Airbrake.bundle"]];
+	}
+
+	return NSLocalizedStringFromTableInBundle((key), @"HTNotifier", resourceBundle, @"");
+}

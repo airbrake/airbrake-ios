@@ -1,0 +1,334 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9224BAC114561EF40017ADCC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9224BAC014561EF40017ADCC /* Foundation.framework */; };
+		9224BAF114561F000017ADCC /* GCAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BACE14561F000017ADCC /* GCAlertView.h */; };
+		9224BAF214561F000017ADCC /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BACF14561F000017ADCC /* GCAlertView.m */; };
+		9224BAFF14561F000017ADCC /* ABNotice.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE114561F000017ADCC /* ABNotice.h */; };
+		9224BB0014561F000017ADCC /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAE214561F000017ADCC /* ABNotice.m */; };
+		9224BB0114561F000017ADCC /* ABNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE314561F000017ADCC /* ABNotifier.h */; };
+		9224BB0214561F000017ADCC /* ABNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAE414561F000017ADCC /* ABNotifier.m */; };
+		9224BB0314561F000017ADCC /* ABNotifierDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE514561F000017ADCC /* ABNotifierDelegate.h */; };
+		9224BB0414561F000017ADCC /* ABNotifierFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9224BAE614561F000017ADCC /* ABNotifierFunctions.h */; };
+		9224BB0514561F000017ADCC /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9224BAE714561F000017ADCC /* ABNotifierFunctions.m */; };
+		925D97C3152BDCAB00084D5D /* DDXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 925D97BD152BDCAB00084D5D /* DDXML.h */; };
+		925D97C4152BDCAB00084D5D /* DDXMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 925D97BE152BDCAB00084D5D /* DDXMLDocument.h */; };
+		925D97C5152BDCAB00084D5D /* DDXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 925D97BF152BDCAB00084D5D /* DDXMLElement.h */; };
+		925D97C6152BDCAB00084D5D /* DDXMLNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 925D97C0152BDCAB00084D5D /* DDXMLNode.h */; };
+		925D97C7152BDCAB00084D5D /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 925D97C1152BDCAB00084D5D /* DDXMLElementAdditions.h */; };
+		925D97C8152BDCAB00084D5D /* DDXMLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 925D97C2152BDCAB00084D5D /* DDXMLPrivate.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9224BABD14561EF40017ADCC /* libAirbrake Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAirbrake Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9224BAC014561EF40017ADCC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9224BAC414561EF40017ADCC /* Airbrake Library-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Airbrake Library-Prefix.pch"; sourceTree = "<group>"; };
+		9224BACE14561F000017ADCC /* GCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAlertView.h; sourceTree = "<group>"; };
+		9224BACF14561F000017ADCC /* GCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAlertView.m; sourceTree = "<group>"; };
+		9224BAE114561F000017ADCC /* ABNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotice.h; sourceTree = "<group>"; };
+		9224BAE214561F000017ADCC /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
+		9224BAE314561F000017ADCC /* ABNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifier.h; sourceTree = "<group>"; };
+		9224BAE414561F000017ADCC /* ABNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifier.m; sourceTree = "<group>"; };
+		9224BAE514561F000017ADCC /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
+		9224BAE614561F000017ADCC /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
+		9224BAE714561F000017ADCC /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
+		925D97BD152BDCAB00084D5D /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXML.h; path = ../../../Airbrake/KissXML/DDXML.h; sourceTree = "<group>"; };
+		925D97BE152BDCAB00084D5D /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLDocument.h; path = ../../../Airbrake/KissXML/DDXMLDocument.h; sourceTree = "<group>"; };
+		925D97BF152BDCAB00084D5D /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLElement.h; path = ../../../Airbrake/KissXML/DDXMLElement.h; sourceTree = "<group>"; };
+		925D97C0152BDCAB00084D5D /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLNode.h; path = ../../../Airbrake/KissXML/DDXMLNode.h; sourceTree = "<group>"; };
+		925D97C1152BDCAB00084D5D /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLElementAdditions.h; path = ../../../Airbrake/KissXML/Additions/DDXMLElementAdditions.h; sourceTree = "<group>"; };
+		925D97C2152BDCAB00084D5D /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDXMLPrivate.h; path = ../../../Airbrake/KissXML/Private/DDXMLPrivate.h; sourceTree = "<group>"; };
+		927F236814C973F0005FAB76 /* Airbrake.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Airbrake.bundle; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9224BABA14561EF40017ADCC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9224BAC114561EF40017ADCC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9224BAB214561EF40017ADCC = {
+			isa = PBXGroup;
+			children = (
+				9224BAC214561EF40017ADCC /* Airbrake Library */,
+				9224BABF14561EF40017ADCC /* Frameworks */,
+				9224BABE14561EF40017ADCC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9224BABE14561EF40017ADCC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9224BABD14561EF40017ADCC /* libAirbrake Library.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9224BABF14561EF40017ADCC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9224BAC014561EF40017ADCC /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9224BAC214561EF40017ADCC /* Airbrake Library */ = {
+			isa = PBXGroup;
+			children = (
+				925D97BC152BDCAB00084D5D /* KissXMLHeaders */,
+				9224BACD14561F000017ADCC /* gcalertview */,
+				9224BAE014561F000017ADCC /* notifier */,
+				9224BAC314561EF40017ADCC /* Supporting Files */,
+			);
+			path = "Airbrake Library";
+			sourceTree = "<group>";
+		};
+		9224BAC314561EF40017ADCC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9224BAC414561EF40017ADCC /* Airbrake Library-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9224BACD14561F000017ADCC /* gcalertview */ = {
+			isa = PBXGroup;
+			children = (
+				9224BACF14561F000017ADCC /* GCAlertView.m */,
+				9224BACE14561F000017ADCC /* GCAlertView.h */,
+			);
+			name = gcalertview;
+			path = ../../../Airbrake/gcalertview;
+			sourceTree = "<group>";
+		};
+		9224BAE014561F000017ADCC /* notifier */ = {
+			isa = PBXGroup;
+			children = (
+				9224BAE214561F000017ADCC /* ABNotice.m */,
+				9224BAE114561F000017ADCC /* ABNotice.h */,
+				9224BAE414561F000017ADCC /* ABNotifier.m */,
+				9224BAE314561F000017ADCC /* ABNotifier.h */,
+				9224BAE714561F000017ADCC /* ABNotifierFunctions.m */,
+				9224BAE614561F000017ADCC /* ABNotifierFunctions.h */,
+				9224BAE514561F000017ADCC /* ABNotifierDelegate.h */,
+				927F236814C973F0005FAB76 /* Airbrake.bundle */,
+			);
+			name = notifier;
+			path = ../../../Airbrake/notifier;
+			sourceTree = "<group>";
+		};
+		925D97BC152BDCAB00084D5D /* KissXMLHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				925D97BD152BDCAB00084D5D /* DDXML.h */,
+				925D97BE152BDCAB00084D5D /* DDXMLDocument.h */,
+				925D97BF152BDCAB00084D5D /* DDXMLElement.h */,
+				925D97C0152BDCAB00084D5D /* DDXMLNode.h */,
+				925D97C1152BDCAB00084D5D /* DDXMLElementAdditions.h */,
+				925D97C2152BDCAB00084D5D /* DDXMLPrivate.h */,
+			);
+			name = KissXMLHeaders;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9224BABB14561EF40017ADCC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9224BAF114561F000017ADCC /* GCAlertView.h in Headers */,
+				9224BAFF14561F000017ADCC /* ABNotice.h in Headers */,
+				9224BB0114561F000017ADCC /* ABNotifier.h in Headers */,
+				9224BB0314561F000017ADCC /* ABNotifierDelegate.h in Headers */,
+				9224BB0414561F000017ADCC /* ABNotifierFunctions.h in Headers */,
+				925D97C3152BDCAB00084D5D /* DDXML.h in Headers */,
+				925D97C4152BDCAB00084D5D /* DDXMLDocument.h in Headers */,
+				925D97C5152BDCAB00084D5D /* DDXMLElement.h in Headers */,
+				925D97C6152BDCAB00084D5D /* DDXMLNode.h in Headers */,
+				925D97C7152BDCAB00084D5D /* DDXMLElementAdditions.h in Headers */,
+				925D97C8152BDCAB00084D5D /* DDXMLPrivate.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		9224BABC14561EF40017ADCC /* Airbrake Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9224BACA14561EF40017ADCC /* Build configuration list for PBXNativeTarget "Airbrake Library" */;
+			buildPhases = (
+				9224BAB914561EF40017ADCC /* Sources */,
+				9224BABA14561EF40017ADCC /* Frameworks */,
+				9224BABB14561EF40017ADCC /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Airbrake Library";
+			productName = "Airbrake Library";
+			productReference = 9224BABD14561EF40017ADCC /* libAirbrake Library.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9224BAB414561EF40017ADCC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Justin.tv;
+			};
+			buildConfigurationList = 9224BAB714561EF40017ADCC /* Build configuration list for PBXProject "Airbrake Library" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				de,
+				es,
+				fr,
+				nl,
+				ro,
+				ru,
+				"zh-Hant",
+			);
+			mainGroup = 9224BAB214561EF40017ADCC;
+			productRefGroup = 9224BABE14561EF40017ADCC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9224BABC14561EF40017ADCC /* Airbrake Library */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9224BAB914561EF40017ADCC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9224BAF214561F000017ADCC /* GCAlertView.m in Sources */,
+				9224BB0014561F000017ADCC /* ABNotice.m in Sources */,
+				9224BB0214561F000017ADCC /* ABNotifier.m in Sources */,
+				9224BB0514561F000017ADCC /* ABNotifierFunctions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9224BAC814561EF40017ADCC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9224BAC914561EF40017ADCC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9224BACB14561EF40017ADCC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Airbrake Library/Airbrake Library-Prefix.pch";
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9224BACC14561EF40017ADCC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Airbrake Library/Airbrake Library-Prefix.pch";
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9224BAB714561EF40017ADCC /* Build configuration list for PBXProject "Airbrake Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9224BAC814561EF40017ADCC /* Debug */,
+				9224BAC914561EF40017ADCC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9224BACA14561EF40017ADCC /* Build configuration list for PBXNativeTarget "Airbrake Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9224BACB14561EF40017ADCC /* Debug */,
+				9224BACC14561EF40017ADCC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9224BAB414561EF40017ADCC /* Project object */;
+}

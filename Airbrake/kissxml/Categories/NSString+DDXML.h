@@ -7,8 +7,8 @@
 /**
  * xmlChar - A basic replacement for char, a byte in a UTF-8 encoded string.
 **/
-- (const xmlChar *)xmlChar;
+- (const xmlChar *)ddxml_xmlChar;
 
-- (NSString *)stringByTrimming;
+- (NSString *)ddxml_stringByTrimming;
 
 @end

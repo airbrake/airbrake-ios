@@ -1,5 +1,6 @@
 # Xcode
-build/*
+*/build/*
+Xcode/Airbrake Library/*
 *.pbxuser
 !default.pbxuser
 *.mode1v3
