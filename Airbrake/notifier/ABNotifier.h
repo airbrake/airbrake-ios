@@ -40,6 +40,12 @@
 
 #import "ABNotifierDelegate.h"
 
+typedef enum {
+	ABNotifierButtonAlwaysSend,
+	ABNotifierButtonSend,
+	ABNotifierButtonDontSend
+} ABNotifierButton;
+
 // notifier version
 extern NSString * const ABNotifierVersion;
 
