@@ -45,6 +45,7 @@
  */
 - (void)notifierWillDisplayAlert;
 - (void)notifierDidDismissAlert;
+- (void)notifierDidDismissAlertWithButtonIndex:(NSUInteger) buttonIndex;
 
 /*
  

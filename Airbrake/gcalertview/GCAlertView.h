@@ -42,7 +42,7 @@
 
 // perform common delegate tasks
 - (void)setWillDismissBlock:(void (^) (void))block;
-- (void)setDidDismissBlock:(void (^) (void))block;
+- (void)setDidDismissBlock:(void (^) (NSUInteger buttonIndex))block;
 - (void)setWillPresentBlock:(void (^) (void))block;
 - (void)setDidPresentBlock:(void (^) (void))block;
 

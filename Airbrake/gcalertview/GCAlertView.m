@@ -83,9 +83,9 @@ static NSString *GCAlertViewDidDismissKey = @"GCAlertViewDidDismissAction";
         [actions removeObjectForKey:GCAlertViewWillDismissKey];
     }
 }
-- (void)setDidDismissBlock:(void (^) (void))block {
+- (void)setDidDismissBlock:(void (^) (NSUInteger buttonIndex))block {
     if (block) {
-        void (^action) () = Block_copy(block);
+        void (^action) (NSUInteger) = Block_copy(block);
         [actions setObject:action forKey:GCAlertViewDidDismissKey];
         Block_release(action);
     }

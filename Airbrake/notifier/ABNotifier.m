@@ -582,10 +582,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     }
     
     // declare blocks
-    void (^delegateDismissBlock) (void) = ^{
+    void (^delegateDismissBlock) (NSUInteger) = ^(NSUInteger buttonIndex) {
         if ([delegate respondsToSelector:@selector(notifierDidDismissAlert)]) {
             [delegate notifierDidDismissAlert];
         }
+		if ([delegate respondsToSelector:@selector(notifierDidDismissAlertWithButtonIndex:)]) {
+			[delegate notifierDidDismissAlertWithButtonIndex:buttonIndex];
+		}
         [[NSNotificationCenter defaultCenter] postNotificationName:ABNotifierDidDismissAlertNotification object:self];
     };
     void (^delegatePresentBlock) (void) = ^{
@@ -622,7 +625,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
     [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
     [alert setDidDismissBlock:delegateDismissBlock];
-    [alert setDidDismissBlock:delegatePresentBlock];
+    [alert setDidPresentBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
     [alert performSelector:@selector(show) withObject:nil afterDelay:0.];
 
