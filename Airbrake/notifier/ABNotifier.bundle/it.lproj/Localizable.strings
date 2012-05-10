@@ -1,0 +1,5 @@
+"NOTICE_TITLE" = "Notifica di errore";
+"NOTICE_BODY" = "%@ ha individuato errori non riportati, vuoi inviare un rapporto allo sviluppatore?";
+"SEND" = "Invia";
+"DONT_SEND" = "Non inviare";
+"ALWAYS_SEND" = "Invia sempre";
