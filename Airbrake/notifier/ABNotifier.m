@@ -38,7 +38,7 @@ static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
 
 // constant strings
-static NSString * const ABNotifierHostName                  = @"airbrake.io";
+static NSString * const ABNotifierHostName                  = @"api.airbrake.io";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
