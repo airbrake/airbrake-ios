@@ -42,6 +42,8 @@
 		4D6C783D16F6C08200C2C949 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C783C16F6C08200C2C949 /* ABCrashReport.m */; };
 		4D6C783E16F6C08200C2C949 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C783C16F6C08200C2C949 /* ABCrashReport.m */; };
 		4D6C784616F6C0B600C2C949 /* ABCrashReportTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C784416F6C0B600C2C949 /* ABCrashReportTestCase.m */; };
+		4D9C8DDA16F6D9C8003C3BD6 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D9C8DD916F6D9C8003C3BD6 /* CrashReporter.framework */; };
+		4D9C8DDB16F6D9C8003C3BD6 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D9C8DD916F6D9C8003C3BD6 /* CrashReporter.framework */; };
 		4DE263F816F6A03F0027D03B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE263F716F6A03F0027D03B /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -105,6 +107,7 @@
 		4D6C783B16F6C08200C2C949 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = SOURCE_ROOT; };
 		4D6C783C16F6C08200C2C949 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = SOURCE_ROOT; };
 		4D6C784416F6C0B600C2C949 /* ABCrashReportTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReportTestCase.m; sourceTree = "<group>"; };
+		4D9C8DD916F6D9C8003C3BD6 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = Frameworks/CrashReporter.framework; sourceTree = "<group>"; };
 		4D9C8DDC16F6DAE6003C3BD6 /* ABConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ABConstants.h; sourceTree = SOURCE_ROOT; };
 		4DE263F416F6A03F0027D03B /* libAirbrakeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAirbrakeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DE263F716F6A03F0027D03B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -121,6 +124,7 @@
 				4D6C77EA16F6B37B00C2C949 /* CoreGraphics.framework in Frameworks */,
 				4D6C780116F6B3F100C2C949 /* GHUnitIOS.framework in Frameworks */,
 				4D6C781B16F6B82500C2C949 /* libOCMock.a in Frameworks */,
+				4D9C8DDB16F6D9C8003C3BD6 /* CrashReporter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DE263F816F6A03F0027D03B /* Foundation.framework in Frameworks */,
+				4D9C8DDA16F6D9C8003C3BD6 /* CrashReporter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +201,7 @@
 		4DE263F616F6A03F0027D03B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D9C8DD916F6D9C8003C3BD6 /* CrashReporter.framework */,
 				4D6C781416F6B82500C2C949 /* OCMock */,
 				4D6C780216F6B4E900C2C949 /* QuartzCore.framework */,
 				4D6C780016F6B3F100C2C949 /* GHUnitIOS.framework */,
@@ -504,6 +510,10 @@
 			buildSettings = {
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/AirbrakeCocoa.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AirbrakeiOS/AirbrakeiOS-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
@@ -520,6 +530,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/AirbrakeCocoa.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AirbrakeiOS/AirbrakeiOS-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
