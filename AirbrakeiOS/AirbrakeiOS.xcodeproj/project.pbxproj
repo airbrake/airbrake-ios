@@ -22,8 +22,26 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		4D6C77DE16F6B14600C2C949 /* AirbrakeiOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C77DC16F6B0F900C2C949 /* AirbrakeiOS.m */; };
-		4D6C77DF16F6B14E00C2C949 /* AirbrakeiOS.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D6C77DB16F6B0F900C2C949 /* AirbrakeiOS.h */; };
+		4D6C77E716F6B37B00C2C949 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6C77E616F6B37B00C2C949 /* UIKit.framework */; };
+		4D6C77E816F6B37B00C2C949 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE263F716F6A03F0027D03B /* Foundation.framework */; };
+		4D6C77EA16F6B37B00C2C949 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6C77E916F6B37B00C2C949 /* CoreGraphics.framework */; };
+		4D6C77F216F6B37B00C2C949 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C77F116F6B37B00C2C949 /* main.m */; };
+		4D6C77F816F6B37B00C2C949 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6C77F716F6B37B00C2C949 /* Default.png */; };
+		4D6C77FA16F6B37B00C2C949 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6C77F916F6B37B00C2C949 /* Default@2x.png */; };
+		4D6C77FC16F6B37B00C2C949 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6C77FB16F6B37B00C2C949 /* Default-568h@2x.png */; };
+		4D6C780116F6B3F100C2C949 /* GHUnitIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6C780016F6B3F100C2C949 /* GHUnitIOS.framework */; };
+		4D6C780316F6B4E900C2C949 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6C780216F6B4E900C2C949 /* QuartzCore.framework */; };
+		4D6C780716F6B63C00C2C949 /* AirbrakeiOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C780616F6B63C00C2C949 /* AirbrakeiOS.m */; };
+		4D6C780816F6B66B00C2C949 /* AirbrakeiOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C780616F6B63C00C2C949 /* AirbrakeiOS.m */; };
+		4D6C780916F6B67200C2C949 /* AirbrakeiOS.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D6C780516F6B63C00C2C949 /* AirbrakeiOS.h */; };
+		4D6C780E16F6B6BB00C2C949 /* ABAbstractTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C780D16F6B6BB00C2C949 /* ABAbstractTestCase.m */; };
+		4D6C781216F6B70500C2C949 /* ABCurrentContextTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C781116F6B70500C2C949 /* ABCurrentContextTestCase.m */; };
+		4D6C781B16F6B82500C2C949 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6C781316F6B82500C2C949 /* libOCMock.a */; };
+		4D6C783916F6BE5900C2C949 /* ABCurrentContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C783816F6BE5900C2C949 /* ABCurrentContext.m */; };
+		4D6C783A16F6BE5900C2C949 /* ABCurrentContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C783816F6BE5900C2C949 /* ABCurrentContext.m */; };
+		4D6C783D16F6C08200C2C949 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C783C16F6C08200C2C949 /* ABCrashReport.m */; };
+		4D6C783E16F6C08200C2C949 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C783C16F6C08200C2C949 /* ABCrashReport.m */; };
+		4D6C784616F6C0B600C2C949 /* ABCrashReportTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C784416F6C0B600C2C949 /* ABCrashReportTestCase.m */; };
 		4DE263F816F6A03F0027D03B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DE263F716F6A03F0027D03B /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +53,13 @@
 			remoteGlobalIDString = 4DE263F316F6A03F0027D03B;
 			remoteInfo = AirbrakeCocoa;
 		};
+		4D6C780A16F6B68900C2C949 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DE263EC16F6A03F0027D03B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4DE263F316F6A03F0027D03B;
+			remoteInfo = AirbrakeiOS;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,21 +69,60 @@
 			dstPath = "${PUBLIC_HEADERS_FOLDER_PATH}";
 			dstSubfolderSpec = 16;
 			files = (
-				4D6C77DF16F6B14E00C2C949 /* AirbrakeiOS.h in CopyFiles */,
+				4D6C780916F6B67200C2C949 /* AirbrakeiOS.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4D6C77DB16F6B0F900C2C949 /* AirbrakeiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AirbrakeiOS.h; path = Classes/AirbrakeiOS.h; sourceTree = SOURCE_ROOT; };
-		4D6C77DC16F6B0F900C2C949 /* AirbrakeiOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AirbrakeiOS.m; path = Classes/AirbrakeiOS.m; sourceTree = SOURCE_ROOT; };
-		4D6C77E016F6B1A600C2C949 /* AirbrakeiOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AirbrakeiOS-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		4D6C77E516F6B37B00C2C949 /* AirbrakeiOSUnitTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirbrakeiOSUnitTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D6C77E616F6B37B00C2C949 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4D6C77E916F6B37B00C2C949 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4D6C77ED16F6B37B00C2C949 /* AirbrakeiOSUnitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirbrakeiOSUnitTests-Info.plist"; sourceTree = "<group>"; };
+		4D6C77F116F6B37B00C2C949 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4D6C77F316F6B37B00C2C949 /* AirbrakeiOSUnitTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AirbrakeiOSUnitTests-Prefix.pch"; sourceTree = "<group>"; };
+		4D6C77F716F6B37B00C2C949 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		4D6C77F916F6B37B00C2C949 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		4D6C77FB16F6B37B00C2C949 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		4D6C780016F6B3F100C2C949 /* GHUnitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnitIOS.framework; path = Frameworks/GHUnitIOS.framework; sourceTree = "<group>"; };
+		4D6C780216F6B4E900C2C949 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4D6C780416F6B63C00C2C949 /* AirbrakeiOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "AirbrakeiOS-Prefix.pch"; path = "AirbrakeiOS/AirbrakeiOS-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		4D6C780516F6B63C00C2C949 /* AirbrakeiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AirbrakeiOS.h; path = AirbrakeiOS/AirbrakeiOS.h; sourceTree = SOURCE_ROOT; };
+		4D6C780616F6B63C00C2C949 /* AirbrakeiOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AirbrakeiOS.m; path = AirbrakeiOS/AirbrakeiOS.m; sourceTree = SOURCE_ROOT; };
+		4D6C780C16F6B6BB00C2C949 /* ABAbstractTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABAbstractTestCase.h; sourceTree = "<group>"; };
+		4D6C780D16F6B6BB00C2C949 /* ABAbstractTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABAbstractTestCase.m; sourceTree = "<group>"; };
+		4D6C781116F6B70500C2C949 /* ABCurrentContextTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCurrentContextTestCase.m; sourceTree = "<group>"; };
+		4D6C781316F6B82500C2C949 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = Frameworks/libOCMock.a; sourceTree = "<group>"; };
+		4D6C781516F6B82500C2C949 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
+		4D6C781616F6B82500C2C949 /* OCMArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
+		4D6C781716F6B82500C2C949 /* OCMConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
+		4D6C781816F6B82500C2C949 /* OCMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
+		4D6C781916F6B82500C2C949 /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
+		4D6C781A16F6B82500C2C949 /* OCMockRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockRecorder.h; sourceTree = "<group>"; };
+		4D6C783716F6BE5900C2C949 /* ABCurrentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCurrentContext.h; sourceTree = SOURCE_ROOT; };
+		4D6C783816F6BE5900C2C949 /* ABCurrentContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCurrentContext.m; sourceTree = SOURCE_ROOT; };
+		4D6C783B16F6C08200C2C949 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = SOURCE_ROOT; };
+		4D6C783C16F6C08200C2C949 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = SOURCE_ROOT; };
+		4D6C784416F6C0B600C2C949 /* ABCrashReportTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReportTestCase.m; sourceTree = "<group>"; };
 		4DE263F416F6A03F0027D03B /* libAirbrakeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAirbrakeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DE263F716F6A03F0027D03B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4D6C77E216F6B37B00C2C949 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D6C780316F6B4E900C2C949 /* QuartzCore.framework in Frameworks */,
+				4D6C77E716F6B37B00C2C949 /* UIKit.framework in Frameworks */,
+				4D6C77E816F6B37B00C2C949 /* Foundation.framework in Frameworks */,
+				4D6C77EA16F6B37B00C2C949 /* CoreGraphics.framework in Frameworks */,
+				4D6C780116F6B3F100C2C949 /* GHUnitIOS.framework in Frameworks */,
+				4D6C781B16F6B82500C2C949 /* libOCMock.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4DE263F116F6A03F0027D03B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -70,10 +134,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D6C77EB16F6B37B00C2C949 /* AirbrakeiOSUnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				4D6C77EC16F6B37B00C2C949 /* Supporting Files */,
+				4D6C780C16F6B6BB00C2C949 /* ABAbstractTestCase.h */,
+				4D6C780D16F6B6BB00C2C949 /* ABAbstractTestCase.m */,
+				4D6C781116F6B70500C2C949 /* ABCurrentContextTestCase.m */,
+				4D6C784416F6C0B600C2C949 /* ABCrashReportTestCase.m */,
+			);
+			path = AirbrakeiOSUnitTests;
+			sourceTree = "<group>";
+		};
+		4D6C77EC16F6B37B00C2C949 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4D6C77ED16F6B37B00C2C949 /* AirbrakeiOSUnitTests-Info.plist */,
+				4D6C77F116F6B37B00C2C949 /* main.m */,
+				4D6C77F316F6B37B00C2C949 /* AirbrakeiOSUnitTests-Prefix.pch */,
+				4D6C77F716F6B37B00C2C949 /* Default.png */,
+				4D6C77F916F6B37B00C2C949 /* Default@2x.png */,
+				4D6C77FB16F6B37B00C2C949 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4D6C781416F6B82500C2C949 /* OCMock */ = {
+			isa = PBXGroup;
+			children = (
+				4D6C781516F6B82500C2C949 /* NSNotificationCenter+OCMAdditions.h */,
+				4D6C781616F6B82500C2C949 /* OCMArg.h */,
+				4D6C781716F6B82500C2C949 /* OCMConstraint.h */,
+				4D6C781816F6B82500C2C949 /* OCMock.h */,
+				4D6C781916F6B82500C2C949 /* OCMockObject.h */,
+				4D6C781A16F6B82500C2C949 /* OCMockRecorder.h */,
+			);
+			name = OCMock;
+			path = Frameworks/OCMock;
+			sourceTree = "<group>";
+		};
 		4DE263EB16F6A03F0027D03B = {
 			isa = PBXGroup;
 			children = (
 				4DE263F916F6A03F0027D03B /* AirbrakeiOS */,
+				4D6C77EB16F6B37B00C2C949 /* AirbrakeiOSUnitTests */,
 				4DE263F616F6A03F0027D03B /* Frameworks */,
 				4DE263F516F6A03F0027D03B /* Products */,
 			);
@@ -83,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				4DE263F416F6A03F0027D03B /* libAirbrakeiOS.a */,
+				4D6C77E516F6B37B00C2C949 /* AirbrakeiOSUnitTests.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,7 +195,13 @@
 		4DE263F616F6A03F0027D03B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D6C781416F6B82500C2C949 /* OCMock */,
+				4D6C780216F6B4E900C2C949 /* QuartzCore.framework */,
+				4D6C780016F6B3F100C2C949 /* GHUnitIOS.framework */,
 				4DE263F716F6A03F0027D03B /* Foundation.framework */,
+				4D6C77E616F6B37B00C2C949 /* UIKit.framework */,
+				4D6C77E916F6B37B00C2C949 /* CoreGraphics.framework */,
+				4D6C781316F6B82500C2C949 /* libOCMock.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -98,9 +209,13 @@
 		4DE263F916F6A03F0027D03B /* AirbrakeiOS */ = {
 			isa = PBXGroup;
 			children = (
-				4D6C77DB16F6B0F900C2C949 /* AirbrakeiOS.h */,
-				4D6C77DC16F6B0F900C2C949 /* AirbrakeiOS.m */,
+				4D6C780516F6B63C00C2C949 /* AirbrakeiOS.h */,
+				4D6C780616F6B63C00C2C949 /* AirbrakeiOS.m */,
 				4DE263FA16F6A03F0027D03B /* Supporting Files */,
+				4D6C783716F6BE5900C2C949 /* ABCurrentContext.h */,
+				4D6C783816F6BE5900C2C949 /* ABCurrentContext.m */,
+				4D6C783B16F6C08200C2C949 /* ABCrashReport.h */,
+				4D6C783C16F6C08200C2C949 /* ABCrashReport.m */,
 			);
 			name = AirbrakeiOS;
 			path = AirbrakeCocoa;
@@ -109,7 +224,7 @@
 		4DE263FA16F6A03F0027D03B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4D6C77E016F6B1A600C2C949 /* AirbrakeiOS-Prefix.pch */,
+				4D6C780416F6B63C00C2C949 /* AirbrakeiOS-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -117,6 +232,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4D6C77E416F6B37B00C2C949 /* AirbrakeiOSUnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D6C77FD16F6B37B00C2C949 /* Build configuration list for PBXNativeTarget "AirbrakeiOSUnitTests" */;
+			buildPhases = (
+				4D6C77E116F6B37B00C2C949 /* Sources */,
+				4D6C77E216F6B37B00C2C949 /* Frameworks */,
+				4D6C77E316F6B37B00C2C949 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4D6C780B16F6B68900C2C949 /* PBXTargetDependency */,
+			);
+			name = AirbrakeiOSUnitTests;
+			productName = AirbrakeiOSUnitTests;
+			productReference = 4D6C77E516F6B37B00C2C949 /* AirbrakeiOSUnitTests.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4DE263F316F6A03F0027D03B /* AirbrakeiOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DE2640216F6A03F0027D03B /* Build configuration list for PBXNativeTarget "AirbrakeiOS" */;
@@ -158,9 +291,23 @@
 			targets = (
 				4DE263F316F6A03F0027D03B /* AirbrakeiOS */,
 				4D0D893216F6A9A90085ABCD /* AirbrakeiOSFramework */,
+				4D6C77E416F6B37B00C2C949 /* AirbrakeiOSUnitTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4D6C77E316F6B37B00C2C949 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D6C77F816F6B37B00C2C949 /* Default.png in Resources */,
+				4D6C77FA16F6B37B00C2C949 /* Default@2x.png in Resources */,
+				4D6C77FC16F6B37B00C2C949 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		4D0D893116F6A5BE0085ABCD /* ShellScript */ = {
@@ -192,11 +339,27 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4D6C77E116F6B37B00C2C949 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D6C77F216F6B37B00C2C949 /* main.m in Sources */,
+				4D6C780716F6B63C00C2C949 /* AirbrakeiOS.m in Sources */,
+				4D6C780E16F6B6BB00C2C949 /* ABAbstractTestCase.m in Sources */,
+				4D6C781216F6B70500C2C949 /* ABCurrentContextTestCase.m in Sources */,
+				4D6C783A16F6BE5900C2C949 /* ABCurrentContext.m in Sources */,
+				4D6C783E16F6C08200C2C949 /* ABCrashReport.m in Sources */,
+				4D6C784616F6C0B600C2C949 /* ABCrashReportTestCase.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4DE263F016F6A03F0027D03B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D6C77DE16F6B14600C2C949 /* AirbrakeiOS.m in Sources */,
+				4D6C780816F6B66B00C2C949 /* AirbrakeiOS.m in Sources */,
+				4D6C783916F6BE5900C2C949 /* ABCurrentContext.m in Sources */,
+				4D6C783D16F6C08200C2C949 /* ABCrashReport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +370,11 @@
 			isa = PBXTargetDependency;
 			target = 4DE263F316F6A03F0027D03B /* AirbrakeiOS */;
 			targetProxy = 4D0D893616F6A9CE0085ABCD /* PBXContainerItemProxy */;
+		};
+		4D6C780B16F6B68900C2C949 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4DE263F316F6A03F0027D03B /* AirbrakeiOS */;
+			targetProxy = 4D6C780A16F6B68900C2C949 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -222,6 +390,57 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = AirbrakeiOSFramework;
+			};
+			name = Release;
+		};
+		4D6C77FE16F6B37B00C2C949 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirbrakeiOSUnitTests/AirbrakeiOSUnitTests-Prefix.pch";
+				INFOPLIST_FILE = "AirbrakeiOSUnitTests/AirbrakeiOSUnitTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4D6C77FF16F6B37B00C2C949 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirbrakeiOSUnitTests/AirbrakeiOSUnitTests-Prefix.pch";
+				INFOPLIST_FILE = "AirbrakeiOSUnitTests/AirbrakeiOSUnitTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
@@ -284,7 +503,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/AirbrakeCocoa.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AirbrakeiOS-Prefix.pch";
+				GCC_PREFIX_HEADER = "AirbrakeiOS/AirbrakeiOS-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = AirbrakeiOS;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_NAME)Headers";
@@ -300,7 +519,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/AirbrakeCocoa.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AirbrakeiOS-Prefix.pch";
+				GCC_PREFIX_HEADER = "AirbrakeiOS/AirbrakeiOS-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = AirbrakeiOS;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(PROJECT_NAME)Headers";
@@ -317,6 +536,15 @@
 			buildConfigurations = (
 				4D0D893416F6A9A90085ABCD /* Debug */,
 				4D0D893516F6A9A90085ABCD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D6C77FD16F6B37B00C2C949 /* Build configuration list for PBXNativeTarget "AirbrakeiOSUnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D6C77FE16F6B37B00C2C949 /* Debug */,
+				4D6C77FF16F6B37B00C2C949 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

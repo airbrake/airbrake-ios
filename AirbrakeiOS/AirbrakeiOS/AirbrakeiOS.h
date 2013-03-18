@@ -3,6 +3,6 @@
 
 @interface AirbrakeiOS : NSObject
 
--(id)initWithAPIKey:(NSString*)apiKey;
++(void)startCrashReporterWithAPIKey:(NSString*)apiKey;
 
 @end
