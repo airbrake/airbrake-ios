@@ -1,9 +1,48 @@
 
 #import <mach-o/ldsyms.h>
 #import "ABCurrentContext.h"
+#import "ABConstants.h"
+
+@interface ABCurrentContext()
+@property (nonatomic, strong, readwrite) NSString* operatingSystem;
+@property (nonatomic, readwrite) unsigned long long physicalMemoryInBytes;
+@property (nonatomic, strong, readwrite) NSString* applicationBuild;
+@property (nonatomic, strong, readwrite) NSString* applicationVersion;
+@property (nonatomic, strong, readwrite) NSString* debugOrRelease;
+@property (nonatomic, strong, readwrite) NSString* clientAPIVersion;
+@end
 
 @implementation ABCurrentContext
 
+-(id)init {
+    self = [super init];
+    if ( self ) {
+        NSProcessInfo* processInfo = [[NSProcessInfo alloc] init];
+        NSString* operatingSystemName = @"iOS";
+        NSString* operatingSystemVersion = processInfo.operatingSystemVersionString;
+        unsigned long long physicalMemoryInBytes = processInfo.physicalMemory;
+        NSString* applicationBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        NSString* applicationVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+        NSString* debugOrRelease = @"Release";
+        NSString* clientAPIVersion = ABClientAPIVersion;
+        
+#if DEBUG 
+        debugOrRelease = @"Debug";
+#endif
+        
+#if TARGET_IPHONE_SIMULATOR
+        operatingSystemName = @"Mac OS X";
+#endif
+        
+        self.operatingSystem = [NSString stringWithFormat:@"%@ %@", operatingSystemName, operatingSystemVersion];
+        self.physicalMemoryInBytes = physicalMemoryInBytes;
+        self.applicationBuild = applicationBuild;
+        self.applicationVersion = applicationVersion;
+        self.debugOrRelease = debugOrRelease;
+        self.clientAPIVersion = clientAPIVersion;
+    }
+    return self;
+}
 
 -(NSString*)executableUUID {
     // See: http://stackoverflow.com/questions/10119700/how-to-get-mach-o-uuid-of-a-running-process

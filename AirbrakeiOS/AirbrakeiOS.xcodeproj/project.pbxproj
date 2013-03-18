@@ -105,6 +105,7 @@
 		4D6C783B16F6C08200C2C949 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = SOURCE_ROOT; };
 		4D6C783C16F6C08200C2C949 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = SOURCE_ROOT; };
 		4D6C784416F6C0B600C2C949 /* ABCrashReportTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReportTestCase.m; sourceTree = "<group>"; };
+		4D9C8DDC16F6DAE6003C3BD6 /* ABConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ABConstants.h; sourceTree = SOURCE_ROOT; };
 		4DE263F416F6A03F0027D03B /* libAirbrakeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAirbrakeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DE263F716F6A03F0027D03B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -216,6 +217,7 @@
 				4D6C783816F6BE5900C2C949 /* ABCurrentContext.m */,
 				4D6C783B16F6C08200C2C949 /* ABCrashReport.h */,
 				4D6C783C16F6C08200C2C949 /* ABCrashReport.m */,
+				4D9C8DDC16F6DAE6003C3BD6 /* ABConstants.h */,
 			);
 			name = AirbrakeiOS;
 			path = AirbrakeCocoa;
