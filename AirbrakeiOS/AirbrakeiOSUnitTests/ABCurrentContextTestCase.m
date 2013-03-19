@@ -47,4 +47,8 @@
     GHAssertEqualObjects(testObject.clientAPIVersion, ABClientAPIVersion, nil);
 }
 
+-(void)testWhenModelIsRequestedThenItIsReturned {
+    GHAssertNotNil(testObject.deviceName, nil);
+}
+
 @end

@@ -1,9 +1,10 @@
-
+#import <UIKit/UIKit.h>
 #import <mach-o/ldsyms.h>
 #import "ABCurrentContext.h"
 #import "ABConstants.h"
 
 @interface ABCurrentContext()
+@property (nonatomic, strong, readwrite) NSString* deviceName;
 @property (nonatomic, strong, readwrite) NSString* operatingSystem;
 @property (nonatomic, readwrite) unsigned long long physicalMemoryInBytes;
 @property (nonatomic, strong, readwrite) NSString* applicationBuild;
@@ -17,23 +18,19 @@
 -(id)init {
     self = [super init];
     if ( self ) {
+        NSString* deviceName = [UIDevice currentDevice].model;
         NSProcessInfo* processInfo = [[NSProcessInfo alloc] init];
-        NSString* operatingSystemName = @"iOS";
-        NSString* operatingSystemVersion = processInfo.operatingSystemVersionString;
+        NSString* operatingSystemName = [UIDevice currentDevice].systemName;
+        NSString* operatingSystemVersion = [UIDevice currentDevice].systemVersion;
         unsigned long long physicalMemoryInBytes = processInfo.physicalMemory;
         NSString* applicationBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
         NSString* applicationVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         NSString* debugOrRelease = @"Release";
         NSString* clientAPIVersion = ABClientAPIVersion;
-        
 #if DEBUG 
         debugOrRelease = @"Debug";
 #endif
-        
-#if TARGET_IPHONE_SIMULATOR
-        operatingSystemName = @"Mac OS X";
-#endif
-        
+        self.deviceName = deviceName;
         self.operatingSystem = [NSString stringWithFormat:@"%@ %@", operatingSystemName, operatingSystemVersion];
         self.physicalMemoryInBytes = physicalMemoryInBytes;
         self.applicationBuild = applicationBuild;
