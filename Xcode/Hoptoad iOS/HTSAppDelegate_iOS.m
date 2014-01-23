@@ -16,7 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // setup notifier
-    [ABNotifier startNotifierWithAPIKey:@""
+    [ABNotifier startNotifierWithAPIKey:@"0f4d7b5618907006a2b29008023febd3"
                         environmentName:ABNotifierAutomaticEnvironment
                                  useSSL:YES // only if your account supports it
                                delegate:self];

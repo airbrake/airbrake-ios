@@ -29,7 +29,6 @@
 
 #import "ABNotifier.h"
 
-#import "DDXML.h"
 
 // library constants
 NSString * const ABNotifierOperatingSystemVersionKey    = @"Operating System";
@@ -195,82 +194,22 @@ const int ABNotifierExceptionNoticeType   = 2;
 + (ABNotice *)noticeWithContentsOfFile:(NSString *)path {
     return [[[ABNotice alloc] initWithContentsOfFile:path] autorelease];
 }
-- (NSString *)hoptoadXMLString {
-    
-    // pool
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    // create root
-    DDXMLElement *notice = [DDXMLElement elementWithName:@"notice"];
-    [notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.1"]];
-    
-    // set api key
-    NSString *APIKey = [ABNotifier APIKey];
-    if (APIKey == nil) { APIKey = @""; }
-    [notice addChild:[DDXMLElement elementWithName:@"api-key" stringValue:APIKey]];
-    
-    // set notifier information
-    DDXMLElement *notifier = [DDXMLElement elementWithName:@"notifier"];
-    [notifier addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
-    [notifier addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
-	[notifier addChild:[DDXMLElement elementWithName:@"version" stringValue:ABNotifierVersion]];
-	[notice addChild:notifier];
-    
-	// set error information
-    NSString *message = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
-    DDXMLElement *error = [DDXMLElement elementWithName:@"error"];
-    [error addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
-	[error addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
-    DDXMLElement *backtrace = [DDXMLElement elementWithName:@"backtrace"];
-    [self.callStack enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        DDXMLElement *line = [DDXMLElement elementWithName:@"line"];
-        [line addAttribute:
-         [DDXMLElement
-          attributeWithName:@"number"
-          stringValue:[(NSArray *)obj objectAtIndex:1]]];
-        [line addAttribute:
-         [DDXMLElement
-          attributeWithName:@"file"
-          stringValue:[(NSArray *)obj objectAtIndex:2]]];
-        [line addAttribute:
-         [DDXMLElement
-          attributeWithName:@"method"
-          stringValue:[(NSArray *)obj objectAtIndex:3]]];
-        [backtrace addChild:line];
-    }];
-	[error addChild:backtrace];
-    [notice addChild:error];
-    
-    // set request info
-    DDXMLElement *request = [DDXMLElement elementWithName:@"request"];
-    [request addChild:[DDXMLElement elementWithName:@"url"]];
-    [request addChild:[DDXMLElement elementWithName:@"component" stringValue:self.controller]];
-    [request addChild:[DDXMLElement elementWithName:@"action" stringValue:self.action]];
-    DDXMLElement *cgi = [DDXMLElement elementWithName:@"cgi-data"];
-    [self.environmentInfo enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        DDXMLElement *entry = [DDXMLElement elementWithName:@"var" stringValue:[obj description]];
-        [entry addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:[key description]]];
-        [cgi addChild:entry];
-    }];
-    [request addChild:cgi];
-    [notice addChild:request];
-    
-    // set server encironment
-    DDXMLElement *environment = [DDXMLElement elementWithName:@"server-environment"];
-    [environment addChild:[DDXMLElement elementWithName:@"environment-name" stringValue:self.environmentName]];
-    [environment addChild:[DDXMLElement elementWithName:@"app-version" stringValue:self.bundleVersion]];
-	[notice addChild:environment];
-    
-    // get return value
-    NSString *XMLString = [[notice XMLString] copy];
-    
-    // pool
-    [pool drain];
-    
-    // return
-    return [XMLString autorelease];
-    
+
+
+- (NSData *)JSONString {
+    NSData *jsonData;
+    NSArray *traceErrors = @[@""];
+    NSDictionary *postDict = @{@"notifier": @{@"name": @"",@"version": @"", @"url": @""}, @"errors":traceErrors};
+    NSError *jsonSerializationError = nil;
+    jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
+
+    if(jsonSerializationError) {
+        jsonData = nil;
+        ABLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    return jsonData;
 }
+
 - (NSString *)description {
 	unsigned int count;
 	objc_property_t *properties = class_copyPropertyList([self class], &count);

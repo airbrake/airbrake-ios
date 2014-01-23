@@ -38,13 +38,14 @@ static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
 
 // constant strings
-static NSString * const ABNotifierHostName                  = @"api.airbrake.io";
+static NSString * const ABNotifierHostName                  = @"airbrake.io";
+static NSString * const ABNotifierProjectID                 = @"Demo";//????
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
 NSString * const ABNotifierWillPostNoticesNotification      = @"ABNotifierWillPostNotices";
 NSString * const ABNotifierDidPostNoticesNotification       = @"ABNotifierDidPostNotices";
-NSString * const ABNotifierVersion                          = @"3.1";
+NSString * const ABNotifierVersion                          = @"4.0";
 NSString * const ABNotifierDevelopmentEnvironment           = @"Development";
 NSString * const ABNotifierAdHocEnvironment                 = @"Ad Hoc";
 NSString * const ABNotifierAppStoreEnvironment              = @"App Store";
@@ -169,6 +170,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 memcpy((void *)ab_signal_info.notice_path, filePath, length);
                 
                 // cache notice payload
+
                 NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
                                 [NSDictionary dictionaryWithObjectsAndKeys:
                                  name, ABNotifierEnvironmentNameKey,
@@ -400,10 +402,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     });
     
     // create url
+    //API V3 http://airbrake.io/api/v3/projects/PROJECT_ID/notices?key=API_KEY
     NSString *URLString = [NSString stringWithFormat:
-                           @"%@://%@/notifier_api/v2/notices",
+                           @"%@://%@/api/v3/projects/%@/notices?key=%@",
                            (__useSSL ? @"https" : @"http"),
-                           ABNotifierHostName];
+                           ABNotifierHostName, ABNotifierProjectID, [self APIKey]];
     NSURL *URL = [NSURL URLWithString:URLString];
     
 #if TARGET_OS_IPHONE
@@ -452,7 +455,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     // create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 	[request setTimeoutInterval:10.0];
-	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
     
 	// get notice payload
@@ -460,10 +463,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #ifdef DEBUG
     ABLog(@"%@", notice);
 #endif
-    NSString *XMLString = [notice hoptoadXMLString];
-    if (XMLString) {
-        NSData *data = [XMLString dataUsingEncoding:NSUTF8StringEncoding];
-        [request setHTTPBody:data];
+    NSData *jsonData = [notice JSONString];
+    if (jsonData) {
+        [request setHTTPBody:jsonData];
     }
     else {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
@@ -507,7 +509,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     else if (statusCode == 422) {
         ABLog(@"The posted notice payload is invalid.");
 #ifdef DEBUG
-        ABLog(@"%@", XMLString);
+        ABLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
 #endif
     }
     
