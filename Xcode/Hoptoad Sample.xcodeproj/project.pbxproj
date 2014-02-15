@@ -32,6 +32,7 @@
 		564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
 		5D0DD3CF18AEE28E00650AA1 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0DD3CE18AEE28E00650AA1 /* CrashReporter.framework */; };
 		5D0DD3D118AEE2BF00650AA1 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */; };
+		5D0DD3D418AF324A00650AA1 /* iOSCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D318AF324A00650AA1 /* iOSCrashReport.m */; };
 		5D20F2B61886613200F8D6FE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */; };
 		5D20F2B81886613900F8D6FE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B71886613900F8D6FE /* UIKit.framework */; };
 		5D20F2BA1886613F00F8D6FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B91886613F00F8D6FE /* Foundation.framework */; };
@@ -76,6 +77,8 @@
 		564B67E9152E090200753DF9 /* ABNotifier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ABNotifier.bundle; sourceTree = "<group>"; };
 		5D0DD3CE18AEE28E00650AA1 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
+		5D0DD3D218AF324A00650AA1 /* iOSCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSCrashReport.h; sourceTree = "<group>"; };
+		5D0DD3D318AF324A00650AA1 /* iOSCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iOSCrashReport.m; sourceTree = "<group>"; };
 		5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		5D20F2B71886613900F8D6FE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		5D20F2B91886613F00F8D6FE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -222,6 +225,8 @@
 				3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */,
 				3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */,
 				3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */,
+				5D0DD3D218AF324A00650AA1 /* iOSCrashReport.h */,
+				5D0DD3D318AF324A00650AA1 /* iOSCrashReport.m */,
 			);
 			path = notifier;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 				3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */,
 				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
 				3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */,
+				5D0DD3D418AF324A00650AA1 /* iOSCrashReport.m in Sources */,
 				3B7A06C713FEFD2E007E8CCF /* ABNotifier.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

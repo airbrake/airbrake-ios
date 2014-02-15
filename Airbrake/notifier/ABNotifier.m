@@ -26,7 +26,7 @@
 #import "ABNotifierFunctions.h"
 
 #import "ABNotifier.h"
-
+#import "iOSCrashReport.h"
 #import "GCAlertView.h"
 
 // internal
@@ -39,7 +39,7 @@ static BOOL __displayPrompt = YES;
 
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
-static NSString * const ABNotifierProjectID                 = @"Demo";//????
+static NSString * const ABNotifierProjectID                 = @"82805";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
@@ -402,11 +402,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     });
     
     // create url
-    //API V3 http://airbrake.io/api/v3/projects/PROJECT_ID/notices?key=API_KEY
+    //API V3 https://airbrake.io/api/v3/projects/%d/ios-symbols?key=API_KEY
     NSString *URLString = [NSString stringWithFormat:
-                           @"%@://%@/api/v3/projects/%@/notices?key=%@",
+                           @"%@://err.io/api/v3/projects/%@/notices?key=%@",
                            (__useSSL ? @"https" : @"http"),
-                           ABNotifierHostName, ABNotifierProjectID, [self APIKey]];
+                           ABNotifierProjectID, [self APIKey]];
     NSURL *URL = [NSURL URLWithString:URLString];
     
 #if TARGET_OS_IPHONE
@@ -463,7 +463,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 #ifdef DEBUG
     ABLog(@"%@", notice);
 #endif
-    NSData *jsonData = [notice JSONString];
+    NSData *jsonData = [iOSCrashReport getCrashReport];
     if (jsonData) {
         [request setHTTPBody:jsonData];
     }
