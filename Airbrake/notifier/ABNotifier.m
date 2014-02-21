@@ -458,9 +458,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 + (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
     
-    // assert
-    NSAssert(![NSThread isMainThread], @"This method must not be called on the main thread");
-    
     // create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 	[request setTimeoutInterval:10.0];
@@ -482,59 +479,50 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         return;
     }
 	
-	// perform request
-    NSError *error = nil;
-	NSHTTPURLResponse *response = nil;
-    
+
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *responseBody, NSError* error){
+        if (response) {
+            if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+                
+                if (error) {
+                    ABLog(@"Encountered error while posting notice.");
+                    ABLog(@"%@", error);
+                    return;
+                }
+                else {
+                    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+                }
+                
+                // great success
+                if (statusCode == 200) {
+                    ABLog(@"Crash report posted");
+                }
+                
+                // forbidden
+                else if (statusCode == 403) {
+                    ABLog(@"Please make sure that your API key is correct and that your project supports SSL.");
+                }
+                
+                // invalid post
+                else if (statusCode == 422) {
+                    ABLog(@"The posted notice payload is invalid.");
 #ifdef DEBUG
-    NSData *responseBody;
+                    ABLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
 #endif
-    [NSURLConnection
-     sendSynchronousRequest:request
-     returningResponse:&response
-     error:&error];
-    NSInteger statusCode = [response statusCode];
-	
-	// error checking
-    if (error) {
-        ABLog(@"Encountered error while posting notice.");
-        ABLog(@"%@", error);
-        return;
-    }
-    else {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-    }
-	
-	// great success
-	if (statusCode == 200) {
-        ABLog(@"Crash report posted");
-	}
-    
-    // forbidden
-    else if (statusCode == 403) {
-        ABLog(@"Please make sure that your API key is correct and that your project supports SSL.");
-    }
-    
-    // invalid post
-    else if (statusCode == 422) {
-        ABLog(@"The posted notice payload is invalid.");
+                }
+                
+                // unknown
+                else {
+                    ABLog(@"Encountered unexpected status code: %ld", (long)statusCode);
 #ifdef DEBUG
-        ABLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+                    ABLog(@"%@", [[[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding] autorelease]);
 #endif
-    }
-    
-    // unknown
-    else {
-        ABLog(@"Encountered unexpected status code: %ld", (long)statusCode);
-#ifdef DEBUG
-        NSString *responseString = [[NSString alloc]
-                                    initWithData:responseBody
-                                    encoding:NSUTF8StringEncoding];
-        ABLog(@"%@", responseString);
-        [responseString release];
-#endif
-    }
-    
+            }
+        }
+            
+      }
+    }];
 }
 
 #pragma mark - cache methods
