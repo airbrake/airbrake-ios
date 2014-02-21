@@ -36,10 +36,10 @@ static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
-
+static NSString *__userName = nil;
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
-static NSString * const ABNotifierProjectID                 = @"82805";
+static NSString * const ABNotifierProjectID                 = @"95161";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
@@ -92,34 +92,32 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @implementation ABNotifier
 
 #pragma mark - initialize the notifier
++ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
+    [self startNotifierWithAPIKey:key environmentName:name userName:nil useSSL:useSSL delegate:delegate installExceptionHandler:YES installSignalHandler:YES displayUserPrompt:YES];
+}
++ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate installExceptionHandler:(BOOL)exception installSignalHandler:(BOOL)signal {
+    [self startNotifierWithAPIKey:key environmentName:name userName:nil useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
+}
+
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate {
     [self startNotifierWithAPIKey:key
                   environmentName:name
+                         userName:username
                            useSSL:useSSL
                          delegate:delegate
           installExceptionHandler:YES
              installSignalHandler:YES
                 displayUserPrompt:YES];
 }
+
+
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
-                         useSSL:(BOOL)useSSL
-                       delegate:(id<ABNotifierDelegate>)delegate
-        installExceptionHandler:(BOOL)exception
-           installSignalHandler:(BOOL)signal {
-    [self startNotifierWithAPIKey:key
-                  environmentName:name
-                           useSSL:useSSL
-                         delegate:delegate
-          installExceptionHandler:exception
-             installSignalHandler:signal
-                displayUserPrompt:YES];
-}
-+ (void)startNotifierWithAPIKey:(NSString *)key
-                environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
@@ -128,6 +126,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     @synchronized(self) {
         static BOOL token = YES;
         if (token) {
+            // store username
+            __userName = username;
             
             // change token5
             token = NO;
@@ -204,6 +204,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 ABLog(@"Notifier %@ ready to catch errors", ABNotifierVersion);
                 ABLog(@"Environment \"%@\"", name);
                 
+                //init crashreport
+                /*
+                PLCrashReporter *crashReporter =[PLCrashReporter sharedReporter];
+                if ([crashReporter hasPendingCrashReport]) {
+                    NSArray *paths = [ABNotifier pathsForAllNotices];
+                    [ABNotifier postNoticesWithPaths:paths];
+                }
+                 */
             }
             else {
                 ABLog(@"The environment name must not be blank. No new notices will be logged");
@@ -339,7 +347,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             path = NSTemporaryDirectory();
         }
         else {
-            path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
+            path = [path stringByAppendingPathComponent:@"AB Notices"];
         }
 #else
         NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -349,7 +357,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         }
         else {
             path = [path stringByAppendingPathComponent:ABNotifierApplicationName()];
-            path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
+            path = [path stringByAppendingPathComponent:@"AB Notices"];
         }
 #endif
         NSFileManager *manager = [NSFileManager defaultManager];
@@ -402,9 +410,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     });
     
     // create url
-    //API V3 https://airbrake.io/api/v3/projects/%d/ios-symbols?key=API_KEY
+    //API V3 https://airbrake.io/api/v3/projects/%d/ios-reports?key=API_KEY
     NSString *URLString = [NSString stringWithFormat:
-                           @"%@://err.io/api/v3/projects/%@/notices?key=%@",
+                           @"%@://airbrake.io/api/v3/projects/%@/ios-reports?key=%@",
                            (__useSSL ? @"https" : @"http"),
                            ABNotifierProjectID, [self APIKey]];
     NSURL *URL = [NSURL URLWithString:URLString];
@@ -460,10 +468,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
 	// get notice payload
     ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
+    [notice setPOSTUserName:__userName];
 #ifdef DEBUG
     ABLog(@"%@", notice);
 #endif
-    NSData *jsonData = [iOSCrashReport getCrashReport];
+    NSData *jsonData = [notice JSONString];
     if (jsonData) {
         [request setHTTPBody:jsonData];
     }
@@ -477,7 +486,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	NSHTTPURLResponse *response = nil;
     
 #ifdef DEBUG
-    NSData *responseBody = 
+    NSData *responseBody;
 #endif
     [NSURLConnection
      sendSynchronousRequest:request

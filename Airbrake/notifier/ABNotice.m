@@ -58,6 +58,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 @property (nonatomic, copy) NSArray         *callStack;
 @property (nonatomic, retain) NSNumber      *noticeVersion;
 @property (nonatomic, copy) NSDictionary    *environmentInfo;
+@property (nonatomic, copy) NSString        *userName;
 @end
 
 @implementation ABNotice
@@ -72,6 +73,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 @synthesize environmentInfo = __environmentInfo;
 @synthesize action = __action;
 @synthesize executable = __executable;
+@synthesize userName =__userName;
 
 - (id)initWithContentsOfFile:(NSString *)path {
     self = [super init];
@@ -195,14 +197,18 @@ const int ABNotifierExceptionNoticeType   = 2;
     return [[[ABNotice alloc] initWithContentsOfFile:path] autorelease];
 }
 
+- (void)setPOSTUserName:(NSString *)theUserName
+{
+    if (theUserName) {
+        self.userName = theUserName;
+    }
+}
 
 - (NSData *)JSONString {
     NSData *jsonData;
-    NSArray *traceErrors = @[@""];
-    NSDictionary *postDict = @{@"notifier": @{@"name": @"",@"version": @"", @"url": @""}, @"errors":traceErrors};
     NSError *jsonSerializationError = nil;
-    jsonData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
-
+    NSDictionary *dictionary = [self getDictionaryFromProperty];
+    jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
         ABLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
@@ -210,8 +216,9 @@ const int ABNotifierExceptionNoticeType   = 2;
     return jsonData;
 }
 
-- (NSString *)description {
-	unsigned int count;
+- (NSDictionary *)getDictionaryFromProperty
+{
+    unsigned int count;
 	objc_property_t *properties = class_copyPropertyList([self class], &count);
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:count];
 	for (unsigned int i = 0; i < count; i++) {
@@ -221,6 +228,11 @@ const int ABNotifierExceptionNoticeType   = 2;
         else { [dictionary setObject:[NSNull null] forKey:name]; }
 	}
 	free(properties);
+    return dictionary;
+}
+
+- (NSString *)description {
+	NSDictionary *dictionary = [self getDictionaryFromProperty];
     return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]]; 
 }
 - (void)dealloc {

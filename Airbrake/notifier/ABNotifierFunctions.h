@@ -137,4 +137,8 @@ NSString *ABNotifierVisibleViewControllerFromViewController(UIViewController *co
 NSString* ABLocalizedString(NSString* key);
 
 // useful defines
+#if(DEBUG)
 #define ABLog(fmt, args...) NSLog(@"[Airbrake] " fmt, ##args)
+#else
+#define ABLog(args...)
+#endif
