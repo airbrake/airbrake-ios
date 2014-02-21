@@ -56,13 +56,16 @@ Next, call the start notifier method at the very beginning of your `application:
 ````
 
 The API key argument expects your Airbrake project API key. The environment name you provide will be used to categorize received crash reports in the Airbrake web interface. The notifier provides several factory environment names that you are free to use.
-The current API also requires your Airbrake project ID. You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.m
 
 - ABNotifierAutomaticEnvironment
 - ABNotifierDevelopmentEnvironment
 - ABNotifierAdHocEnvironment
 - ABNotifierAppStoreEnvironment
 - ABNotifierReleaseEnvironment
+
+
+The current API also requires your Airbrake project ID. You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.m
+
 
 The `ABNotifierAutomaticEnvironment` environment will set the environment to release or development depending on the presence of the `DEBUG` macro.
 
