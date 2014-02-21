@@ -280,7 +280,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
-				ORGANIZATIONNAME = "GUI Cocoa, LLC.";
+				ORGANIZATIONNAME = "";
 			};
 			buildConfigurationList = 3B2E0B1D137A11B1009B558C /* Build configuration list for PBXProject "Hoptoad Sample" */;
 			compatibilityVersion = "Xcode 3.2";
