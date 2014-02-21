@@ -1,4 +1,8 @@
 # Airbrake iOS Notifier Changelog
+## 4.0 beta
+- JSON format crash report.
+- add username parameter to ABNotifier. 
+- raised support floor to iOS 5.0
 
 ## 3.1
 
