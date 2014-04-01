@@ -368,7 +368,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              attributes:nil
              error:nil];
         }
-        [path retain];
     });
     return path;
 }
@@ -516,7 +515,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 else {
                     ABLog(@"Encountered unexpected status code: %ld", (long)statusCode);
 #ifdef DEBUG
-                    ABLog(@"%@", [[[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding] autorelease]);
+                    ABLog(@"%@", [[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding]);
 #endif
             }
         }
@@ -617,7 +616,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     [alert setDidDismissBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
     [alert show];
-    [alert release];
     
 #else
     
