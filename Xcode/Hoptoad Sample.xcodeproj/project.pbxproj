@@ -30,9 +30,7 @@
 		3B7A06C713FEFD2E007E8CCF /* ABNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */; };
 		564B67EA152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
 		564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
-		5D0DD3CF18AEE28E00650AA1 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0DD3CE18AEE28E00650AA1 /* CrashReporter.framework */; };
 		5D0DD3D118AEE2BF00650AA1 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */; };
-		5D0DD3D418AF324A00650AA1 /* iOSCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D318AF324A00650AA1 /* iOSCrashReport.m */; };
 		5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */; };
 		5D20F2B61886613200F8D6FE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */; };
 		5D20F2B81886613900F8D6FE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B71886613900F8D6FE /* UIKit.framework */; };
@@ -76,10 +74,7 @@
 		3BCEC491142CD54B00AAD825 /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = INSTALLATION.html; path = ../INSTALLATION.html; sourceTree = "<group>"; };
 		3BCEC492142CD54B00AAD825 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 		564B67E9152E090200753DF9 /* ABNotifier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ABNotifier.bundle; sourceTree = "<group>"; };
-		5D0DD3CE18AEE28E00650AA1 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
-		5D0DD3D218AF324A00650AA1 /* iOSCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSCrashReport.h; sourceTree = "<group>"; };
-		5D0DD3D318AF324A00650AA1 /* iOSCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iOSCrashReport.m; sourceTree = "<group>"; };
 		5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		5D20F2B71886613900F8D6FE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -106,7 +101,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D20F2BE1886617100F8D6FE /* libicucore.dylib in Frameworks */,
-				5D0DD3CF18AEE28E00650AA1 /* CrashReporter.framework in Frameworks */,
 				5D20F2BC1886614800F8D6FE /* CoreGraphics.framework in Frameworks */,
 				5D20F2BA1886613F00F8D6FE /* Foundation.framework in Frameworks */,
 				5D20F2B81886613900F8D6FE /* UIKit.framework in Frameworks */,
@@ -188,7 +182,6 @@
 		3B2E0BD7137A179C009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5D0DD3CE18AEE28E00650AA1 /* CrashReporter.framework */,
 				5D20F2BD1886617100F8D6FE /* libicucore.dylib */,
 				5D20F2BB1886614800F8D6FE /* CoreGraphics.framework */,
 				5D20F2B91886613F00F8D6FE /* Foundation.framework */,
@@ -228,8 +221,6 @@
 				3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */,
 				3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */,
 				3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */,
-				5D0DD3D218AF324A00650AA1 /* iOSCrashReport.h */,
-				5D0DD3D318AF324A00650AA1 /* iOSCrashReport.m */,
 			);
 			path = notifier;
 			sourceTree = "<group>";
@@ -387,7 +378,6 @@
 				3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */,
 				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
 				3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */,
-				5D0DD3D418AF324A00650AA1 /* iOSCrashReport.m in Sources */,
 				3B7A06C713FEFD2E007E8CCF /* ABNotifier.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -539,10 +529,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad\\ iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hoptoad iOS/Hoptoad iOS-Prefix.pch";
@@ -563,10 +550,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad\\ iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hoptoad iOS/Hoptoad iOS-Prefix.pch";
 				INFOPLIST_FILE = "Hoptoad iOS/Hoptoad iOS-Info.plist";

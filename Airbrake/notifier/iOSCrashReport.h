@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CrashReporter/CrashReporter.h"
+//#import "CrashReporter/CrashReporter.h"
 @interface iOSCrashReport : NSObject
 
 +(NSData *)getCrashReport;

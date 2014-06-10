@@ -26,7 +26,6 @@
 #import "ABNotifierFunctions.h"
 
 #import "ABNotifier.h"
-#import "iOSCrashReport.h"
 #import "GCAlertView.h"
 
 // internal
