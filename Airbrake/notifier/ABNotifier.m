@@ -26,7 +26,6 @@
 #import "ABNotifierFunctions.h"
 
 #import "ABNotifier.h"
-
 #import "GCAlertView.h"
 
 // internal
@@ -36,15 +35,15 @@ static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
-
+static NSString *__userName = nil;
 // constant strings
-static NSString * const ABNotifierHostName                  = @"api.airbrake.io";
+static NSString * const ABNotifierHostName                  = @"airbrake.io";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
 NSString * const ABNotifierWillPostNoticesNotification      = @"ABNotifierWillPostNotices";
 NSString * const ABNotifierDidPostNoticesNotification       = @"ABNotifierDidPostNotices";
-NSString * const ABNotifierVersion                          = @"3.1";
+NSString * const ABNotifierVersion                          = @"4.0";
 NSString * const ABNotifierDevelopmentEnvironment           = @"Development";
 NSString * const ABNotifierAdHocEnvironment                 = @"Ad Hoc";
 NSString * const ABNotifierAppStoreEnvironment              = @"App Store";
@@ -91,34 +90,32 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @implementation ABNotifier
 
 #pragma mark - initialize the notifier
++ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
+    [self startNotifierWithAPIKey:key environmentName:name userName:nil useSSL:useSSL delegate:delegate installExceptionHandler:YES installSignalHandler:YES displayUserPrompt:YES];
+}
++ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate installExceptionHandler:(BOOL)exception installSignalHandler:(BOOL)signal {
+    [self startNotifierWithAPIKey:key environmentName:name userName:nil useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
+}
+
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate {
     [self startNotifierWithAPIKey:key
                   environmentName:name
+                         userName:username
                            useSSL:useSSL
                          delegate:delegate
           installExceptionHandler:YES
              installSignalHandler:YES
                 displayUserPrompt:YES];
 }
+
+
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
-                         useSSL:(BOOL)useSSL
-                       delegate:(id<ABNotifierDelegate>)delegate
-        installExceptionHandler:(BOOL)exception
-           installSignalHandler:(BOOL)signal {
-    [self startNotifierWithAPIKey:key
-                  environmentName:name
-                           useSSL:useSSL
-                         delegate:delegate
-          installExceptionHandler:exception
-             installSignalHandler:signal
-                displayUserPrompt:YES];
-}
-+ (void)startNotifierWithAPIKey:(NSString *)key
-                environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
@@ -127,6 +124,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     @synchronized(self) {
         static BOOL token = YES;
         if (token) {
+            // store username
+            __userName = username;
             
             // change token5
             token = NO;
@@ -169,6 +168,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 memcpy((void *)ab_signal_info.notice_path, filePath, length);
                 
                 // cache notice payload
+
                 NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
                                 [NSDictionary dictionaryWithObjectsAndKeys:
                                  name, ABNotifierEnvironmentNameKey,
@@ -202,6 +202,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 ABLog(@"Notifier %@ ready to catch errors", ABNotifierVersion);
                 ABLog(@"Environment \"%@\"", name);
                 
+                //init crashreport
+                /*
+                PLCrashReporter *crashReporter =[PLCrashReporter sharedReporter];
+                if ([crashReporter hasPendingCrashReport]) {
+                    NSArray *paths = [ABNotifier pathsForAllNotices];
+                    [ABNotifier postNoticesWithPaths:paths];
+                }
+                 */
             }
             else {
                 ABLog(@"The environment name must not be blank. No new notices will be logged");
@@ -337,7 +345,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             path = NSTemporaryDirectory();
         }
         else {
-            path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
+            path = [path stringByAppendingPathComponent:@"AB Notices"];
         }
 #else
         NSArray *folders = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -347,7 +355,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         }
         else {
             path = [path stringByAppendingPathComponent:ABNotifierApplicationName()];
-            path = [path stringByAppendingPathComponent:@"Hoptoad Notices"];
+            path = [path stringByAppendingPathComponent:@"AB Notices"];
         }
 #endif
         NSFileManager *manager = [NSFileManager defaultManager];
@@ -358,7 +366,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              attributes:nil
              error:nil];
         }
-        [path retain];
     });
     return path;
 }
@@ -400,10 +407,12 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     });
     
     // create url
+    //API V3 iOS report https://airbrake.io/api/v3/projects/%d/ios-reports?key=API_KEY
+    //current V3 API https://api.airbrake.io/api/v3/projects/%d/notices?key=API_KEY
     NSString *URLString = [NSString stringWithFormat:
-                           @"%@://%@/notifier_api/v2/notices",
+                           @"%@://api.airbrake.io/api/v3/projects/%@/notices?key=%@",
                            (__useSSL ? @"https" : @"http"),
-                           ABNotifierHostName];
+                           ABNotifierProjectID, [self APIKey]];
     NSURL *URL = [NSURL URLWithString:URLString];
     
 #if TARGET_OS_IPHONE
@@ -446,83 +455,71 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 + (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
     
-    // assert
-    NSAssert(![NSThread isMainThread], @"This method must not be called on the main thread");
-    
     // create url request
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 	[request setTimeoutInterval:10.0];
-	[request setValue:@"text/xml" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
     
 	// get notice payload
     ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
+    [notice setPOSTUserName:__userName];
 #ifdef DEBUG
     ABLog(@"%@", notice);
 #endif
-    NSString *XMLString = [notice hoptoadXMLString];
-    if (XMLString) {
-        NSData *data = [XMLString dataUsingEncoding:NSUTF8StringEncoding];
-        [request setHTTPBody:data];
+    NSData *jsonData = [notice JSONString];
+    if (jsonData) {
+        [request setHTTPBody:jsonData];
     }
     else {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         return;
     }
 	
-	// perform request
-    NSError *error = nil;
-	NSHTTPURLResponse *response = nil;
-    
+
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *responseBody, NSError* error){
+        if (response) {
+            if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+                
+                if (error) {
+                    ABLog(@"Encountered error while posting notice.");
+                    ABLog(@"%@", error);
+                    return;
+                }
+                else {
+                    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+                }
+                
+                // great success
+                if (statusCode == 200) {
+                    ABLog(@"Crash report posted");
+                }
+                
+                // forbidden
+                else if (statusCode == 403) {
+                    ABLog(@"Please make sure that your API key is correct and that your project supports SSL.");
+                }
+                
+                // invalid post
+                else if (statusCode == 422) {
+                    ABLog(@"The posted notice payload is invalid.");
 #ifdef DEBUG
-    NSData *responseBody = 
+                    ABLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
 #endif
-    [NSURLConnection
-     sendSynchronousRequest:request
-     returningResponse:&response
-     error:&error];
-    NSInteger statusCode = [response statusCode];
-	
-	// error checking
-    if (error) {
-        ABLog(@"Encountered error while posting notice.");
-        ABLog(@"%@", error);
-        return;
-    }
-    else {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-    }
-	
-	// great success
-	if (statusCode == 200) {
-        ABLog(@"Crash report posted");
-	}
-    
-    // forbidden
-    else if (statusCode == 403) {
-        ABLog(@"Please make sure that your API key is correct and that your project supports SSL.");
-    }
-    
-    // invalid post
-    else if (statusCode == 422) {
-        ABLog(@"The posted notice payload is invalid.");
+                }
+                
+                // unknown
+                else {
+                    ABLog(@"Encountered unexpected status code: %ld", (long)statusCode);
 #ifdef DEBUG
-        ABLog(@"%@", XMLString);
+                    ABLog(@"%@", [[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding]);
 #endif
-    }
-    
-    // unknown
-    else {
-        ABLog(@"Encountered unexpected status code: %ld", (long)statusCode);
-#ifdef DEBUG
-        NSString *responseString = [[NSString alloc]
-                                    initWithData:responseBody
-                                    encoding:NSUTF8StringEncoding];
-        ABLog(@"%@", responseString);
-        [responseString release];
-#endif
-    }
-    
+            }
+        }
+            
+      }
+    }];
 }
 
 #pragma mark - cache methods
@@ -617,7 +614,6 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     [alert setDidDismissBlock:delegatePresentBlock];
     [alert setCancelButtonIndex:2];
     [alert show];
-    [alert release];
     
 #else
     

@@ -16,20 +16,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // setup notifier
-    [ABNotifier startNotifierWithAPIKey:@""
+    [ABNotifier startNotifierWithAPIKey:@"FILLINYOURKEY"
                         environmentName:ABNotifierAutomaticEnvironment
+                        userName:@"user001"
                                  useSSL:YES // only if your account supports it
                                delegate:self];
-    [ABNotifier setEnvironmentValue:@"test value" forKey:@"test key"];
-    
-    // test notice on main thread
-    [ABNotifier writeTestNotice];
-    
-    // test notice on another thread
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [ABNotifier writeTestNotice];
-    });
-    
     // show ui
     [self.window makeKeyAndVisible];
     
@@ -39,10 +30,6 @@
 }
 
 #pragma mark - memory management
-- (void)dealloc {
-    self.window = nil;
-    [super dealloc];
-}
 
 #pragma mark - button actions
 - (IBAction)exception {

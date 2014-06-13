@@ -83,13 +83,12 @@ extern const int ABNotifierExceptionNoticeType;
     NSDictionary *__environmentInfo;
     NSArray *__callStack;
     NSNumber *__noticeVersion;
+    NSString *__userName;
 }
 
 // create an object representation of notice data
 - (id)initWithContentsOfFile:(NSString *)path;
 + (ABNotice *)noticeWithContentsOfFile:(NSString *)path;
-
-// get a string representation of the hoptoad xml payload
-- (NSString *)hoptoadXMLString;
-
+- (NSData *)JSONString;
+- (void)setPOSTUserName:(NSString *)theUserName;
 @end

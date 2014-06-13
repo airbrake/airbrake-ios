@@ -1,12 +1,11 @@
 # About
 
 <img src="http://f.cl.ly/items/0R31371i3u3J1h2r1A01/ios%2009.19.32.jpg" width=800px>
-
 The Airbrake iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to [Airbrake](http://airbrake.io) where you can see information like backtrace, device type, app version, and more.
 
 To see how this might help you, check out [this screencast](http://guicocoa.com/airbrake). If you have questions or need support, please visit [Airbrake support](http://help.airbrake.io/discussions/ios-notifier)
 
-The notifier requires iOS 4.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects.
+The notifier requires iOS 5.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects.
 
 # Signals
 
@@ -32,9 +31,12 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 Airbrake supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will dropped by Airbrake. For more information on how this is implemented, read this [knowledge base article](http://help.airbrake.io/kb/ios/app-versions).
 
 # Installation
+Directly from source code
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
-2. Add `SystemConfiguration.framework` and `libxml2.dylib` to your project
-3. Add the path `/usr/include/libxml2` to Header Search Paths in your project's build settings under "All Configurations"
+2. Add `SystemConfiguration.framework` to your project
+
+From cocoapods
+pod 'Airbrake-iOS', '~> 4.0'  
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
@@ -48,7 +50,8 @@ To run the notifier you only need to complete two steps. First, import the `ABNo
 ````objc
 #import "ABNotifier.h"
 ````
-    
+With version 4.0, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
+
 Next, call the start notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
 ````objective-c
@@ -65,6 +68,7 @@ The API key argument expects your Airbrake project API key. The environment name
 - ABNotifierAdHocEnvironment
 - ABNotifierAppStoreEnvironment
 - ABNotifierReleaseEnvironment
+
 
 The `ABNotifierAutomaticEnvironment` environment will set the environment to release or development depending on the presence of the `DEBUG` macro.
 

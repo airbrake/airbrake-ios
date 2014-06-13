@@ -70,6 +70,10 @@ extern NSString * const ABNotifierWillPostNoticesNotification;
 extern NSString * const ABNotifierDidPostNoticesNotification;
 
 /*
+ The current API also requires your Airbrake project ID. You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID.  
+ */
+static NSString * const ABNotifierProjectID                 = @"95161";
+/*
  
  HTNotifier is the primary class of the notifer library. Start the notifier by
  calling `startNotifierWithAPIKey:environmentName:`.
@@ -99,12 +103,18 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
                        delegate:(id<ABNotifierDelegate>)delegate;
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<ABNotifierDelegate>)delegate;
++ (void)startNotifierWithAPIKey:(NSString *)key
+                environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal;
 + (void)startNotifierWithAPIKey:(NSString *)key
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
