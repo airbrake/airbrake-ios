@@ -32,10 +32,12 @@ Airbrake supports a version floor for reported notices. A setting called "Latest
 
 # Installation
 Directly from source code
+
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
 2. Add `SystemConfiguration.framework` to your project
 
 From cocoapods
+
 pod 'Airbrake-iOS', '~> 4.0'  
 
 ## Upgrading
