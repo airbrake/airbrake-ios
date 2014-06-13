@@ -53,6 +53,9 @@ To run the notifier you only need to complete two steps. First, import the `ABNo
 #import "ABNotifier.h"
 ````
 With version 4.0, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
+````objective-c
+static NSString * const ABNotifierProjectID                 = @"<YOUR PROJECT ID>";
+````
 
 Next, call the start notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
@@ -157,3 +160,4 @@ The `ABNotifierDelegate` protocol allows you to respond to actions going on insi
 - [Jordan Breeding](http://jordanbreeding.com)
 - [LithiumCorp](http://lithiumcorp.com)
 - [Mathijs Kadijk](http://www.wrep.nl/)
+- [Jocelyn Harrington](http://www.cleanmicro.com)
