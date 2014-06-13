@@ -30,8 +30,12 @@ In order for the call stack to be properly symbolicated at the time of a crash, 
 Airbrake supports a version floor for reported notices. A setting called "Latest app version" is available in your project settings that lets you specify the lowest app version for which crashes will be saved. This version is compared using [semantic versioning](http://semver.org/). The notifier uses your `CFBundleVersion` to make this comparison. If you have apps in the wild that are using an older notifier version and don't report this bundle version, the notices will dropped by Airbrake. For more information on how this is implemented, read this [knowledge base article](http://help.airbrake.io/kb/ios/app-versions).
 
 # Installation
+Directly from source code
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
 2. Add `SystemConfiguration.framework` to your project
+
+From cocoapods
+pod 'Airbrake-iOS', '~> 4.0'  
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
@@ -45,7 +49,8 @@ To run the notifier you only need to complete two steps. First, import the `ABNo
 ````objc
 #import "ABNotifier.h"
 ````
-    
+With version 4.0, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
+
 Next, call the start notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
 
 ````objective-c
@@ -62,9 +67,6 @@ The API key argument expects your Airbrake project API key. The environment name
 - ABNotifierAdHocEnvironment
 - ABNotifierAppStoreEnvironment
 - ABNotifierReleaseEnvironment
-
-
-The current API also requires your Airbrake project ID. You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.m
 
 
 The `ABNotifierAutomaticEnvironment` environment will set the environment to release or development depending on the presence of the `DEBUG` macro.

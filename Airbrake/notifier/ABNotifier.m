@@ -38,7 +38,6 @@ static BOOL __displayPrompt = YES;
 static NSString *__userName = nil;
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
-static NSString * const ABNotifierProjectID                 = @"95161";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
 NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDisplayAlert";
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
