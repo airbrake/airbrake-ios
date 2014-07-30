@@ -59,6 +59,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 @property (nonatomic, strong) NSNumber      *noticeVersion;
 @property (nonatomic, copy) NSDictionary    *environmentInfo;
 @property (nonatomic, copy) NSString        *userName;
+@property (nonatomic, strong) NSString      *dataPath;
 @end
 
 @implementation ABNotice
@@ -90,6 +91,7 @@ const int ABNotifierExceptionNoticeType   = 2;
             
             // setup
             NSData *data = [NSData dataWithContentsOfFile:path];
+            self.dataPath = path;
             NSData *subdata = nil;
             NSDictionary *dictionary = nil;
             unsigned long location = 0;
@@ -205,13 +207,20 @@ const int ABNotifierExceptionNoticeType   = 2;
 - (NSData *)JSONString {
     NSData *jsonData;
     NSError *jsonSerializationError = nil;
-    NSDictionary *dictionary = [self getDictionaryFromProperty];
+    NSDictionary *dictionary = [self getNoticeDictionary];
     jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
         ABLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
     }
     return jsonData;
+}
+
+
+-(NSDictionary *)getNoticeDictionary
+{
+    NSDictionary *notice = @{@"report": [[NSData dataWithContentsOfFile:self.dataPath] description], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":@"iOS", @"environment":ABNotifierPlatformName(),@"version":ABNotifierApplicationVersion(),@"url":@"",@"userName":self.userName},@"environment":@{@"name": self.environmentName},@"session":@{@"name":@""}};
+    return notice;
 }
 
 - (NSDictionary *)getDictionaryFromProperty
@@ -231,7 +240,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 
 - (NSString *)description {
 	NSDictionary *dictionary = [self getDictionaryFromProperty];
-    return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]]; 
+    return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]];  
 }
 
 @end

@@ -407,10 +407,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     });
     
     // create url
-    //API V3 iOS report https://airbrake.io/api/v3/projects/%d/ios-reports?key=API_KEY
+    //API V3 iOS report https://error.io/api/v3/projects/%d/ios-reports?key=API_KEY
     //current V3 API https://api.airbrake.io/api/v3/projects/%d/notices?key=API_KEY
     NSString *URLString = [NSString stringWithFormat:
-                           @"%@://api.airbrake.io/api/v3/projects/%@/notices?key=%@",
+                           @"%@://api.airbrake.io/api/v3/projects/%@/ios-reports?key=%@",
                            (__useSSL ? @"https" : @"http"),
                            ABNotifierProjectID, [self APIKey]];
     NSURL *URL = [NSURL URLWithString:URLString];
@@ -492,8 +492,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 }
                 
                 // great success
-                if (statusCode == 200) {
-                    ABLog(@"Crash report posted");
+                if (statusCode >= 200 && statusCode <=299) {
+                    ABLog(@"Crash report posted status code:%ld",(long)statusCode);
+                    ABLog(@"%@", [[NSString alloc] initWithData:responseBody encoding:NSUTF8StringEncoding]);
                 }
                 
                 // forbidden
