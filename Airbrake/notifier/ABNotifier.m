@@ -27,7 +27,7 @@
 
 #import "ABNotifier.h"
 #import "GCAlertView.h"
-
+#import "ABCrashReport.h"
 // internal
 static SCNetworkReachabilityRef __reachability = nil;
 static id<ABNotifierDelegate> __delegate = nil;
@@ -140,6 +140,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             __useSSL = useSSL;
             __displayPrompt = display;
             
+            // start crashreport
+            [[ABCrashReport sharedInstance] startCrashReport];
             // switch on api key
             if ([key length]) {
                 __APIKey = [key copy];
@@ -156,60 +158,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // switch on environment name
             if ([name length]) {
-                
-                // vars
-                unsigned long length;
-                
-                // cache signal notice file path
-                NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
-                const char *filePath = [[ABNotifier pathForNewNoticeWithName:fileName] UTF8String];
-                length = (strlen(filePath) + 1);
-                ab_signal_info.notice_path = malloc(length);
-                memcpy((void *)ab_signal_info.notice_path, filePath, length);
-                
-                // cache notice payload
+                //TODO: need to save context data here
 
-                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
-                                [NSDictionary dictionaryWithObjectsAndKeys:
-                                 name, ABNotifierEnvironmentNameKey,
-                                 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],
-                                 ABNotifierBundleVersionKey,
-                                 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"],
-                                 ABNotifierExecutableKey,
-                                 nil]];
-                length = [data length];
-                ab_signal_info.notice_payload = malloc(length);
-                memcpy(ab_signal_info.notice_payload, [data bytes], length);
-                ab_signal_info.notice_payload_length = length;
-                
-                // cache user data
-                [self addEnvironmentEntriesFromDictionary:
-                 [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                  ABNotifierPlatformName(), ABNotifierPlatformNameKey,
-                  ABNotifierOperatingSystemVersion(), ABNotifierOperatingSystemVersionKey,
-                  ABNotifierApplicationVersion(), ABNotifierApplicationVersionKey,
-                  nil]];
-                
-                // start handlers
-                if (exception) {
-                    ABNotifierStartExceptionHandler();
-                }
-                if (signal) {
-                    ABNotifierStartSignalHandler();
-                }
-                
                 // log
                 ABLog(@"Notifier %@ ready to catch errors", ABNotifierVersion);
                 ABLog(@"Environment \"%@\"", name);
-                
-                //init crashreport
-                /*
-                PLCrashReporter *crashReporter =[PLCrashReporter sharedReporter];
-                if ([crashReporter hasPendingCrashReport]) {
-                    NSArray *paths = [ABNotifier pathsForAllNotices];
-                    [ABNotifier postNoticesWithPaths:paths];
-                }
-                 */
             }
             else {
                 ABLog(@"The environment name must not be blank. No new notices will be logged");
@@ -453,6 +406,20 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     });
 	
 }
+
++ (NSData *)JSONString:(NSString *)filePath {
+    NSData *jsonData;
+    NSError *error = NULL;
+    NSError *jsonSerializationError = nil;
+    NSDictionary *notice = @{@"report": [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error]};
+    jsonData = [NSJSONSerialization dataWithJSONObject:notice options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
+    if(jsonSerializationError) {
+        jsonData = nil;
+        ABLog(@"ERROR: JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    return jsonData;
+}
+
 + (void)postNoticeWithContentsOfFile:(NSString *)path toURL:(NSURL *)URL {
     
     // create url request
@@ -461,13 +428,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPMethod:@"POST"];
     
-	// get notice payload
-    ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
-    [notice setPOSTUserName:__userName];
-#ifdef DEBUG
-    ABLog(@"%@", notice);
-#endif
-    NSData *jsonData = [notice JSONString];
+    NSData *jsonData = [self JSONString:path];
     if (jsonData) {
         [request setHTTPBody:jsonData];
     }

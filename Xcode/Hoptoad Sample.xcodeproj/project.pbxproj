@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
+		01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F0665A199DE85300F0CC61 /* CrashReporter.framework */; };
 		3B2E0B52137A11E1009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B50137A11E1009B558C /* InfoPlist.strings */; };
 		3B2E0B55137A11E1009B558C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B54137A11E1009B558C /* main.m */; };
 		3B2E0B58137A11E1009B558C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B56137A11E1009B558C /* Credits.rtf */; };
@@ -40,6 +42,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01CC7554199D6653007B7A91 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = "<group>"; };
+		01CC7555199D6653007B7A91 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = "<group>"; };
+		01F0665A199DE85300F0CC61 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		3B2E0B45137A11E0009B558C /* Hoptoad Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoptoad Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B2E0B4F137A11E1009B558C /* Hoptoad Mac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Hoptoad Mac-Info.plist"; sourceTree = "<group>"; };
 		3B2E0B51137A11E1009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -101,6 +106,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D20F2BE1886617100F8D6FE /* libicucore.dylib in Frameworks */,
+				01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */,
 				5D20F2BC1886614800F8D6FE /* CoreGraphics.framework in Frameworks */,
 				5D20F2BA1886613F00F8D6FE /* Foundation.framework in Frameworks */,
 				5D20F2B81886613900F8D6FE /* UIKit.framework in Frameworks */,
@@ -182,6 +188,7 @@
 		3B2E0BD7137A179C009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				01F0665A199DE85300F0CC61 /* CrashReporter.framework */,
 				5D20F2BD1886617100F8D6FE /* libicucore.dylib */,
 				5D20F2BB1886614800F8D6FE /* CoreGraphics.framework */,
 				5D20F2B91886613F00F8D6FE /* Foundation.framework */,
@@ -220,6 +227,8 @@
 				3B7A06A713FEFD2E007E8CCF /* ABNotice.m */,
 				3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */,
 				3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */,
+				01CC7554199D6653007B7A91 /* ABCrashReport.h */,
+				01CC7555199D6653007B7A91 /* ABCrashReport.m */,
 				3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */,
 			);
 			path = notifier;
@@ -373,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */,
 				3B2E0B73137A11F9009B558C /* main.m in Sources */,
 				3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */,
 				3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */,
@@ -484,7 +494,12 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad\\ Mac",
+					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad",
+					Mac,
+					"$(PROJECT_DIR)/Hoptoad",
+					iOS,
+					"$(PROJECT_DIR)/Hoptoad",
+					iOS,
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -508,7 +523,12 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad\\ Mac",
+					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad",
+					Mac,
+					"$(PROJECT_DIR)/Hoptoad",
+					iOS,
+					"$(PROJECT_DIR)/Hoptoad",
+					iOS,
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -529,7 +549,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Hoptoad\\ iOS",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hoptoad iOS/Hoptoad iOS-Prefix.pch";
@@ -550,7 +573,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Hoptoad\\ iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hoptoad iOS/Hoptoad iOS-Prefix.pch";
 				INFOPLIST_FILE = "Hoptoad iOS/Hoptoad iOS-Info.plist";
