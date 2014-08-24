@@ -228,7 +228,7 @@ const int ABNotifierExceptionNoticeType   = 2;
         }
     }
     NSDictionary *notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace
-        }], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":self.userName},@"environment":@{@"name": self.environmentName}};
+                                                                                                                                                      }], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":self.userName},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
     return notice;
 }
 
