@@ -40,6 +40,14 @@
 	raise(SIGSEGV);
 }
 
+- (IBAction)customLog:(id)sender {
+    @try {
+        [NSException raise:@"custom method name" format:@"custom method error!"];
+    } @catch (NSException *exception) {
+        [ABNotifier logException:exception parameters: @{@"version": @"4.1", @"status":@"testing"}];
+    }
+}
+
 #pragma mark - notifier delegate
 - (UIViewController *)rootViewControllerForNotice {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
