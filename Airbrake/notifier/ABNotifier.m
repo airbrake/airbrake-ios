@@ -452,7 +452,13 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     NSData *jsonData;
     NSError *error = NULL;
     NSError *jsonSerializationError = nil;
-    NSDictionary *notice = @{@"report": [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error]};
+    NSString *dataStr = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+    if (!dataStr) {
+        jsonData = nil;
+        ABLog(@"ERROR: Crash report data is not readable.");
+        return jsonData;
+    }
+    NSDictionary *notice = @{@"report": dataStr};
     jsonData = [NSJSONSerialization dataWithJSONObject:notice options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;

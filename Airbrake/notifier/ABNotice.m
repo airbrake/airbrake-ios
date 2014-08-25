@@ -209,6 +209,11 @@ const int ABNotifierExceptionNoticeType   = 2;
     NSData *jsonData;
     NSError *jsonSerializationError = nil;
     NSDictionary *dictionary = [self getNoticeDictionary];
+    if (!dictionary) {
+        jsonData = nil;
+        ABLog(@"ERROR: JSONString has empty notice dictionary.");
+        return jsonData;
+    }
     jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
@@ -220,15 +225,16 @@ const int ABNotifierExceptionNoticeType   = 2;
 
 -(NSDictionary *)getNoticeDictionary
 {
-    //file, line, function
     NSMutableArray *backtrace = [[NSMutableArray alloc] initWithCapacity:0];
     for (NSArray *item in self.callStack) {
         if ([item count]&& [item count]>4) {
             [backtrace addObject:@{@"line":@([item[1] intValue]),@"file":item[2],@"function":item[3]}];
+        } else {
+            //if we can't format the backtrace to the format matching with server API, return nil instead.  
+            return nil;
         }
     }
-    NSDictionary *notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace
-                                                                                                                                                      }], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":self.userName},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
+    NSDictionary *notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":self.userName},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
     return notice;
 }
 
