@@ -42,7 +42,8 @@ NSString * const ABNotifierCallStackKey                 = @"Call Stack";
 NSString * const ABNotifierControllerKey                = @"Controller";
 NSString * const ABNotifierExecutableKey                = @"Executable";
 NSString * const ABNotifierExceptionParametersKey       = @"Exception Parameters";
-NSString * const ABNotifierNoticePathExtension          = @"htnotice";
+NSString * const ABNotifierNoticePathExtension          = @"abnotice";
+NSString * const ABNotifierExceptionPathExtension       = @"abexception";
 const int ABNotifierNoticeVersion         = 5;
 const int ABNotifierSignalNoticeType      = 1;
 const int ABNotifierExceptionNoticeType   = 2;
@@ -59,6 +60,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 @property (nonatomic, strong) NSNumber      *noticeVersion;
 @property (nonatomic, copy) NSDictionary    *environmentInfo;
 @property (nonatomic, copy) NSString        *userName;
+@property (nonatomic, strong) NSString      *dataPath;
 @end
 
 @implementation ABNotice
@@ -82,7 +84,7 @@ const int ABNotifierExceptionNoticeType   = 2;
             
             // check path
             NSString *extension = [path pathExtension];
-            if (![extension isEqualToString:ABNotifierNoticePathExtension]) {
+            if (![extension isEqualToString:ABNotifierExceptionPathExtension]) {
                 [NSException
                  raise:NSInvalidArgumentException
                  format:@"%@ is not a valid notice", path];
@@ -90,6 +92,7 @@ const int ABNotifierExceptionNoticeType   = 2;
             
             // setup
             NSData *data = [NSData dataWithContentsOfFile:path];
+            self.dataPath = path;
             NSData *subdata = nil;
             NSDictionary *dictionary = nil;
             unsigned long location = 0;
@@ -205,13 +208,34 @@ const int ABNotifierExceptionNoticeType   = 2;
 - (NSData *)JSONString {
     NSData *jsonData;
     NSError *jsonSerializationError = nil;
-    NSDictionary *dictionary = [self getDictionaryFromProperty];
+    NSDictionary *dictionary = [self getNoticeDictionary];
+    if (!dictionary) {
+        jsonData = nil;
+        ABLog(@"ERROR: JSONString has empty notice dictionary.");
+        return jsonData;
+    }
     jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
         ABLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
     }
     return jsonData;
+}
+
+
+-(NSDictionary *)getNoticeDictionary
+{
+    NSMutableArray *backtrace = [[NSMutableArray alloc] initWithCapacity:0];
+    for (NSArray *item in self.callStack) {
+        if ([item count]&& [item count]>4) {
+            [backtrace addObject:@{@"line":@([item[1] intValue]),@"file":item[2],@"function":item[3]}];
+        } else {
+            //if we can't format the backtrace to the format matching with server API, return nil instead.  
+            return nil;
+        }
+    }
+    NSDictionary *notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":self.userName},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
+    return notice;
 }
 
 - (NSDictionary *)getDictionaryFromProperty
@@ -231,7 +255,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 
 - (NSString *)description {
 	NSDictionary *dictionary = [self getDictionaryFromProperty];
-    return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]]; 
+    return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]];  
 }
 
 @end

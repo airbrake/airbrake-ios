@@ -5,7 +5,7 @@ The Airbrake iOS Notifier is designed to give developers instant notification of
 
 To see how this might help you, check out [this screencast](http://guicocoa.com/airbrake). If you have questions or need support, please visit [Airbrake support](http://help.airbrake.io/discussions/ios-notifier)
 
-The notifier requires iOS 5.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects.
+The notifier requires iOS 5.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects. Current iOS Notifier version is 4.1.
 
 # Signals
 
@@ -35,10 +35,11 @@ Directly from source code
 
 1. Drag the Airbrake folder to your project and make sure "Copy Items" and "Create Groups" are selected
 2. Add `SystemConfiguration.framework` to your project
+3. Add 'CrashReporter.framework' from Airbrake folder to your project
 
 From cocoapods
 
-pod 'Airbrake-iOS', '~> 4.0'  
+pod 'Airbrake-iOS', '~> 4.1'  
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
@@ -52,7 +53,7 @@ To run the notifier you only need to complete two steps. First, import the `ABNo
 ````objc
 #import "ABNotifier.h"
 ````
-With version 4.0, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
+With version 4.*, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
 ````objective-c
 static NSString * const ABNotifierProjectID                 = @"<YOUR PROJECT ID>";
 ````
@@ -81,9 +82,9 @@ The `ABNotifierAutomaticEnvironment` environment will set the environment to rel
 
 Airbrake notices support custom environment variables. To add your own values to this part of the notice, use the "environmentValue" family of methods found in `ABNotifier.h`.
 
-# Exception Logging
+# Custom Exception Logging
 
-As of version 3.0 of the notifier, you can log your own exceptions at any time.
+You can log your own exceptions at any time.
 
 ````objective-c
 @try {
@@ -93,6 +94,8 @@ As of version 3.0 of the notifier, you can log your own exceptions at any time.
     [ABNotifier logException:e];
 }
 ````
+When custom exception is used, the notifier will mirror the existing uncaught exception handler, and allow the application to catch and record exceptions without actually crashing. 
+
 
 # Debugging
 

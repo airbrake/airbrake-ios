@@ -56,6 +56,7 @@ extern NSString * const ABNotifierExceptionParametersKey;
 
 // notice file extension
 extern NSString * const ABNotifierNoticePathExtension;
+extern NSString * const ABNotifierExceptionPathExtension;
 
 // file flags
 extern const int ABNotifierNoticeVersion;

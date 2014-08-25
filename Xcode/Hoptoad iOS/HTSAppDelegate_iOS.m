@@ -16,7 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // setup notifier
-    [ABNotifier startNotifierWithAPIKey:@"FILLINYOURKEY"
+    [ABNotifier startNotifierWithAPIKey:@"YOUR API KEY"
                         environmentName:ABNotifierAutomaticEnvironment
                         userName:@"user001"
                                  useSSL:YES // only if your account supports it
@@ -38,6 +38,14 @@
 }
 - (IBAction)signal {
 	raise(SIGSEGV);
+}
+
+- (IBAction)customLog:(id)sender {
+    @try {
+        [NSException raise:@"custom method name" format:@"custom method error!"];
+    } @catch (NSException *exception) {
+        [ABNotifier logException:exception parameters: @{@"version": @"4.1", @"status":@"testing"}];
+    }
 }
 
 #pragma mark - notifier delegate
