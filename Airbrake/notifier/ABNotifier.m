@@ -36,6 +36,7 @@ static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
 static NSString *__userName = nil;
+static NSString *__envName = nil;
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
@@ -159,6 +160,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             // switch on environment name
             if ([name length]) {
                 
+                __envName = name;
                 // vars
                 unsigned long length;
                 
@@ -458,7 +460,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         ABLog(@"ERROR: Crash report data is not readable.");
         return jsonData;
     }
-    NSDictionary *notice = @{@"report": dataStr};
+    NSDictionary *notice = @{@"report": dataStr, @"context":@{@"userName":__userName, @"environment":__envName}};
     jsonData = [NSJSONSerialization dataWithJSONObject:notice options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
