@@ -39,7 +39,7 @@ Directly from source code
 
 From cocoapods
 
-pod 'Airbrake-iOS', '~> 4.1'  
+pod 'Airbrake-iOS', '~> 4.1.1'  
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
