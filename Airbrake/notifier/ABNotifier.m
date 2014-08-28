@@ -35,7 +35,7 @@ static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
 static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
-static NSString *__userName = nil;
+static NSString *__userName = @"Anonymous";
 static NSString *__envName = nil;
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
@@ -92,10 +92,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 
 #pragma mark - initialize the notifier
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
-    [self startNotifierWithAPIKey:key environmentName:name userName:nil useSSL:useSSL delegate:delegate installExceptionHandler:YES installSignalHandler:YES displayUserPrompt:YES];
+    [self startNotifierWithAPIKey:key environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:YES installSignalHandler:YES displayUserPrompt:YES];
 }
 + (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate installExceptionHandler:(BOOL)exception installSignalHandler:(BOOL)signal {
-    [self startNotifierWithAPIKey:key environmentName:name userName:nil useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
+    [self startNotifierWithAPIKey:key environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
 }
 
 + (void)startNotifierWithAPIKey:(NSString *)key

@@ -18,7 +18,6 @@
     // setup notifier
     [ABNotifier startNotifierWithAPIKey:@"YOUR API KEY"
                         environmentName:ABNotifierAutomaticEnvironment
-                        userName:@"user001"
                                  useSSL:YES // only if your account supports it
                                delegate:self];
     // show ui
