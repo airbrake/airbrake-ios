@@ -5,7 +5,7 @@ The Airbrake iOS Notifier is designed to give developers instant notification of
 
 To see how this might help you, check out [this screencast](http://guicocoa.com/airbrake). If you have questions or need support, please visit [Airbrake support](http://help.airbrake.io/discussions/ios-notifier)
 
-The notifier requires iOS 5.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects. Current iOS Notifier version is 4.1.
+The notifier requires iOS 5.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects. It's also compitable with Swift. Current iOS Notifier version is 4.1.
 
 # Signals
 
@@ -43,8 +43,22 @@ pod 'Airbrake-iOS', '~> 4.1.2'
 
 ## Upgrading
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
+
+
+# Update Your Project ID
+With version 4.*, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
+````objective-c
+static NSString * const ABNotifierProjectID                 = @"<YOUR PROJECT ID>";
+````
+
+# Running The Notifier in Swift
+When you add Airbrake iOS to your Swift project, Xcode will automatically add the bridging header for 'ABNotifier' class. 
+First, set up the ABNotifer in your app delegate at the beginning of your 'func application(application: UIApplication!, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {'
+````swift
+ABNotifier.startNotifierWithAPIKey(YOUR_API_KEY, environmentName: ABNotifierAutomaticEnvironment, useSSL: true, delegate: self);
+````
     
-# Running The Notifier
+# Running The Notifier in Objecitve C
 
 The `ABNotifier` class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the `ABNotifierDelegate` protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
 
@@ -52,10 +66,6 @@ To run the notifier you only need to complete two steps. First, import the `ABNo
 
 ````objc
 #import "ABNotifier.h"
-````
-With version 4.*, airbrake iOS also requires your Airbrake project ID (defined as const NSString ABNotifierProjectID). You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. Please use your own project ID for ABNotifierProjectID located in ABNotifier.h
-````objective-c
-static NSString * const ABNotifierProjectID                 = @"<YOUR PROJECT ID>";
 ````
 
 Next, call the start notifier method at the very beginning of your `application:didFinishLaunchingWithOptions:`
@@ -105,6 +115,10 @@ To test that the notifier is working inside your application, a simple test meth
 [ABNotifier writeTestNotice];
 ````
 
+Similarly you can call the test method in Swift. 
+````swift
+ABNotifier.writeTestNotice();
+````
 If you use the `DEBUG` macro to signify development builds the notifier will log notices and errors to the console as they are reported to help see more details.
 
 #Implementing the Delegate Protocol
