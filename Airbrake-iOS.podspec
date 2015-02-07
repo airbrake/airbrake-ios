@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
                    The Airbrake iOS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to Airbrake where you can see information like backtrace, device type, app version, and more.
                    DESC
 
-  s.homepage     = "http://airbrake.io/pages/ios-notifier"
+  s.homepage     = "https://airbrake.io/languages/ios"
   
   s.license      = "MIT"
   
