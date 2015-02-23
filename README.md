@@ -53,6 +53,20 @@ static NSString * const ABNotifierProjectID                 = @"<YOUR PROJECT ID
 
 # Running The Notifier in Swift
 When you add Airbrake iOS to your Swift project, Xcode will automatically add the bridging header for 'ABNotifier' class. 
+
+When Xcode didn't generate the bridging header for your project, for example, you installed Airbrake iOS from cocoapods, you can create a bridge file manually. 
+1. Add a new file to the project and choose Header File as template  
+2. Next, Save as [ProjectName]_Bridging_Header.h and make sure it's at the root of the project. 
+3. Open [ProjectName]-Bridging-Header.h and add ABNotifier, for example
+````objective-c
+#ifndef [ProjectName]_Bridging_Header
+#define [ProjectName]_Bridging_Header
+#import "ABNotifier.h"
+#endif
+````
+4. Add [ProjectName]_Bridging_Header.h to your project build settings. In your project build settings, find Swift Compiler – Code Generation, and next to Objective-C Bridging Header add your bridging header file.
+Now you should be able to access ABNotifier class in your swift project. 
+
 First, set up the ABNotifer in your app delegate at the beginning of your 'func application(application: UIApplication!, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {'
 ````swift
 ABNotifier.startNotifierWithAPIKey(YOUR_API_KEY, environmentName: ABNotifierAutomaticEnvironment, useSSL: true, delegate: self);
