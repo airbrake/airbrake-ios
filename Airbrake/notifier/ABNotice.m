@@ -227,7 +227,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 {
     NSMutableArray *backtrace = [[NSMutableArray alloc] initWithCapacity:0];
     for (NSArray *item in self.callStack) {
-        if ([item count]&& [item count]>4) {
+        if ([item count] && [item count]>4) {
             [backtrace addObject:@{@"line":@([item[1] intValue]),@"file":item[2],@"function":item[3]}];
         } else {
             //if we can't format the backtrace to the format matching with server API, return nil instead.  
