@@ -605,7 +605,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // alert body
     NSString *body = nil;
-    if ([delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
+    if (delegate && [delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
         body = [delegate bodyForNoticeAlert];
     }
     if (body == nil) {
