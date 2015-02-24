@@ -200,9 +200,17 @@ const int ABNotifierExceptionNoticeType   = 2;
 
 - (void)setPOSTUserName:(NSString *)theUserName
 {
-    if (theUserName) {
+    if ([theUserName length]) {
         self.userName = theUserName;
     }
+}
+
+- (NSString *)getPostUserName {
+    NSString * uname = @"Anonymous";
+    if ([self.userName length]) {
+        uname = self.userName;
+    }
+    return self.userName;
 }
 
 - (NSData *)JSONString {
@@ -225,6 +233,8 @@ const int ABNotifierExceptionNoticeType   = 2;
 
 -(NSDictionary *)getNoticeDictionary
 {
+    NSDictionary *notice = nil;
+    @try {
     NSMutableArray *backtrace = [[NSMutableArray alloc] initWithCapacity:0];
     for (NSArray *item in self.callStack) {
         if ([item count] && [item count]>4) {
@@ -234,7 +244,10 @@ const int ABNotifierExceptionNoticeType   = 2;
             return nil;
         }
     }
-    NSDictionary *notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":self.userName},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
+    notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":[self getPostUserName]},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
+    } @catch (NSException *exception) {
+        ABLog(@"ERROR: custom notice dictionary failed : %@", [exception reason]);
+    }
     return notice;
 }
 
