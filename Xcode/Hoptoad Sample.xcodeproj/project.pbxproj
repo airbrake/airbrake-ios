@@ -11,6 +11,8 @@
 		019511C41A9C01FF007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C31A9C01FF007F9070 /* SystemConfiguration.framework */; };
 		019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C51A9C0217007F9070 /* SystemConfiguration.framework */; };
 		019511C81A9C0274007F9070 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C71A9C0274007F9070 /* Cocoa.framework */; };
+		019511CA1A9C3E76007F9070 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C91A9C3E76007F9070 /* UIKit.framework */; };
+		019511CD1A9C4004007F9070 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511CC1A9C4004007F9070 /* CrashReporter.framework */; };
 		01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
 		01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F0665A199DE85300F0CC61 /* CrashReporter.framework */; };
 		3B2E0B52137A11E1009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B50137A11E1009B558C /* InfoPlist.strings */; };
@@ -32,7 +34,6 @@
 		3B7A06C713FEFD2E007E8CCF /* ABNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */; };
 		564B67EA152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
 		564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
-		5D0DD3D118AEE2BF00650AA1 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */; };
 		5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,8 @@
 		019511C31A9C01FF007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		019511C51A9C0217007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		019511C71A9C0274007F9070 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		019511C91A9C3E76007F9070 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		019511CC1A9C4004007F9070 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		01CC7554199D6653007B7A91 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = "<group>"; };
 		01CC7555199D6653007B7A91 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = "<group>"; };
 		01F0665A199DE85300F0CC61 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
@@ -60,10 +63,6 @@
 		3B2E0B74137A11F9009B558C /* HTSAppDelegate_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTSAppDelegate_iOS.h; sourceTree = "<group>"; };
 		3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTSAppDelegate_iOS.m; sourceTree = "<group>"; };
 		3B2E0B78137A11F9009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		3B2E0B94137A1670009B558C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		3B2E0BCF137A16B7009B558C /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = SDKs/MacOSX10.6.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
-		3B2E0BD1137A16F1009B558C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
-		3B2E0C4F137B3697009B558C /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = SDKs/MacOSX10.6.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
 		3B7A068C13FEFD2E007E8CCF /* GCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAlertView.h; sourceTree = "<group>"; };
 		3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAlertView.m; sourceTree = "<group>"; };
 		3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
@@ -76,13 +75,7 @@
 		3BCEC490142CD54B00AAD825 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		3BCEC492142CD54B00AAD825 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 		564B67E9152E090200753DF9 /* ABNotifier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ABNotifier.bundle; sourceTree = "<group>"; };
-		5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
-		5D20F2B71886613900F8D6FE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		5D20F2B91886613F00F8D6FE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		5D20F2BB1886614800F8D6FE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		5D20F2BD1886617100F8D6FE /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +84,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				019511C81A9C0274007F9070 /* Cocoa.framework in Frameworks */,
+				019511CD1A9C4004007F9070 /* CrashReporter.framework in Frameworks */,
 				019511C41A9C01FF007F9070 /* SystemConfiguration.framework in Frameworks */,
-				5D0DD3D118AEE2BF00650AA1 /* CrashReporter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019511CA1A9C3E76007F9070 /* UIKit.framework in Frameworks */,
 				019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */,
 				01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */,
 			);
@@ -166,13 +160,9 @@
 		3B2E0BD6137A178D009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				019511CC1A9C4004007F9070 /* CrashReporter.framework */,
 				019511C71A9C0274007F9070 /* Cocoa.framework */,
 				019511C31A9C01FF007F9070 /* SystemConfiguration.framework */,
-				5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */,
-				3B2E0C4F137B3697009B558C /* libicucore.dylib */,
-				3B2E0BD1137A16F1009B558C /* SystemConfiguration.framework */,
-				3B2E0BCF137A16B7009B558C /* libxml2.dylib */,
-				3B2E0B94137A1670009B558C /* Cocoa.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -180,13 +170,9 @@
 		3B2E0BD7137A179C009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				019511C91A9C3E76007F9070 /* UIKit.framework */,
 				019511C51A9C0217007F9070 /* SystemConfiguration.framework */,
 				01F0665A199DE85300F0CC61 /* CrashReporter.framework */,
-				5D20F2BD1886617100F8D6FE /* libicucore.dylib */,
-				5D20F2BB1886614800F8D6FE /* CoreGraphics.framework */,
-				5D20F2B91886613F00F8D6FE /* Foundation.framework */,
-				5D20F2B71886613900F8D6FE /* UIKit.framework */,
-				5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -505,6 +491,7 @@
 				GCC_PREFIX_HEADER = "Hoptoad Mac/Hoptoad Mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Hoptoad Mac/Hoptoad Mac-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/.";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -528,6 +515,7 @@
 				GCC_PREFIX_HEADER = "Hoptoad Mac/Hoptoad Mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Hoptoad Mac/Hoptoad Mac-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/.";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
