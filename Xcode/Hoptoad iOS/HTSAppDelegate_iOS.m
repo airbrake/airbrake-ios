@@ -16,7 +16,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // setup notifier
-    [ABNotifier startNotifierWithAPIKey:@"YOUR API KEY"
+    [ABNotifier startNotifierWithAPIKey:@""  //Your API Key
+                              ProductID:@""  //Your App's Product ID
                         environmentName:ABNotifierAutomaticEnvironment
                                  useSSL:YES // only if your account supports it
                                delegate:self];
@@ -43,7 +44,7 @@
     @try {
         [NSException raise:@"custom method name" format:@"custom method error!"];
     } @catch (NSException *exception) {
-        [ABNotifier logException:exception parameters: @{@"version": @"4.1", @"status":@"testing"}];
+        [ABNotifier logException:exception parameters: @{@"version": @"4.2", @"status":@"testing"}];
     }
 }
 

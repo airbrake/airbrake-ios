@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		019511C21A9C01B3007F9070 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
+		019511C41A9C01FF007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C31A9C01FF007F9070 /* SystemConfiguration.framework */; };
+		019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C51A9C0217007F9070 /* SystemConfiguration.framework */; };
+		019511C81A9C0274007F9070 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C71A9C0274007F9070 /* Cocoa.framework */; };
 		01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
 		01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F0665A199DE85300F0CC61 /* CrashReporter.framework */; };
 		3B2E0B52137A11E1009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B50137A11E1009B558C /* InfoPlist.strings */; };
@@ -18,10 +22,6 @@
 		3B2E0B73137A11F9009B558C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B72137A11F9009B558C /* main.m */; };
 		3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */; };
 		3B2E0B79137A11F9009B558C /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B77137A11F9009B558C /* MainWindow.xib */; };
-		3B2E0B95137A1670009B558C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0B94137A1670009B558C /* Cocoa.framework */; };
-		3B2E0BD0137A16B7009B558C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0BCF137A16B7009B558C /* libxml2.dylib */; };
-		3B2E0BD2137A16F1009B558C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0BD1137A16F1009B558C /* SystemConfiguration.framework */; };
-		3B2E0C50137B3697009B558C /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2E0C4F137B3697009B558C /* libicucore.dylib */; };
 		3B7A06B413FEFD2E007E8CCF /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
 		3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
 		3B7A06C213FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
@@ -34,14 +34,12 @@
 		564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
 		5D0DD3D118AEE2BF00650AA1 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */; };
 		5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */; };
-		5D20F2B61886613200F8D6FE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B51886613200F8D6FE /* SystemConfiguration.framework */; };
-		5D20F2B81886613900F8D6FE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B71886613900F8D6FE /* UIKit.framework */; };
-		5D20F2BA1886613F00F8D6FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2B91886613F00F8D6FE /* Foundation.framework */; };
-		5D20F2BC1886614800F8D6FE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2BB1886614800F8D6FE /* CoreGraphics.framework */; };
-		5D20F2BE1886617100F8D6FE /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D20F2BD1886617100F8D6FE /* libicucore.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		019511C31A9C01FF007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		019511C51A9C0217007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		019511C71A9C0274007F9070 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		01CC7554199D6653007B7A91 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = "<group>"; };
 		01CC7555199D6653007B7A91 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = "<group>"; };
 		01F0665A199DE85300F0CC61 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
@@ -76,7 +74,6 @@
 		3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifier.m; sourceTree = "<group>"; };
 		3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
 		3BCEC490142CD54B00AAD825 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
-		3BCEC491142CD54B00AAD825 /* INSTALLATION.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = INSTALLATION.html; path = ../INSTALLATION.html; sourceTree = "<group>"; };
 		3BCEC492142CD54B00AAD825 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
 		564B67E9152E090200753DF9 /* ABNotifier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ABNotifier.bundle; sourceTree = "<group>"; };
 		5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
@@ -93,11 +90,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019511C81A9C0274007F9070 /* Cocoa.framework in Frameworks */,
+				019511C41A9C01FF007F9070 /* SystemConfiguration.framework in Frameworks */,
 				5D0DD3D118AEE2BF00650AA1 /* CrashReporter.framework in Frameworks */,
-				3B2E0C50137B3697009B558C /* libicucore.dylib in Frameworks */,
-				3B2E0BD2137A16F1009B558C /* SystemConfiguration.framework in Frameworks */,
-				3B2E0BD0137A16B7009B558C /* libxml2.dylib in Frameworks */,
-				3B2E0B95137A1670009B558C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,12 +100,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D20F2BE1886617100F8D6FE /* libicucore.dylib in Frameworks */,
+				019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */,
 				01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */,
-				5D20F2BC1886614800F8D6FE /* CoreGraphics.framework in Frameworks */,
-				5D20F2BA1886613F00F8D6FE /* Foundation.framework in Frameworks */,
-				5D20F2B81886613900F8D6FE /* UIKit.framework in Frameworks */,
-				5D20F2B61886613200F8D6FE /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,7 +112,6 @@
 			isa = PBXGroup;
 			children = (
 				3BCEC490142CD54B00AAD825 /* CHANGELOG.md */,
-				3BCEC491142CD54B00AAD825 /* INSTALLATION.html */,
 				3BCEC492142CD54B00AAD825 /* README.md */,
 				3B7A068813FEFD2E007E8CCF /* Airbrake */,
 				3B2E0B4D137A11E1009B558C /* Airbrake Mac */,
@@ -176,6 +166,8 @@
 		3B2E0BD6137A178D009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				019511C71A9C0274007F9070 /* Cocoa.framework */,
+				019511C31A9C01FF007F9070 /* SystemConfiguration.framework */,
 				5D0DD3D018AEE2BF00650AA1 /* CrashReporter.framework */,
 				3B2E0C4F137B3697009B558C /* libicucore.dylib */,
 				3B2E0BD1137A16F1009B558C /* SystemConfiguration.framework */,
@@ -188,6 +180,7 @@
 		3B2E0BD7137A179C009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				019511C51A9C0217007F9070 /* SystemConfiguration.framework */,
 				01F0665A199DE85300F0CC61 /* CrashReporter.framework */,
 				5D20F2BD1886617100F8D6FE /* libicucore.dylib */,
 				5D20F2BB1886614800F8D6FE /* CoreGraphics.framework */,
@@ -279,7 +272,7 @@
 		3B2E0B1A137A11B1009B558C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					3B2E0B65137A11F8009B558C = {
@@ -374,6 +367,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019511C21A9C01B3007F9070 /* ABCrashReport.m in Sources */,
 				3B2E0B55137A11E1009B558C /* main.m in Sources */,
 				3B2E0B5B137A11E1009B558C /* HTSAppDelegate_Mac.m in Sources */,
 				3B7A06B413FEFD2E007E8CCF /* GCAlertView.m in Sources */,
@@ -451,7 +445,9 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -464,7 +460,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 			};
 			name = Debug;
 		};
@@ -476,7 +472,9 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -499,12 +497,7 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad",
-					Mac,
-					"$(PROJECT_DIR)/Hoptoad",
-					iOS,
-					"$(PROJECT_DIR)/Hoptoad",
-					iOS,
+					"$(PROJECT_DIR)/Hoptoad\\ Mac",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -528,12 +521,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/cpt_caveman/Documents/airbrakeiOS/airbrake-ios/Xcode/Hoptoad",
-					Mac,
-					"$(PROJECT_DIR)/Hoptoad",
-					iOS,
-					"$(PROJECT_DIR)/Hoptoad",
-					iOS,
+					"$(PROJECT_DIR)/Hoptoad\\ Mac",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
