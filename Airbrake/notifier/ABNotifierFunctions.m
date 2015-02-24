@@ -140,7 +140,7 @@ void ABNotifierStopSignalHandler(void) {
 
 #pragma mark - Info.plist accessors
 NSString *ABNotifierApplicationVersion(void) {
-    static NSString *version = nil;
+    static NSString *version = @"0.0";
     static dispatch_once_t token;
     dispatch_once(&token, ^{
         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
