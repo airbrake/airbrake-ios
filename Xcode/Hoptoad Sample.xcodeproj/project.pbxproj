@@ -12,7 +12,8 @@
 		019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C51A9C0217007F9070 /* SystemConfiguration.framework */; };
 		019511C81A9C0274007F9070 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C71A9C0274007F9070 /* Cocoa.framework */; };
 		019511CA1A9C3E76007F9070 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C91A9C3E76007F9070 /* UIKit.framework */; };
-		019511CD1A9C4004007F9070 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511CC1A9C4004007F9070 /* CrashReporter.framework */; };
+		01ABD1331AA15CE0005638A7 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01ABD1321AA15CE0005638A7 /* CrashReporter.framework */; };
+		01ABD1351AA15DC6005638A7 /* CrashReporter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 01ABD1321AA15CE0005638A7 /* CrashReporter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
 		01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F0665A199DE85300F0CC61 /* CrashReporter.framework */; };
 		3B2E0B52137A11E1009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B50137A11E1009B558C /* InfoPlist.strings */; };
@@ -37,12 +38,25 @@
 		5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		01ABD1341AA15D91005638A7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				01ABD1351AA15DC6005638A7 /* CrashReporter.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		019511C31A9C01FF007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		019511C51A9C0217007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		019511C71A9C0274007F9070 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		019511C91A9C3E76007F9070 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		019511CC1A9C4004007F9070 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
+		01ABD1321AA15CE0005638A7 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		01CC7554199D6653007B7A91 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = "<group>"; };
 		01CC7555199D6653007B7A91 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = "<group>"; };
 		01F0665A199DE85300F0CC61 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
@@ -84,7 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				019511C81A9C0274007F9070 /* Cocoa.framework in Frameworks */,
-				019511CD1A9C4004007F9070 /* CrashReporter.framework in Frameworks */,
+				01ABD1331AA15CE0005638A7 /* CrashReporter.framework in Frameworks */,
 				019511C41A9C01FF007F9070 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,7 +174,7 @@
 		3B2E0BD6137A178D009B558C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				019511CC1A9C4004007F9070 /* CrashReporter.framework */,
+				01ABD1321AA15CE0005638A7 /* CrashReporter.framework */,
 				019511C71A9C0274007F9070 /* Cocoa.framework */,
 				019511C31A9C01FF007F9070 /* SystemConfiguration.framework */,
 			);
@@ -224,6 +238,7 @@
 				3B2E0B42137A11E0009B558C /* Frameworks */,
 				3B2E0B43137A11E0009B558C /* Resources */,
 				3BFC84DA139C5AD0000D2BB2 /* ShellScript */,
+				01ABD1341AA15D91005638A7 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -491,7 +506,8 @@
 				GCC_PREFIX_HEADER = "Hoptoad Mac/Hoptoad Mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Hoptoad Mac/Hoptoad Mac-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/.";
+				LD_RUNPATH_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Hoptoad\\ Mac";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -515,7 +531,8 @@
 				GCC_PREFIX_HEADER = "Hoptoad Mac/Hoptoad Mac-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Hoptoad Mac/Hoptoad Mac-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/.";
+				LD_RUNPATH_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Hoptoad\\ Mac";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
