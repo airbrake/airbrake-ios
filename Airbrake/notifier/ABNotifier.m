@@ -38,6 +38,7 @@ static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
 static NSString *__userName = @"Anonymous";
 static NSString *__envName = nil;
+static NSString *__noticePath = nil;
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
@@ -296,6 +297,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (void)logException:(NSException *)exception {
     [self logException:exception parameters:nil];
 }
+
 + (void)writeTestNotice {
     @try {
         NSArray *array = [NSArray array];
@@ -370,35 +372,60 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              attributes:nil
              error:nil];
         }
+#if !TARGET_OS_IPHONE
+        __noticePath = [[NSString alloc] initWithString:path];
+#endif
     });
     return path;
 }
 + (NSString *)pathForNewNoticeWithName:(NSString *)name {
     NSString *path = [self pathForNoticesDirectory];
+#if !TARGET_OS_IPHONE
+    if (__noticePath) {
+        path = __noticePath;
+    }
+#endif
     path = [path stringByAppendingPathComponent:name];
     return [path stringByAppendingPathExtension:ABNotifierNoticePathExtension];
 }
 
 + (NSString *)pathForNewExceptionWithName:(NSString *)name {
     NSString *path = [self pathForNoticesDirectory];
+#if !TARGET_OS_IPHONE
+    if (__noticePath) {
+        path = __noticePath;
+    }
+#endif
     path = [path stringByAppendingPathComponent:name];
     return [path stringByAppendingPathExtension:ABNotifierExceptionPathExtension];
 }
 
 + (NSArray *)pathsForAllNotices {
     NSString *path = [self pathForNoticesDirectory];
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:[contents count]];
-    [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
-            NSString *noticePath = [path stringByAppendingPathComponent:obj];
-            [paths addObject:noticePath];
-        } else if ([[obj pathExtension] isEqualToString:ABNotifierExceptionPathExtension]) {
-            NSString *noticePath = [path stringByAppendingPathComponent:obj];
-            [paths addObject:noticePath];
-        }
-    }];
-    return paths;
+#if !TARGET_OS_IPHONE
+    if (__noticePath) {
+        path = __noticePath;
+    }
+#endif
+    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:0];
+    @try {
+        NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+        [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
+                NSString *noticePath = [path stringByAppendingPathComponent:obj];
+                [paths addObject:noticePath];
+            } else if ([[obj pathExtension] isEqualToString:ABNotifierExceptionPathExtension]) {
+                NSString *noticePath = [path stringByAppendingPathComponent:obj];
+                [paths addObject:noticePath];
+            }
+        }];
+    }
+    @catch (NSException *exception) {
+        ABLog(@"Error when getting pathsFroAllNotices: %@", exception.description);
+    }
+    @finally {
+        return paths;
+    }
 }
 
 #pragma mark - post notices
