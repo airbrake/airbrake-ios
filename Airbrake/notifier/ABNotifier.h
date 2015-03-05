@@ -97,29 +97,29 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
  */
 
 + (void)startNotifierWithAPIKey:(NSString *)key
-                      ProductID:(NSString *)projectId
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL;
 + (void)startNotifierWithAPIKey:(NSString *)key
-                      ProductID:(NSString *)projectId
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate;
 + (void)startNotifierWithAPIKey:(NSString *)key
-                      ProductID:(NSString *)projectId
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                        userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate;
 + (void)startNotifierWithAPIKey:(NSString *)key
-                      ProductID:(NSString *)projectId
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal;
 + (void)startNotifierWithAPIKey:(NSString *)key
-                      ProductID:(NSString *)projectId
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                        userName:(NSString *)username
                          useSSL:(BOOL)useSSL
@@ -135,7 +135,7 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
  */
 + (id<ABNotifierDelegate>)delegate;
 + (NSString *)APIKey;
-+ (NSString *)ProjectID;
++ (NSString *)projectID;
 /*
  
  Log an exception and optionally save parameters with this exception. These

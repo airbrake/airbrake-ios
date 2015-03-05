@@ -17,7 +17,7 @@
     
     // setup notifier
     [ABNotifier startNotifierWithAPIKey:@""  //Your API Key
-                              ProductID:@""  //Your App's Product ID
+                              projectID:@""  //Your App's Product ID
                         environmentName:ABNotifierAutomaticEnvironment
                                  useSSL:YES // only if your account supports it
                                delegate:self];
