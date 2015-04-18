@@ -1,4 +1,7 @@
 # Airbrake iOS Notifier Changelog
+## 4.2
+- bug fixes
+- add productID as parameter in ABNotifier class method
 ## 4.1
 - bug fixes
 ## 4.0 beta

@@ -14,9 +14,7 @@
 
 }
 
-@property (nonatomic, strong) IBOutlet UIWindow *window;
+@property (nonatomic, strong) UIWindow *window;
 
-- (IBAction)exception;
-- (IBAction)signal;
 
 @end

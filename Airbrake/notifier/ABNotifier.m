@@ -33,10 +33,12 @@ static SCNetworkReachabilityRef __reachability = nil;
 static id<ABNotifierDelegate> __delegate = nil;
 static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
+static NSString * __ABProjectID = nil;
 static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
 static NSString *__userName = @"Anonymous";
 static NSString *__envName = nil;
+static NSString *__noticePath = nil;
 // constant strings
 static NSString * const ABNotifierHostName                  = @"airbrake.io";
 static NSString * const ABNotifierAlwaysSendKey             = @"AlwaysSendCrashReports";
@@ -44,7 +46,7 @@ NSString * const ABNotifierWillDisplayAlertNotification     = @"ABNotifierWillDi
 NSString * const ABNotifierDidDismissAlertNotification      = @"ABNotifierDidDismissAlert";
 NSString * const ABNotifierWillPostNoticesNotification      = @"ABNotifierWillPostNotices";
 NSString * const ABNotifierDidPostNoticesNotification       = @"ABNotifierDidPostNotices";
-NSString * const ABNotifierVersion                          = @"4.1";
+NSString * const ABNotifierVersion                          = @"4.2";
 NSString * const ABNotifierDevelopmentEnvironment           = @"Development";
 NSString * const ABNotifierAdHocEnvironment                 = @"Ad Hoc";
 NSString * const ABNotifierAppStoreEnvironment              = @"App Store";
@@ -91,23 +93,24 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 @implementation ABNotifier
 
 #pragma mark - initialize the notifier
-+ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
-    [self startNotifierWithAPIKey:key environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:YES installSignalHandler:YES displayUserPrompt:YES];
++ (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId environmentName:(NSString *)name useSSL:(BOOL)useSSL {
+    [self startNotifierWithAPIKey:key projectID:projectId environmentName:name useSSL:useSSL delegate:nil];
 }
-+ (void)startNotifierWithAPIKey:(NSString *)key environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate installExceptionHandler:(BOOL)exception installSignalHandler:(BOOL)signal {
-    [self startNotifierWithAPIKey:key environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
+
++ (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
+    [self startNotifierWithAPIKey:key projectID:projectId environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:YES installSignalHandler:YES displayUserPrompt:YES];
+}
++ (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate installExceptionHandler:(BOOL)exception installSignalHandler:(BOOL)signal {
+    [self startNotifierWithAPIKey:key projectID:projectId environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
 }
 
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                        userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate {
-    [self startNotifierWithAPIKey:key
-                  environmentName:name
-                         userName:username
-                           useSSL:useSSL
-                         delegate:delegate
+    [self startNotifierWithAPIKey:key projectID:projectId environmentName:name userName:username useSSL:useSSL delegate:delegate
           installExceptionHandler:YES
              installSignalHandler:YES
                 displayUserPrompt:YES];
@@ -115,6 +118,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 
 
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                        userName:(NSString *)username
                          useSSL:(BOOL)useSSL
@@ -143,9 +147,10 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // start crashreport
             [[ABCrashReport sharedInstance] startCrashReport];
-            // switch on api key
-            if ([key length]) {
+            // switch on api key and project id
+            if ([key length] && [projectId length]) {
                 __APIKey = [key copy];
+                __ABProjectID = [projectId copy];
                 __reachability = SCNetworkReachabilityCreateWithName(NULL, [ABNotifierHostName UTF8String]);
                 if (SCNetworkReachabilitySetCallback(__reachability, ABNotifierReachabilityDidChange, nil)) {
                     if (!SCNetworkReachabilityScheduleWithRunLoop(__reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode)) {
@@ -154,7 +159,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
                 }
             }
             else {
-                ABLog(@"The API key must not be blank. No notices will be posted.");
+                ABLog(@"The API key and ProjectID must not be blank. No notices will be posted.");
             }
             
             // switch on environment name
@@ -225,6 +230,11 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         return __APIKey;
     }
 }
++ (NSString *)projectID {
+    @synchronized(self) {
+        return __ABProjectID;
+    }
+}
 
 #pragma mark - write data
 + (void)logException:(NSException *)exception parameters:(NSDictionary *)parameters {
@@ -269,7 +279,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             
             // delegate
             id<ABNotifierDelegate> delegate = [self delegate];
-            if ([delegate respondsToSelector:@selector(notifierDidLogException:)]) {
+            if (delegate && [delegate respondsToSelector:@selector(notifierDidLogException:)]) {
                 [delegate notifierDidLogException:exception];
             }
             
@@ -287,6 +297,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (void)logException:(NSException *)exception {
     [self logException:exception parameters:nil];
 }
+
 + (void)writeTestNotice {
     @try {
         NSArray *array = [NSArray array];
@@ -361,35 +372,60 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              attributes:nil
              error:nil];
         }
+#if !TARGET_OS_IPHONE
+        __noticePath = [[NSString alloc] initWithString:path];
+#endif
     });
     return path;
 }
 + (NSString *)pathForNewNoticeWithName:(NSString *)name {
     NSString *path = [self pathForNoticesDirectory];
+#if !TARGET_OS_IPHONE
+    if (__noticePath) {
+        path = __noticePath;
+    }
+#endif
     path = [path stringByAppendingPathComponent:name];
     return [path stringByAppendingPathExtension:ABNotifierNoticePathExtension];
 }
 
 + (NSString *)pathForNewExceptionWithName:(NSString *)name {
     NSString *path = [self pathForNoticesDirectory];
+#if !TARGET_OS_IPHONE
+    if (__noticePath) {
+        path = __noticePath;
+    }
+#endif
     path = [path stringByAppendingPathComponent:name];
     return [path stringByAppendingPathExtension:ABNotifierExceptionPathExtension];
 }
 
 + (NSArray *)pathsForAllNotices {
     NSString *path = [self pathForNoticesDirectory];
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:[contents count]];
-    [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
-            NSString *noticePath = [path stringByAppendingPathComponent:obj];
-            [paths addObject:noticePath];
-        } else if ([[obj pathExtension] isEqualToString:ABNotifierExceptionPathExtension]) {
-            NSString *noticePath = [path stringByAppendingPathComponent:obj];
-            [paths addObject:noticePath];
-        }
-    }];
-    return paths;
+#if !TARGET_OS_IPHONE
+    if (__noticePath) {
+        path = __noticePath;
+    }
+#endif
+    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:0];
+    @try {
+        NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+        [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if ([[obj pathExtension] isEqualToString:ABNotifierNoticePathExtension]) {
+                NSString *noticePath = [path stringByAppendingPathComponent:obj];
+                [paths addObject:noticePath];
+            } else if ([[obj pathExtension] isEqualToString:ABNotifierExceptionPathExtension]) {
+                NSString *noticePath = [path stringByAppendingPathComponent:obj];
+                [paths addObject:noticePath];
+            }
+        }];
+    }
+    @catch (NSException *exception) {
+        ABLog(@"Error when getting pathsFroAllNotices: %@", exception.description);
+    }
+    @finally {
+        return paths;
+    }
 }
 
 #pragma mark - post notices
@@ -476,7 +512,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     NSString *URLString = [NSString stringWithFormat:
                            @"%@://api.airbrake.io/api/v3/projects/%@/ios-reports?key=%@",
                            (__useSSL ? @"https" : @"http"),
-                           ABNotifierProjectID, [self APIKey]];
+                           [self projectID], [self APIKey]];
     NSData *jsonData;
     NSString *fileType = [path pathExtension];
     // create data based on file name, if it's a full crash report, will send the report as human readable string.
@@ -487,7 +523,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         URLString = [NSString stringWithFormat:
                      @"%@://api.airbrake.io/api/v3/projects/%@/notices?key=%@",
                      (__useSSL ? @"https" : @"http"),
-                     ABNotifierProjectID, [self APIKey]];
+                     [self projectID], [self APIKey]];
         // get ABNotice
         ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
         [notice setPOSTUserName:__userName];
@@ -596,7 +632,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     
     // alert body
     NSString *body = nil;
-    if ([delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
+    if (delegate && [delegate respondsToSelector:@selector(bodyForNoticeAlert)]) {
         body = [delegate bodyForNoticeAlert];
     }
     if (body == nil) {
@@ -634,18 +670,44 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     };
     
 #if TARGET_OS_IPHONE
-    
-    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
-    [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
-        setDefaultsBlock();
-        postNoticesBlock();
-    }];
-    [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
-    [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
-    [alert setDidDismissBlock:delegateDismissBlock];
-    [alert setDidDismissBlock:delegatePresentBlock];
-    [alert setCancelButtonIndex:2];
-    [alert show];
+    if ([UIAlertController class]) {
+        UIAlertController *alert= [UIAlertController alertControllerWithTitle:title
+                                                                      message:body
+                                                               preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction* alwaysSend = [UIAlertAction actionWithTitle:ABLocalizedString(@"ALWAYS_SEND")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action){
+                                                               postNoticesBlock();
+                                                           }];
+        UIAlertAction* send = [UIAlertAction actionWithTitle:ABLocalizedString(@"SEND")
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action){
+                                                         postNoticesBlock();
+                                                     }];
+        UIAlertAction* cancel = [UIAlertAction actionWithTitle:ABLocalizedString(@"DONT_SEND")
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action) {
+                                                           deleteNoticesBlock();
+                                                           [alert dismissViewControllerAnimated:YES completion:nil];
+                                                       }];
+        
+        [alert addAction:alwaysSend];
+        [alert addAction:send];
+        [alert addAction:cancel];
+        [[[UIApplication sharedApplication] delegate].window.rootViewController presentViewController:alert animated:YES completion:nil];
+    } else {
+        GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
+        [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
+            setDefaultsBlock();
+            postNoticesBlock();
+        }];
+        [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
+        [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
+        [alert setDidDismissBlock:delegateDismissBlock];
+        [alert setDidDismissBlock:delegatePresentBlock];
+        [alert setCancelButtonIndex:2];
+        [alert show];
+    }
     
 #else
     
