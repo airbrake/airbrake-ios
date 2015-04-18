@@ -25,6 +25,8 @@
 		019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C51A9C0217007F9070 /* SystemConfiguration.framework */; };
 		019511CA1A9C3E76007F9070 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C91A9C3E76007F9070 /* UIKit.framework */; };
 		01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
+		01DB74D01AE1DAD300AEDEEE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DB74CE1AE1DAD300AEDEEE /* ViewController.m */; };
+		01DB74D11AE1DAD300AEDEEE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */; };
 		01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F0665A199DE85300F0CC61 /* CrashReporter.framework */; };
 		3B2E0B70137A11F9009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B6E137A11F9009B558C /* InfoPlist.strings */; };
 		3B2E0B73137A11F9009B558C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B72137A11F9009B558C /* main.m */; };
@@ -60,6 +62,9 @@
 		01ABD1321AA15CE0005638A7 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		01CC7554199D6653007B7A91 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = "<group>"; };
 		01CC7555199D6653007B7A91 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = "<group>"; };
+		01DB74CD1AE1DAD300AEDEEE /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		01DB74CE1AE1DAD300AEDEEE /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		01F0665A199DE85300F0CC61 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
 		3B2E0B4F137A11E1009B558C /* AirbrakeMac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirbrakeMac-Info.plist"; sourceTree = "<group>"; };
 		3B2E0B51137A11E1009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -158,6 +163,9 @@
 			children = (
 				3B2E0B74137A11F9009B558C /* HTSAppDelegate_iOS.h */,
 				3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */,
+				01DB74CD1AE1DAD300AEDEEE /* ViewController.h */,
+				01DB74CE1AE1DAD300AEDEEE /* ViewController.m */,
+				01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */,
 				3B2E0B77137A11F9009B558C /* MainWindow.xib */,
 				3B2E0B6D137A11F9009B558C /* AirbrakeiOS-Info.plist */,
 				3B2E0B6E137A11F9009B558C /* InfoPlist.strings */,
@@ -323,6 +331,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B2E0B70137A11F9009B558C /* InfoPlist.strings in Resources */,
+				01DB74D11AE1DAD300AEDEEE /* Main.storyboard in Resources */,
 				5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */,
 				3B2E0B79137A11F9009B558C /* MainWindow.xib in Resources */,
 				564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */,
@@ -382,6 +391,7 @@
 			files = (
 				01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */,
 				3B2E0B73137A11F9009B558C /* main.m in Sources */,
+				01DB74D01AE1DAD300AEDEEE /* ViewController.m in Sources */,
 				3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */,
 				3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */,
 				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
