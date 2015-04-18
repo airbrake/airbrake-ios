@@ -210,7 +210,7 @@ const int ABNotifierExceptionNoticeType   = 2;
     if ([self.userName length]) {
         uname = self.userName;
     }
-    return self.userName;
+    return uname;
 }
 
 - (NSData *)JSONString {
