@@ -31,7 +31,6 @@
 		3B2E0B70137A11F9009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B6E137A11F9009B558C /* InfoPlist.strings */; };
 		3B2E0B73137A11F9009B558C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B72137A11F9009B558C /* main.m */; };
 		3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */; };
-		3B2E0B79137A11F9009B558C /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B77137A11F9009B558C /* MainWindow.xib */; };
 		3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
 		3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
 		3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
@@ -81,7 +80,6 @@
 		3B2E0B72137A11F9009B558C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3B2E0B74137A11F9009B558C /* HTSAppDelegate_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTSAppDelegate_iOS.h; sourceTree = "<group>"; };
 		3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTSAppDelegate_iOS.m; sourceTree = "<group>"; };
-		3B2E0B78137A11F9009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		3B7A068C13FEFD2E007E8CCF /* GCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAlertView.h; sourceTree = "<group>"; };
 		3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAlertView.m; sourceTree = "<group>"; };
 		3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
@@ -166,7 +164,6 @@
 				01DB74CD1AE1DAD300AEDEEE /* ViewController.h */,
 				01DB74CE1AE1DAD300AEDEEE /* ViewController.m */,
 				01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */,
-				3B2E0B77137A11F9009B558C /* MainWindow.xib */,
 				3B2E0B6D137A11F9009B558C /* AirbrakeiOS-Info.plist */,
 				3B2E0B6E137A11F9009B558C /* InfoPlist.strings */,
 				3B2E0B71137A11F9009B558C /* AirbrakeiOS-Prefix.pch */,
@@ -279,7 +276,7 @@
 		3B2E0B1A137A11B1009B558C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					3B2E0B65137A11F8009B558C = {
@@ -333,7 +330,6 @@
 				3B2E0B70137A11F9009B558C /* InfoPlist.strings in Resources */,
 				01DB74D11AE1DAD300AEDEEE /* Main.storyboard in Resources */,
 				5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */,
-				3B2E0B79137A11F9009B558C /* MainWindow.xib in Resources */,
 				564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -435,14 +431,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		3B2E0B77137A11F9009B558C /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3B2E0B78137A11F9009B558C /* en */,
-			);
-			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -508,6 +496,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -519,7 +508,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
@@ -535,6 +524,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;

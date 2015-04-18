@@ -8,9 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ABNotifier.h"
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <ABNotifierDelegate>
 
-- (IBAction)exception;
-- (IBAction)signal;
 @end
 

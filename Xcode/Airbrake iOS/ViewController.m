@@ -24,4 +24,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)exception {
+    NSArray *array = [NSArray array];
+    [array objectAtIndex:NSUIntegerMax];
+}
+- (IBAction)signal {
+    raise(SIGSEGV);
+}
+
+- (IBAction)customLog:(id)sender {
+    @try {
+        [NSException raise:@"custom method name" format:@"custom method error!"];
+    } @catch (NSException *exception) {
+        [ABNotifier logException:exception parameters: @{@"version": @"4.2", @"status":@"testing"}];
+    }
+}
+
 @end
