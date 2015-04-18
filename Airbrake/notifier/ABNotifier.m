@@ -670,18 +670,44 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     };
     
 #if TARGET_OS_IPHONE
-    
-    GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
-    [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
-        setDefaultsBlock();
-        postNoticesBlock();
-    }];
-    [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
-    [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
-    [alert setDidDismissBlock:delegateDismissBlock];
-    [alert setDidDismissBlock:delegatePresentBlock];
-    [alert setCancelButtonIndex:2];
-    [alert show];
+    if ([UIAlertController class]) {
+        UIAlertController *alert= [UIAlertController alertControllerWithTitle:title
+                                                                      message:body
+                                                               preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction* alwaysSend = [UIAlertAction actionWithTitle:ABLocalizedString(@"SEND")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action){
+                                                               postNoticesBlock();
+                                                           }];
+        UIAlertAction* send = [UIAlertAction actionWithTitle:ABLocalizedString(@"SEND")
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action){
+                                                         postNoticesBlock();
+                                                     }];
+        UIAlertAction* cancel = [UIAlertAction actionWithTitle:ABLocalizedString(@"DONT_SEND")
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action) {
+                                                           deleteNoticesBlock();
+                                                           [alert dismissViewControllerAnimated:YES completion:nil];
+                                                       }];
+        
+        [alert addAction:alwaysSend];
+        [alert addAction:send];
+        [alert addAction:cancel];
+        [[[UIApplication sharedApplication] delegate].window.rootViewController presentViewController:alert animated:YES completion:nil];
+    } else {
+        GCAlertView *alert = [[GCAlertView alloc] initWithTitle:title message:body];
+        [alert addButtonWithTitle:ABLocalizedString(@"ALWAYS_SEND") block:^{
+            setDefaultsBlock();
+            postNoticesBlock();
+        }];
+        [alert addButtonWithTitle:ABLocalizedString(@"SEND") block:postNoticesBlock];
+        [alert addButtonWithTitle:ABLocalizedString(@"DONT_SEND") block:deleteNoticesBlock];
+        [alert setDidDismissBlock:delegateDismissBlock];
+        [alert setDidDismissBlock:delegatePresentBlock];
+        [alert setCancelButtonIndex:2];
+        [alert show];
+    }
     
 #else
     
