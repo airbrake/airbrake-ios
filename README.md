@@ -69,7 +69,7 @@ First, set up the ABNotifer in your app delegate at the beginning of your 'func 
 ABNotifier.startNotifierWithAPIKey(YOUR_API_KEY, projectID: Your_Product_ID,environmentName: ABNotifierAutomaticEnvironment, useSSL: true);
 ````
     
-# Running The Notifier in Objecitve C
+# Running The Notifier in Objective C
 
 The `ABNotifier` class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the `ABNotifierDelegate` protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
 
