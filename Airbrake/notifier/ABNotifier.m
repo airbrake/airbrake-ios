@@ -677,6 +677,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         UIAlertAction* alwaysSend = [UIAlertAction actionWithTitle:ABLocalizedString(@"ALWAYS_SEND")
                                                              style:UIAlertActionStyleDefault
                                                            handler:^(UIAlertAction * action){
+                                                               setDefaultsBlock();
                                                                postNoticesBlock();
                                                            }];
         UIAlertAction* send = [UIAlertAction actionWithTitle:ABLocalizedString(@"SEND")
