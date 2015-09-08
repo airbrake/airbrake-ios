@@ -39,7 +39,7 @@ typedef struct ab_signal_info_t {
     void *user_data;
 	
 } ab_signal_info_t;
-ab_signal_info_t ab_signal_info;
+extern ab_signal_info_t ab_signal_info;
 
 // notice payload keys
 extern NSString * const ABNotifierOperatingSystemVersionKey;

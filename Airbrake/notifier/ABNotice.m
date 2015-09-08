@@ -29,6 +29,7 @@
 
 #import "ABNotifier.h"
 
+ab_signal_info_t ab_signal_info;
 
 // library constants
 NSString * const ABNotifierOperatingSystemVersionKey    = @"Operating System";
