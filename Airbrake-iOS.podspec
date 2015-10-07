@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Airbrake-iOS"
-  s.version      = "4.2.1"
+  s.version      = "4.2.2"
   s.summary      = "An Airbrake Notifier for iOS"
 
   s.description  = <<-DESC
