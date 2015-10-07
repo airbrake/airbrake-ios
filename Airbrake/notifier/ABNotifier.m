@@ -673,7 +673,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     if ([UIAlertController class]) {
         UIAlertController *alert= [UIAlertController alertControllerWithTitle:title
                                                                       message:body
-                                                               preferredStyle:UIAlertControllerStyleActionSheet];
+                                                               preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction* alwaysSend = [UIAlertAction actionWithTitle:ABLocalizedString(@"ALWAYS_SEND")
                                                              style:UIAlertActionStyleDefault
                                                            handler:^(UIAlertAction * action){
