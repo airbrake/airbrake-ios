@@ -45,22 +45,22 @@ pod 'Airbrake-iOS'
 Please remove all of the resources used by the notifier from your project before upgrading. This is the best way to make sure all of the appropriate files are present and no extra files exist.
 
 
-# Find Your Project ID
+## Find Your Project ID
 With version 4.*, airbrake iOS also requires your Airbrake project ID . You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3. 
 
-# Running The Notifier in Swift As Framework
+## Running The Notifier in Swift As Framework
 1. Add Airbrake-iOS to the podfile:
 use_frameworks!
 pod 'Airbrake-iOS'
 
-2. `import Airbrake_iOS` in app delegate. 
+2. `import Airbrake_iOS` in app delegate. (if you run into issue with build, please refer to issue [#58](https://github.com/airbrake/airbrake-ios/issues/58))
 3. set up the ABNotifer in your app delegate at the beginning of your 'func application(application: UIApplication!, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {'
 ````swift
 ABNotifier.startNotifierWithAPIKey(YOUR_API_KEY, projectID: Your_Product_ID,environmentName: ABNotifierAutomaticEnvironment, useSSL: true);
 ````
 And you're good to go. 
 
-# Running The Notifier in Swift As Static Library
+## Running The Notifier in Swift As Static Library
 When you add Airbrake iOS to your Swift project, Xcode will automatically add the bridging header for 'ABNotifier' class. 
 
 When Xcode didn't generate the bridging header for your project, for example, you installed Airbrake iOS from cocoapods, you can create a bridge file manually. 
@@ -81,7 +81,7 @@ First, set up the ABNotifer in your app delegate at the beginning of your 'func 
 ABNotifier.startNotifierWithAPIKey(YOUR_API_KEY, projectID: Your_Product_ID,environmentName: ABNotifierAutomaticEnvironment, useSSL: true);
 ````
     
-# Running The Notifier in Objective C
+## Running The Notifier in Objective C
 
 The `ABNotifier` class is the primary class you will interact with while using the notifier. All of its methods and properties, along with the `ABNotifierDelegate` protocol are documented in their headers. **Please read through the header files for a complete reference of the library.**
 
