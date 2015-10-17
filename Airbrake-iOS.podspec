@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Airbrake-iOS"
-  s.version      = "4.2.2"
+  s.version      = "4.2.3"
   s.summary      = "An Airbrake Notifier for iOS"
 
   s.description  = <<-DESC
@@ -17,13 +17,15 @@ Pod::Spec.new do |s|
   
   s.platform     = :ios, "6.0"
 
-  s.source       = { :git => "https://github.com/airbrake/airbrake-ios.git", :tag => "4.2.2" }
+  s.source       = { :git => "https://github.com/airbrake/airbrake-ios.git", :tag => "4.2.3" }
 
   s.source_files  = "Airbrake/{notifier,gcalertview}/*.{h,m}", "Airbrake/CrashReporter.framework/Versions/A/Headers/*.h"
 
   s.resources = "Airbrake/notifier/ABNotifier.bundle"
 
   s.framework  = "SystemConfiguration"
+
+  s.public_header_files = "Airbrake/notifier/ABNotifier.h"
 
   s.ios.vendored_frameworks  = "Airbrake/CrashReporter.framework"
 
