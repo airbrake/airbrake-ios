@@ -25,8 +25,6 @@ Pod::Spec.new do |s|
 
   s.framework  = "SystemConfiguration"
 
-  s.public_header_files = "Airbrake/notifier/*.h"
-
   s.ios.vendored_frameworks  = "Airbrake/CrashReporter.framework"
 
   s.requires_arc = true
