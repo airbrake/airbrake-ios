@@ -3,7 +3,7 @@
 <img src="http://f.cl.ly/items/0R31371i3u3J1h2r1A01/ios%2009.19.32.jpg" width=800px>
 The Airbrake iOS/Mac OS Notifier is designed to give developers instant notification of problems that occur in their apps. With just a few lines of code and a few extra files in your project, your app will automatically phone home whenever a crash or exception is encountered. These reports go straight to [Airbrake](http://airbrake.io) where you can see information like backtrace, device type, app version, and more.
 
-To see how this might help you, check out [this screencast](http://guicocoa.github.io/airbrake/). If you have questions or need support, please visit [Airbrake support](http://help.airbrake.io/discussions/ios-notifier)
+If you have questions or need support, please visit [Airbrake support](http://help.airbrake.io/discussions/ios-notifier)
 
 The notifier requires iOS 5.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects. It's also compitable with Swift. Current iOS Notifier version is 4.2.
 
