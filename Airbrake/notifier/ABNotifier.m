@@ -496,7 +496,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         ABLog(@"ERROR: Crash report data is not readable.");
         return jsonData;
     }
-    NSDictionary *notice = @{@"report": dataStr, @"context":@{@"userName":__userName, @"environment":__envName}};
+    NSDictionary *notice = @{@"report": dataStr, @"context":@{@"userName":__userName, @"environment":__envName, @"notifier":@{@"name":@"Airbrake-iOS",@"version":ABNotifierVersion,@"url":@""}}};
     jsonData = [NSJSONSerialization dataWithJSONObject:notice options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
