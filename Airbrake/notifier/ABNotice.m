@@ -245,7 +245,7 @@ const int ABNotifierExceptionNoticeType   = 2;
             return nil;
         }
     }
-    notice = @{@"notifier": @{@"name":self.executable, @"version":ABNotifierApplicationVersion(), @"url":self.executable},@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":[self getPostUserName]},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
+    notice = @{@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"notifier":@{@"name":ABNotifierName,@"version":ABNotifierVersion,@"url":@"https://github.com/airbrake/airbrake-ios"},@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":[self getPostUserName]},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
     } @catch (NSException *exception) {
         ABLog(@"ERROR: custom notice dictionary failed : %@", [exception reason]);
     }

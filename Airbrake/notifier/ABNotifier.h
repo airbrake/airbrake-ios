@@ -26,8 +26,8 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-    #ifndef __IPHONE_5_0
-        #error This version of the Airbrake notifier requires iOS 5.0 or later
+    #ifndef __IPHONE_6_0
+        #error This version of the Airbrake notifier requires iOS 6.0 or later
     #endif
 #elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
@@ -41,6 +41,7 @@
 #import "ABNotifierDelegate.h"
 
 // notifier version
+extern NSString * const ABNotifierName;
 extern NSString * const ABNotifierVersion;
 
 /*
