@@ -29,7 +29,7 @@
 
 #import "ABNotifier.h"
 
-#import "DDXML.h"
+ab_signal_info_t ab_signal_info;
 
 // library constants
 NSString * const ABNotifierOperatingSystemVersionKey    = @"Operating System";
@@ -43,7 +43,8 @@ NSString * const ABNotifierCallStackKey                 = @"Call Stack";
 NSString * const ABNotifierControllerKey                = @"Controller";
 NSString * const ABNotifierExecutableKey                = @"Executable";
 NSString * const ABNotifierExceptionParametersKey       = @"Exception Parameters";
-NSString * const ABNotifierNoticePathExtension          = @"htnotice";
+NSString * const ABNotifierNoticePathExtension          = @"abnotice";
+NSString * const ABNotifierExceptionPathExtension       = @"abexception";
 const int ABNotifierNoticeVersion         = 5;
 const int ABNotifierSignalNoticeType      = 1;
 const int ABNotifierExceptionNoticeType   = 2;
@@ -57,8 +58,10 @@ const int ABNotifierExceptionNoticeType   = 2;
 @property (nonatomic, copy) NSString        *action;
 @property (nonatomic, copy) NSString        *executable;
 @property (nonatomic, copy) NSArray         *callStack;
-@property (nonatomic, retain) NSNumber      *noticeVersion;
+@property (nonatomic, strong) NSNumber      *noticeVersion;
 @property (nonatomic, copy) NSDictionary    *environmentInfo;
+@property (nonatomic, copy) NSString        *userName;
+@property (nonatomic, strong) NSString      *dataPath;
 @end
 
 @implementation ABNotice
@@ -73,6 +76,7 @@ const int ABNotifierExceptionNoticeType   = 2;
 @synthesize environmentInfo = __environmentInfo;
 @synthesize action = __action;
 @synthesize executable = __executable;
+@synthesize userName =__userName;
 
 - (id)initWithContentsOfFile:(NSString *)path {
     self = [super init];
@@ -81,7 +85,7 @@ const int ABNotifierExceptionNoticeType   = 2;
             
             // check path
             NSString *extension = [path pathExtension];
-            if (![extension isEqualToString:ABNotifierNoticePathExtension]) {
+            if (![extension isEqualToString:ABNotifierExceptionPathExtension]) {
                 [NSException
                  raise:NSInvalidArgumentException
                  format:@"%@ is not a valid notice", path];
@@ -89,6 +93,7 @@ const int ABNotifierExceptionNoticeType   = 2;
             
             // setup
             NSData *data = [NSData dataWithContentsOfFile:path];
+            self.dataPath = path;
             NSData *subdata = nil;
             NSDictionary *dictionary = nil;
             unsigned long location = 0;
@@ -172,7 +177,6 @@ const int ABNotifierExceptionNoticeType   = 2;
                 NSMutableDictionary *mutableInfo = [self.environmentInfo mutableCopy];
                 [mutableInfo addEntriesFromDictionary:[dictionary objectForKey:ABNotifierExceptionParametersKey]];
                 self.environmentInfo = mutableInfo;
-                [mutableInfo release];
                 
             }
             
@@ -186,93 +190,71 @@ const int ABNotifierExceptionNoticeType   = 2;
         }
         @catch (NSException *exception) {
             ABLog(@"%@", exception);
-            [self release];
             return nil;
         }
     }
     return self;
 }
 + (ABNotice *)noticeWithContentsOfFile:(NSString *)path {
-    return [[[ABNotice alloc] initWithContentsOfFile:path] autorelease];
+    return [[ABNotice alloc] initWithContentsOfFile:path];
 }
-- (NSString *)hoptoadXMLString {
-    
-    // pool
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    // create root
-    DDXMLElement *notice = [DDXMLElement elementWithName:@"notice"];
-    [notice addAttribute:[DDXMLElement attributeWithName:@"version" stringValue:@"2.1"]];
-    
-    // set api key
-    NSString *APIKey = [ABNotifier APIKey];
-    if (APIKey == nil) { APIKey = @""; }
-    [notice addChild:[DDXMLElement elementWithName:@"api-key" stringValue:APIKey]];
-    
-    // set notifier information
-    DDXMLElement *notifier = [DDXMLElement elementWithName:@"notifier"];
-    [notifier addChild:[DDXMLElement elementWithName:@"name" stringValue:@"Hoptoad iOS Notifier"]];
-    [notifier addChild:[DDXMLElement elementWithName:@"url" stringValue:@"http://github.com/guicocoa/hoptoad-ios"]];
-	[notifier addChild:[DDXMLElement elementWithName:@"version" stringValue:ABNotifierVersion]];
-	[notice addChild:notifier];
-    
-	// set error information
-    NSString *message = [NSString stringWithFormat:@"%@: %@", self.exceptionName, self.exceptionReason];
-    DDXMLElement *error = [DDXMLElement elementWithName:@"error"];
-    [error addChild:[DDXMLElement elementWithName:@"class" stringValue:self.exceptionName]];
-	[error addChild:[DDXMLElement elementWithName:@"message" stringValue:message]];
-    DDXMLElement *backtrace = [DDXMLElement elementWithName:@"backtrace"];
-    [self.callStack enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        DDXMLElement *line = [DDXMLElement elementWithName:@"line"];
-        [line addAttribute:
-         [DDXMLElement
-          attributeWithName:@"number"
-          stringValue:[(NSArray *)obj objectAtIndex:1]]];
-        [line addAttribute:
-         [DDXMLElement
-          attributeWithName:@"file"
-          stringValue:[(NSArray *)obj objectAtIndex:2]]];
-        [line addAttribute:
-         [DDXMLElement
-          attributeWithName:@"method"
-          stringValue:[(NSArray *)obj objectAtIndex:3]]];
-        [backtrace addChild:line];
-    }];
-	[error addChild:backtrace];
-    [notice addChild:error];
-    
-    // set request info
-    DDXMLElement *request = [DDXMLElement elementWithName:@"request"];
-    [request addChild:[DDXMLElement elementWithName:@"url"]];
-    [request addChild:[DDXMLElement elementWithName:@"component" stringValue:self.controller]];
-    [request addChild:[DDXMLElement elementWithName:@"action" stringValue:self.action]];
-    DDXMLElement *cgi = [DDXMLElement elementWithName:@"cgi-data"];
-    [self.environmentInfo enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        DDXMLElement *entry = [DDXMLElement elementWithName:@"var" stringValue:[obj description]];
-        [entry addAttribute:[DDXMLElement attributeWithName:@"key" stringValue:[key description]]];
-        [cgi addChild:entry];
-    }];
-    [request addChild:cgi];
-    [notice addChild:request];
-    
-    // set server encironment
-    DDXMLElement *environment = [DDXMLElement elementWithName:@"server-environment"];
-    [environment addChild:[DDXMLElement elementWithName:@"environment-name" stringValue:self.environmentName]];
-    [environment addChild:[DDXMLElement elementWithName:@"app-version" stringValue:self.bundleVersion]];
-	[notice addChild:environment];
-    
-    // get return value
-    NSString *XMLString = [[notice XMLString] copy];
-    
-    // pool
-    [pool drain];
-    
-    // return
-    return [XMLString autorelease];
-    
+
+- (void)setPOSTUserName:(NSString *)theUserName
+{
+    if ([theUserName length]) {
+        self.userName = theUserName;
+    }
 }
-- (NSString *)description {
-	unsigned int count;
+
+- (NSString *)getPostUserName {
+    NSString * uname = @"Anonymous";
+    if ([self.userName length]) {
+        uname = self.userName;
+    }
+    return uname;
+}
+
+- (NSData *)JSONString {
+    NSData *jsonData;
+    NSError *jsonSerializationError = nil;
+    NSDictionary *dictionary = [self getNoticeDictionary];
+    if (!dictionary) {
+        jsonData = nil;
+        ABLog(@"ERROR: JSONString has empty notice dictionary.");
+        return jsonData;
+    }
+    jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
+    if(jsonSerializationError) {
+        jsonData = nil;
+        ABLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    return jsonData;
+}
+
+
+-(NSDictionary *)getNoticeDictionary
+{
+    NSDictionary *notice = nil;
+    @try {
+    NSMutableArray *backtrace = [[NSMutableArray alloc] initWithCapacity:0];
+    for (NSArray *item in self.callStack) {
+        if ([item count] && [item count]>4) {
+            [backtrace addObject:@{@"line":@([item[1] intValue]),@"file":item[2],@"function":item[3]}];
+        } else {
+            //if we can't format the backtrace to the format matching with server API, return nil instead.  
+            return nil;
+        }
+    }
+    notice = @{@"errors":@[@{@"type":self.exceptionName,@"message":self.exceptionReason, @"backtrace":backtrace}], @"context":@{@"notifier":@{@"name":ABNotifierName,@"version":ABNotifierVersion,@"url":@"https://github.com/airbrake/airbrake-ios"},@"os": ABNotifierOperatingSystemVersion(),@"language":ABNotifierPlatformName(), @"environment":self.environmentName,@"version":ABNotifierApplicationVersion(),@"userName":[self getPostUserName]},@"environment":@{@"name": self.environmentName},@"params":self.environmentInfo};
+    } @catch (NSException *exception) {
+        ABLog(@"ERROR: custom notice dictionary failed : %@", [exception reason]);
+    }
+    return notice;
+}
+
+- (NSDictionary *)getDictionaryFromProperty
+{
+    unsigned int count;
 	objc_property_t *properties = class_copyPropertyList([self class], &count);
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:count];
 	for (unsigned int i = 0; i < count; i++) {
@@ -282,18 +264,12 @@ const int ABNotifierExceptionNoticeType   = 2;
         else { [dictionary setObject:[NSNull null] forKey:name]; }
 	}
 	free(properties);
-    return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]]; 
+    return dictionary;
 }
-- (void)dealloc {
-	self.exceptionName = nil;
-	self.exceptionReason = nil;
-	self.environmentName = nil;
-	self.environmentInfo = nil;
-    self.bundleVersion = nil;
-    self.action = nil;
-	self.callStack = nil;
-	self.controller = nil;
-	[super dealloc];
+
+- (NSString *)description {
+	NSDictionary *dictionary = [self getDictionaryFromProperty];
+    return [NSString stringWithFormat:@"%@ %@", [super description], [dictionary description]];  
 }
 
 @end

@@ -1,5 +1,14 @@
 # Airbrake iOS Notifier Changelog
-
+## 4.2
+- bug fixes
+- add productID as parameter in ABNotifier class method
+## 4.1
+- bug fixes
+## 4.0 beta
+- JSON format crash report.
+- add username parameter to ABNotifier. 
+- raised support floor to iOS 5.0
+- Asyncnously http request. 
 ## 3.1
 
 - add new environment strings to differentiate between development and testing

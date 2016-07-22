@@ -1,0 +1,626 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		010B8ECF1AA7E00600A1B55A /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
+		010B8ED01AA7E00600A1B55A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B54137A11E1009B558C /* main.m */; };
+		010B8ED11AA7E00600A1B55A /* HTSAppDelegate_Mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B5A137A11E1009B558C /* HTSAppDelegate_Mac.m */; };
+		010B8ED21AA7E00600A1B55A /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
+		010B8ED31AA7E00600A1B55A /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
+		010B8ED41AA7E00600A1B55A /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
+		010B8ED51AA7E00600A1B55A /* ABNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */; };
+		010B8ED71AA7E00600A1B55A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C71A9C0274007F9070 /* Cocoa.framework */; };
+		010B8ED81AA7E00600A1B55A /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01ABD1321AA15CE0005638A7 /* CrashReporter.framework */; };
+		010B8ED91AA7E00600A1B55A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C31A9C01FF007F9070 /* SystemConfiguration.framework */; };
+		010B8EDB1AA7E00600A1B55A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B50137A11E1009B558C /* InfoPlist.strings */; };
+		010B8EDC1AA7E00600A1B55A /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B56137A11E1009B558C /* Credits.rtf */; };
+		010B8EDD1AA7E00600A1B55A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B5C137A11E1009B558C /* MainMenu.xib */; };
+		010B8EDE1AA7E00600A1B55A /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
+		010B8EE11AA7E00600A1B55A /* CrashReporter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 01ABD1321AA15CE0005638A7 /* CrashReporter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C51A9C0217007F9070 /* SystemConfiguration.framework */; };
+		019511CA1A9C3E76007F9070 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 019511C91A9C3E76007F9070 /* UIKit.framework */; };
+		01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CC7555199D6653007B7A91 /* ABCrashReport.m */; };
+		01DB74D01AE1DAD300AEDEEE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DB74CE1AE1DAD300AEDEEE /* ViewController.m */; };
+		01DB74D11AE1DAD300AEDEEE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */; };
+		01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F0665A199DE85300F0CC61 /* CrashReporter.framework */; };
+		3B2E0B70137A11F9009B558C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3B2E0B6E137A11F9009B558C /* InfoPlist.strings */; };
+		3B2E0B73137A11F9009B558C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B72137A11F9009B558C /* main.m */; };
+		3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */; };
+		3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */; };
+		3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */; };
+		3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A713FEFD2E007E8CCF /* ABNotice.m */; };
+		3B7A06C713FEFD2E007E8CCF /* ABNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */; };
+		564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 564B67E9152E090200753DF9 /* ABNotifier.bundle */; };
+		5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		010B8EE01AA7E00600A1B55A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				010B8EE11AA7E00600A1B55A /* CrashReporter.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		010B8EE51AA7E00600A1B55A /* AirbrakeMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirbrakeMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		019511C31A9C01FF007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		019511C51A9C0217007F9070 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		019511C71A9C0274007F9070 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		019511C91A9C3E76007F9070 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		01ABD1321AA15CE0005638A7 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
+		01CC7554199D6653007B7A91 /* ABCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCrashReport.h; sourceTree = "<group>"; };
+		01CC7555199D6653007B7A91 /* ABCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCrashReport.m; sourceTree = "<group>"; };
+		01DB74CD1AE1DAD300AEDEEE /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		01DB74CE1AE1DAD300AEDEEE /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		01F0665A199DE85300F0CC61 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CrashReporter.framework; sourceTree = "<group>"; };
+		3B2E0B4F137A11E1009B558C /* AirbrakeMac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirbrakeMac-Info.plist"; sourceTree = "<group>"; };
+		3B2E0B51137A11E1009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3B2E0B53137A11E1009B558C /* AirbrakeMac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AirbrakeMac-Prefix.pch"; sourceTree = "<group>"; };
+		3B2E0B54137A11E1009B558C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3B2E0B57137A11E1009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		3B2E0B59137A11E1009B558C /* HTSAppDelegate_Mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTSAppDelegate_Mac.h; sourceTree = "<group>"; };
+		3B2E0B5A137A11E1009B558C /* HTSAppDelegate_Mac.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTSAppDelegate_Mac.m; sourceTree = "<group>"; };
+		3B2E0B5D137A11E1009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		3B2E0B66137A11F8009B558C /* AirbrakeiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirbrakeiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B2E0B6D137A11F9009B558C /* AirbrakeiOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirbrakeiOS-Info.plist"; sourceTree = "<group>"; };
+		3B2E0B6F137A11F9009B558C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3B2E0B71137A11F9009B558C /* AirbrakeiOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AirbrakeiOS-Prefix.pch"; sourceTree = "<group>"; };
+		3B2E0B72137A11F9009B558C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3B2E0B74137A11F9009B558C /* HTSAppDelegate_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTSAppDelegate_iOS.h; sourceTree = "<group>"; };
+		3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTSAppDelegate_iOS.m; sourceTree = "<group>"; };
+		3B7A068C13FEFD2E007E8CCF /* GCAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCAlertView.h; sourceTree = "<group>"; };
+		3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCAlertView.m; sourceTree = "<group>"; };
+		3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierFunctions.h; sourceTree = "<group>"; };
+		3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifierFunctions.m; sourceTree = "<group>"; };
+		3B7A06A613FEFD2E007E8CCF /* ABNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotice.h; sourceTree = "<group>"; };
+		3B7A06A713FEFD2E007E8CCF /* ABNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotice.m; sourceTree = "<group>"; };
+		3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifier.h; sourceTree = "<group>"; };
+		3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABNotifier.m; sourceTree = "<group>"; };
+		3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABNotifierDelegate.h; sourceTree = "<group>"; };
+		3BCEC490142CD54B00AAD825 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
+		3BCEC492142CD54B00AAD825 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; wrapsLines = 1; };
+		564B67E9152E090200753DF9 /* ABNotifier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ABNotifier.bundle; sourceTree = "<group>"; };
+		5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		010B8ED61AA7E00600A1B55A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010B8ED71AA7E00600A1B55A /* Cocoa.framework in Frameworks */,
+				010B8ED81AA7E00600A1B55A /* CrashReporter.framework in Frameworks */,
+				010B8ED91AA7E00600A1B55A /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3B2E0B63137A11F8009B558C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				019511CA1A9C3E76007F9070 /* UIKit.framework in Frameworks */,
+				019511C61A9C0217007F9070 /* SystemConfiguration.framework in Frameworks */,
+				01F0665B199DE85300F0CC61 /* CrashReporter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3B2E0B18137A11B1009B558C = {
+			isa = PBXGroup;
+			children = (
+				3BCEC490142CD54B00AAD825 /* CHANGELOG.md */,
+				3BCEC492142CD54B00AAD825 /* README.md */,
+				3B7A068813FEFD2E007E8CCF /* Airbrake */,
+				3B2E0B4D137A11E1009B558C /* Airbrake Mac */,
+				3B2E0B6B137A11F9009B558C /* Airbrake iOS */,
+				3B2E0B24137A11B1009B558C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3B2E0B24137A11B1009B558C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3B2E0B66137A11F8009B558C /* AirbrakeiOS.app */,
+				010B8EE51AA7E00600A1B55A /* AirbrakeMac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3B2E0B4D137A11E1009B558C /* Airbrake Mac */ = {
+			isa = PBXGroup;
+			children = (
+				3B2E0B59137A11E1009B558C /* HTSAppDelegate_Mac.h */,
+				3B2E0B5A137A11E1009B558C /* HTSAppDelegate_Mac.m */,
+				3B2E0B5C137A11E1009B558C /* MainMenu.xib */,
+				3B2E0B4F137A11E1009B558C /* AirbrakeMac-Info.plist */,
+				3B2E0B50137A11E1009B558C /* InfoPlist.strings */,
+				3B2E0B53137A11E1009B558C /* AirbrakeMac-Prefix.pch */,
+				3B2E0B54137A11E1009B558C /* main.m */,
+				3B2E0B56137A11E1009B558C /* Credits.rtf */,
+				3B2E0BD6137A178D009B558C /* Frameworks */,
+			);
+			path = "Airbrake Mac";
+			sourceTree = "<group>";
+		};
+		3B2E0B6B137A11F9009B558C /* Airbrake iOS */ = {
+			isa = PBXGroup;
+			children = (
+				3B2E0B74137A11F9009B558C /* HTSAppDelegate_iOS.h */,
+				3B2E0B75137A11F9009B558C /* HTSAppDelegate_iOS.m */,
+				01DB74CD1AE1DAD300AEDEEE /* ViewController.h */,
+				01DB74CE1AE1DAD300AEDEEE /* ViewController.m */,
+				01DB74CF1AE1DAD300AEDEEE /* Main.storyboard */,
+				3B2E0B6D137A11F9009B558C /* AirbrakeiOS-Info.plist */,
+				3B2E0B6E137A11F9009B558C /* InfoPlist.strings */,
+				3B2E0B71137A11F9009B558C /* AirbrakeiOS-Prefix.pch */,
+				5D0DD3D518B7266A00650AA1 /* Default-568h@2x.png */,
+				3B2E0B72137A11F9009B558C /* main.m */,
+				3B2E0BD7137A179C009B558C /* Frameworks */,
+			);
+			path = "Airbrake iOS";
+			sourceTree = "<group>";
+		};
+		3B2E0BD6137A178D009B558C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				01ABD1321AA15CE0005638A7 /* CrashReporter.framework */,
+				019511C71A9C0274007F9070 /* Cocoa.framework */,
+				019511C31A9C01FF007F9070 /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3B2E0BD7137A179C009B558C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				019511C91A9C3E76007F9070 /* UIKit.framework */,
+				019511C51A9C0217007F9070 /* SystemConfiguration.framework */,
+				01F0665A199DE85300F0CC61 /* CrashReporter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3B7A068813FEFD2E007E8CCF /* Airbrake */ = {
+			isa = PBXGroup;
+			children = (
+				3B7A068913FEFD2E007E8CCF /* gcalertview */,
+				3B7A069E13FEFD2E007E8CCF /* notifier */,
+			);
+			name = Airbrake;
+			path = ../Airbrake;
+			sourceTree = "<group>";
+		};
+		3B7A068913FEFD2E007E8CCF /* gcalertview */ = {
+			isa = PBXGroup;
+			children = (
+				3B7A068C13FEFD2E007E8CCF /* GCAlertView.h */,
+				3B7A068D13FEFD2E007E8CCF /* GCAlertView.m */,
+			);
+			path = gcalertview;
+			sourceTree = "<group>";
+		};
+		3B7A069E13FEFD2E007E8CCF /* notifier */ = {
+			isa = PBXGroup;
+			children = (
+				564B67E9152E090200753DF9 /* ABNotifier.bundle */,
+				3B7A06A413FEFD2E007E8CCF /* ABNotifierFunctions.h */,
+				3B7A06A513FEFD2E007E8CCF /* ABNotifierFunctions.m */,
+				3B7A06A613FEFD2E007E8CCF /* ABNotice.h */,
+				3B7A06A713FEFD2E007E8CCF /* ABNotice.m */,
+				3B7A06A813FEFD2E007E8CCF /* ABNotifier.h */,
+				3B7A06A913FEFD2E007E8CCF /* ABNotifier.m */,
+				01CC7554199D6653007B7A91 /* ABCrashReport.h */,
+				01CC7555199D6653007B7A91 /* ABCrashReport.m */,
+				3B7A06AA13FEFD2E007E8CCF /* ABNotifierDelegate.h */,
+			);
+			path = notifier;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		010B8ECD1AA7E00600A1B55A /* AirbrakeMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 010B8EE21AA7E00600A1B55A /* Build configuration list for PBXNativeTarget "AirbrakeMac" */;
+			buildPhases = (
+				010B8ECE1AA7E00600A1B55A /* Sources */,
+				010B8ED61AA7E00600A1B55A /* Frameworks */,
+				010B8EDA1AA7E00600A1B55A /* Resources */,
+				010B8EDF1AA7E00600A1B55A /* ShellScript */,
+				010B8EE01AA7E00600A1B55A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirbrakeMac;
+			productName = "Hoptoad Mac";
+			productReference = 010B8EE51AA7E00600A1B55A /* AirbrakeMac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3B2E0B65137A11F8009B558C /* AirbrakeiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3B2E0B7A137A11F9009B558C /* Build configuration list for PBXNativeTarget "AirbrakeiOS" */;
+			buildPhases = (
+				3B2E0B62137A11F8009B558C /* Sources */,
+				3B2E0B63137A11F8009B558C /* Frameworks */,
+				3B2E0B64137A11F8009B558C /* Resources */,
+				3BFC84D8139C5AB7000D2BB2 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirbrakeiOS;
+			productName = "Hoptoad iOS";
+			productReference = 3B2E0B66137A11F8009B558C /* AirbrakeiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3B2E0B1A137A11B1009B558C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "";
+				TargetAttributes = {
+					3B2E0B65137A11F8009B558C = {
+						DevelopmentTeam = 58JWY6KSB8;
+					};
+				};
+			};
+			buildConfigurationList = 3B2E0B1D137A11B1009B558C /* Build configuration list for PBXProject "Airbrake" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				de,
+				es,
+				fr,
+				ro,
+				ru,
+				"nl-BE",
+				"nl-NL",
+				nl,
+				"zh-Hant",
+			);
+			mainGroup = 3B2E0B18137A11B1009B558C;
+			productRefGroup = 3B2E0B24137A11B1009B558C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3B2E0B65137A11F8009B558C /* AirbrakeiOS */,
+				010B8ECD1AA7E00600A1B55A /* AirbrakeMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		010B8EDA1AA7E00600A1B55A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010B8EDB1AA7E00600A1B55A /* InfoPlist.strings in Resources */,
+				010B8EDC1AA7E00600A1B55A /* Credits.rtf in Resources */,
+				010B8EDD1AA7E00600A1B55A /* MainMenu.xib in Resources */,
+				010B8EDE1AA7E00600A1B55A /* ABNotifier.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3B2E0B64137A11F8009B558C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B2E0B70137A11F9009B558C /* InfoPlist.strings in Resources */,
+				01DB74D11AE1DAD300AEDEEE /* Main.storyboard in Resources */,
+				5D0DD3D618B7266A00650AA1 /* Default-568h@2x.png in Resources */,
+				564B67EB152E090200753DF9 /* ABNotifier.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		010B8EDF1AA7E00600A1B55A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/ruby;
+			shellScript = "#!/usr/bin/ruby\n# xcode-git-cfbundleversion.rb\n# Update CFBundleVersion in Info.plist file with short Git revision string\n# http://github.com/guicocoa/xcode-git-cfbundleversion/\n#\n# This is based on\n# http://github.com/digdog/xcode-git-cfbundleversion/\n# http://github.com/jsallis/xcode-git-versioner\n# http://github.com/juretta/iphone-project-tools/tree/v1.0.3\n\nrequire 'rubygems'\nbegin\nrequire 'Plist'\nrescue LoadError => e\nputs \"You need to install the 'Plist' gem: [sudo] gem install plist\"\nexit 1\nend\n\nraise \"Must be run from Xcode\" unless ENV['XCODE_VERSION_ACTUAL']\n\nGIT = \"/usr/bin/git\"\nPRODUCT_PLIST = File.join(ENV['BUILT_PRODUCTS_DIR'], ENV['INFOPLIST_PATH'])\nREVISION = `#{GIT} log --pretty=format:'' | wc -l`.scan(/\\d/).to_s\nBUNDLE_VERSION = \"CFBundleVersion\"\n\nif File.file?(PRODUCT_PLIST) and REVISION\n\n# update product plist\n`/usr/bin/plutil -convert xml1 \\\"#{PRODUCT_PLIST}\\\"`\ninfo = Plist::parse_xml(PRODUCT_PLIST)\nif info\ninfo[BUNDLE_VERSION] = REVISION\ninfo.save_plist(PRODUCT_PLIST)\nend\n`/usr/bin/plutil -convert binary1 \\\"#{PRODUCT_PLIST}\\\"`\n\n# log\nputs \"updated #{BUNDLE_VERSION} to #{REVISION}\"\n\nend\n";
+		};
+		3BFC84D8139C5AB7000D2BB2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/ruby;
+			shellScript = "";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		010B8ECE1AA7E00600A1B55A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010B8ECF1AA7E00600A1B55A /* ABCrashReport.m in Sources */,
+				010B8ED01AA7E00600A1B55A /* main.m in Sources */,
+				010B8ED11AA7E00600A1B55A /* HTSAppDelegate_Mac.m in Sources */,
+				010B8ED21AA7E00600A1B55A /* GCAlertView.m in Sources */,
+				010B8ED31AA7E00600A1B55A /* ABNotifierFunctions.m in Sources */,
+				010B8ED41AA7E00600A1B55A /* ABNotice.m in Sources */,
+				010B8ED51AA7E00600A1B55A /* ABNotifier.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3B2E0B62137A11F8009B558C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01CC7556199D6653007B7A91 /* ABCrashReport.m in Sources */,
+				3B2E0B73137A11F9009B558C /* main.m in Sources */,
+				01DB74D01AE1DAD300AEDEEE /* ViewController.m in Sources */,
+				3B2E0B76137A11F9009B558C /* HTSAppDelegate_iOS.m in Sources */,
+				3B7A06B513FEFD2E007E8CCF /* GCAlertView.m in Sources */,
+				3B7A06C313FEFD2E007E8CCF /* ABNotifierFunctions.m in Sources */,
+				3B7A06C513FEFD2E007E8CCF /* ABNotice.m in Sources */,
+				3B7A06C713FEFD2E007E8CCF /* ABNotifier.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3B2E0B50137A11E1009B558C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3B2E0B51137A11E1009B558C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		3B2E0B56137A11E1009B558C /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3B2E0B57137A11E1009B558C /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		3B2E0B5C137A11E1009B558C /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3B2E0B5D137A11E1009B558C /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		3B2E0B6E137A11F9009B558C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3B2E0B6F137A11F9009B558C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		010B8EE31AA7E00600A1B55A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Airbrake\\ Mac",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Airbrake Mac/AirbrakeMac-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "Airbrake Mac/AirbrakeMac-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Airbrake\\ Mac";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = AirbrakeMac;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		010B8EE41AA7E00600A1B55A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Airbrake\\ Mac",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Airbrake Mac/AirbrakeMac-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "Airbrake Mac/AirbrakeMac-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Airbrake\\ Mac";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = AirbrakeMac;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		3B2E0B3C137A11B1009B558C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		3B2E0B3D137A11B1009B558C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+			};
+			name = Release;
+		};
+		3B2E0B7B137A11F9009B558C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Airbrake\\ iOS",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Airbrake iOS/AirbrakeiOS-Prefix.pch";
+				INFOPLIST_FILE = "Airbrake iOS/AirbrakeiOS-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = AirbrakeiOS;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "arm64 armv7";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		3B2E0B7C137A11F9009B558C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Airbrake\\ iOS",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Airbrake iOS/AirbrakeiOS-Prefix.pch";
+				INFOPLIST_FILE = "Airbrake iOS/AirbrakeiOS-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = AirbrakeiOS;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		010B8EE21AA7E00600A1B55A /* Build configuration list for PBXNativeTarget "AirbrakeMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				010B8EE31AA7E00600A1B55A /* Debug */,
+				010B8EE41AA7E00600A1B55A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3B2E0B1D137A11B1009B558C /* Build configuration list for PBXProject "Airbrake" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B2E0B3C137A11B1009B558C /* Debug */,
+				3B2E0B3D137A11B1009B558C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3B2E0B7A137A11F9009B558C /* Build configuration list for PBXNativeTarget "AirbrakeiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B2E0B7B137A11F9009B558C /* Debug */,
+				3B2E0B7C137A11F9009B558C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3B2E0B1A137A11B1009B558C /* Project object */;
+}

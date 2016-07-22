@@ -140,7 +140,7 @@ void ABNotifierStopSignalHandler(void) {
 
 #pragma mark - Info.plist accessors
 NSString *ABNotifierApplicationVersion(void) {
-    static NSString *version = nil;
+    static NSString *version = @"0.0";
     static dispatch_once_t token;
     dispatch_once(&token, ^{
         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
@@ -351,7 +351,7 @@ NSString *ABLocalizedString(NSString* key) {
     static NSBundle *bundle = nil;
     static dispatch_once_t token;
     dispatch_once(&token, ^{
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"ABNotifier" ofType:@"bundle"];
+        NSString *path = [[NSBundle bundleForClass:[ABNotifier class]] pathForResource:@"ABNotifier" ofType:@"bundle"];
         bundle = [[NSBundle alloc] initWithPath:path];
     });
     return [bundle localizedStringForKey:key value:key table:nil];

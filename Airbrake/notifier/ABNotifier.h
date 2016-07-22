@@ -26,8 +26,8 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-    #ifndef __IPHONE_4_0
-        #error This version of the Airbrake notifier requires iOS 4.0 or later
+    #ifndef __IPHONE_6_0
+        #error This version of the Airbrake notifier requires iOS 6.0 or later
     #endif
 #elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
@@ -41,6 +41,7 @@
 #import "ABNotifierDelegate.h"
 
 // notifier version
+extern NSString * const ABNotifierName;
 extern NSString * const ABNotifierVersion;
 
 /*
@@ -69,6 +70,7 @@ extern NSString * const ABNotifierDidDismissAlertNotification;
 extern NSString * const ABNotifierWillPostNoticesNotification;
 extern NSString * const ABNotifierDidPostNoticesNotification;
 
+
 /*
  
  HTNotifier is the primary class of the notifer library. Start the notifier by
@@ -84,6 +86,7 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
  here are as follows:
  
  API Key: your Airbrake project API key
+ Product ID: each app should have its own product ID. You can find your project ID from http://help.airbrake.io/kb/api-2/notifier-api-v3.
  Environment Name: the name of the environment to collect notices in
  SSL: set this to enable secure reporting if your Airbrake account supports it
  Delegate: the object that wishes to receive events from the notifier
@@ -93,18 +96,33 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
     before notices are posted
  
  */
+
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
+                environmentName:(NSString *)name
+                         useSSL:(BOOL)useSSL;
++ (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate;
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
+                environmentName:(NSString *)name
+                       userName:(NSString *)username
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<ABNotifierDelegate>)delegate;
++ (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal;
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
@@ -139,7 +157,7 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
  */
 + (id<ABNotifierDelegate>)delegate;
 + (NSString *)APIKey;
-
++ (NSString *)projectID;
 /*
  
  Log an exception and optionally save parameters with this exception. These
