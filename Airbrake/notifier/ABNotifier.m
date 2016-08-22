@@ -123,7 +123,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 }
 
 + (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId hostName:(NSString *)hostName environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
-    [self startNotifierWithAPIKey:key projectID:projectId hostName:hostName environmentName:name userName:nil useSSL:useSSL delegate:delegate
+    [self startNotifierWithAPIKey:key projectID:projectId hostName:hostName environmentName:name userName:__userName useSSL:useSSL delegate:delegate
           installExceptionHandler:YES
              installSignalHandler:YES
                 displayUserPrompt:YES];
@@ -158,7 +158,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         static BOOL token = YES;
         if (token) {
             // store username
-            __userName = username;
+            if (username && username.length > 0) {
+                __userName = username;
+            }
             
             // change token5
             token = NO;
@@ -171,7 +173,7 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
             if (hostName && hostName.length > 0) {
                 __hostName = hostName;
             } else {
-                __hostName = ABNotifierName;
+                __hostName = ABNotifierHostName;
             }
             
             __userData = [[NSMutableDictionary alloc] init];
