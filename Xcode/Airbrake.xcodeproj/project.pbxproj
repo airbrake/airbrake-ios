@@ -276,11 +276,11 @@
 		3B2E0B1A137A11B1009B558C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					3B2E0B65137A11F8009B558C = {
-						DevelopmentTeam = 58JWY6KSB8;
+						DevelopmentTeam = U49DNE22RB;
 					};
 				};
 			};
@@ -453,6 +453,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Airbrake\\ Mac";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.guicocoa.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = AirbrakeMac;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -478,6 +479,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Airbrake\\ Mac";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.guicocoa.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = AirbrakeMac;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -495,6 +497,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -546,6 +549,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Airbrake\\ iOS",
@@ -555,6 +559,7 @@
 				GCC_PREFIX_HEADER = "Airbrake iOS/AirbrakeiOS-Prefix.pch";
 				INFOPLIST_FILE = "Airbrake iOS/AirbrakeiOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guicocoa.airbrakeios;
 				PRODUCT_NAME = AirbrakeiOS;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -572,6 +577,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Airbrake\\ iOS",
@@ -580,6 +586,7 @@
 				GCC_PREFIX_HEADER = "Airbrake iOS/AirbrakeiOS-Prefix.pch";
 				INFOPLIST_FILE = "Airbrake iOS/AirbrakeiOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guicocoa.airbrakeios;
 				PRODUCT_NAME = AirbrakeiOS;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
