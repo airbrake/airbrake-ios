@@ -130,20 +130,25 @@ extern NSString * const ABNotifierDidPostNoticesNotification;
               displayUserPrompt:(BOOL)display;
 
 + (void)startNotifierWithAPIKey:(NSString *)key
+                    projectID:(NSString *)projectId
                        hostName:(NSString *)hostName
                 environmentName:(NSString *)name
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate;
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                        hostName:(NSString *)hostName
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
            installSignalHandler:(BOOL)signal;
 + (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
                        hostName:(NSString *)hostName
                 environmentName:(NSString *)name
+                       userName:(NSString *)username
                          useSSL:(BOOL)useSSL
                        delegate:(id<ABNotifierDelegate>)delegate
         installExceptionHandler:(BOOL)exception
