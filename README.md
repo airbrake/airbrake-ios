@@ -5,7 +5,7 @@ The Airbrake iOS/Mac OS Notifier is designed to give developers instant notifica
 
 If you have questions or need support, please visit [Airbrake support](http://help.airbrake.io/discussions/ios-notifier)
 
-The notifier requires iOS 6.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects. It's also compitable with Swift. Current iOS Notifier version is 4.2.5.
+The notifier requires iOS 6.0 or higher for iOS projects and Mac OS 10.7 or higher for Mac OS projects. It's also compitable with Swift. Current iOS Notifier version is 4.2.6.
 
 # Signals
 
