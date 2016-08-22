@@ -34,6 +34,9 @@ static id<ABNotifierDelegate> __delegate = nil;
 static NSMutableDictionary *__userData;
 static NSString * __APIKey = nil;
 static NSString * __ABProjectID = nil;
+//__hostName will be used to format the URL to post the crash report.
+//By default the hostName is airbrake.io and url is https://api.airbrake.io/api/v3/projects/%d/...
+static NSString * __hostName = nil;
 static BOOL __useSSL = NO;
 static BOOL __displayPrompt = YES;
 static NSString *__userName = @"Anonymous";
@@ -105,21 +108,45 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     [self startNotifierWithAPIKey:key projectID:projectId environmentName:name userName:__userName useSSL:useSSL delegate:delegate installExceptionHandler:exception installSignalHandler:signal displayUserPrompt:YES];
 }
 
-+ (void)startNotifierWithAPIKey:(NSString *)key
-                      projectID:(NSString *)projectId
-                environmentName:(NSString *)name
-                       userName:(NSString *)username
-                         useSSL:(BOOL)useSSL
-                       delegate:(id<ABNotifierDelegate>)delegate {
++ (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId environmentName:(NSString *)name userName:(NSString *)username useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
     [self startNotifierWithAPIKey:key projectID:projectId environmentName:name userName:username useSSL:useSSL delegate:delegate
           installExceptionHandler:YES
              installSignalHandler:YES
                 displayUserPrompt:YES];
 }
 
++ (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId environmentName:(NSString *)name userName:(NSString *)username useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate installExceptionHandler:(BOOL)exception installSignalHandler:(BOOL)signal displayUserPrompt:(BOOL)display {
+    [self startNotifierWithAPIKey:key projectID:projectId hostName:nil environmentName:name userName:username useSSL:useSSL delegate:delegate
+          installExceptionHandler:exception
+             installSignalHandler:signal
+                displayUserPrompt:display];
+}
+
++ (void)startNotifierWithAPIKey:(NSString *)key projectID:(NSString *)projectId hostName:(NSString *)hostName environmentName:(NSString *)name useSSL:(BOOL)useSSL delegate:(id<ABNotifierDelegate>)delegate {
+    [self startNotifierWithAPIKey:key projectID:projectId hostName:hostName environmentName:name userName:__userName useSSL:useSSL delegate:delegate
+          installExceptionHandler:YES
+             installSignalHandler:YES
+                displayUserPrompt:YES];
+}
 
 + (void)startNotifierWithAPIKey:(NSString *)key
                       projectID:(NSString *)projectId
+                       hostName:(NSString *)hostName
+                environmentName:(NSString *)name
+                       userName:(NSString *)username
+                         useSSL:(BOOL)useSSL
+                       delegate:(id<ABNotifierDelegate>)delegate
+        installExceptionHandler:(BOOL)exception
+           installSignalHandler:(BOOL)signal {
+    [self startNotifierWithAPIKey:key projectID:projectId hostName:hostName environmentName:name userName:username useSSL:useSSL delegate:delegate
+          installExceptionHandler:exception
+             installSignalHandler:signal
+                displayUserPrompt:YES];
+}
+
++ (void)startNotifierWithAPIKey:(NSString *)key
+                      projectID:(NSString *)projectId
+                       hostName:(NSString *)hostName
                 environmentName:(NSString *)name
                        userName:(NSString *)username
                          useSSL:(BOOL)useSSL
@@ -131,7 +158,9 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
         static BOOL token = YES;
         if (token) {
             // store username
-            __userName = username;
+            if (username && username.length > 0) {
+                __userName = username;
+            }
             
             // change token5
             token = NO;
@@ -141,6 +170,12 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
              [NSDictionary dictionaryWithObject:@"NO" forKey:ABNotifierAlwaysSendKey]];
             
             // capture vars
+            if (hostName && hostName.length > 0) {
+                __hostName = hostName;
+            } else {
+                __hostName = ABNotifierHostName;
+            }
+            
             __userData = [[NSMutableDictionary alloc] init];
             __delegate = delegate;
             __useSSL = useSSL;
@@ -511,8 +546,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     // create url
     //API V3 iOS report https://api.airbrake.io/api/v3/projects/%d/ios-reports?key=API_KEY
     NSString *URLString = [NSString stringWithFormat:
-                           @"%@://api.airbrake.io/api/v3/projects/%@/ios-reports?key=%@",
-                           (__useSSL ? @"https" : @"http"),
+                           @"%@://api.%@/api/v3/projects/%@/ios-reports?key=%@",
+                           (__useSSL ? @"https" : @"http"), __hostName,
                            [self projectID], [self APIKey]];
     NSData *jsonData;
     NSString *fileType = [path pathExtension];
@@ -522,8 +557,8 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     } else {
         //current V3 API https://api.airbrake.io/api/v3/projects/%d/notices?key=API_KEY
         URLString = [NSString stringWithFormat:
-                     @"%@://api.airbrake.io/api/v3/projects/%@/notices?key=%@",
-                     (__useSSL ? @"https" : @"http"),
+                     @"%@://api.%@/api/v3/projects/%@/notices?key=%@",
+                     (__useSSL ? @"https" : @"http"), __hostName,
                      [self projectID], [self APIKey]];
         // get ABNotice
         ABNotice *notice = [ABNotice noticeWithContentsOfFile:path];
