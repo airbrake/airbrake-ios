@@ -329,3 +329,4 @@ The project uses the MIT License. See LICENSE.md for details.
 [app-ver]: https://airbrake.io/docs/airbrake-android-ios/app-versions/
 [twitter]: https://twitter.com/airbrake
 [issues]: https://github.com/airbrake/airbrake-ios/issues
+[airbrake-ios]: https://github.com/airbrake/airbrake-ios
