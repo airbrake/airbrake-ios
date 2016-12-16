@@ -37,7 +37,7 @@ static NSString * __ABProjectID = nil;
 //__hostName will be used to format the URL to post the crash report.
 //By default the hostName is airbrake.io and url is https://api.airbrake.io/api/v3/projects/%d/...
 static NSString * __hostName = nil;
-static BOOL __useSSL = NO;
+static BOOL __useSSL = YES;
 static BOOL __displayPrompt = YES;
 static NSString *__userName = @"Anonymous";
 static NSString *__envName = nil;

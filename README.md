@@ -112,8 +112,7 @@ Running the notifier in Swift as framework
      ABNotifier.startNotifierWithAPIKey(
        YOUR_API_KEY,
        projectID: Your_Product_ID,
-       environmentName: ABNotifierAutomaticEnvironment,
-       useSSL: true
+       environmentName: ABNotifierAutomaticEnvironment
      );
      ```
 
@@ -180,7 +179,6 @@ Next, call the start notifier method at the very beginning of your
 [ABNotifier startNotifierWithAPIKey:@"YOUR_API_KEY"
                           projectID:@"Your_Product_ID"
                     environmentName:ABNotifierAutomaticEnvironment
-                             useSSL:YES // only if your account supports it
                            delegate:self];
 ```
 
