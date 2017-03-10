@@ -75,7 +75,12 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
         close(fd);
         
     }
-	
+
+    id<ABNotifierDelegate> delegte = [ABNotifier delegate];
+    if ([delegte respondsToSelector:@selector(notifierDidRecieveSignal:)]) {
+		[delegte notifierDidRecieveSignal:signal];
+	}
+
 	// re raise
 	raise(signal);
     
@@ -83,6 +88,10 @@ void ht_handle_signal(int signal, siginfo_t *info, void *context) {
 void ht_handle_exception(NSException *exception) {
     ABNotifierStopSignalHandler();
     ABNotifierStopExceptionHandler();
+    id<ABNotifierDelegate> delegte = [ABNotifier delegate];
+    if ([delegte respondsToSelector:@selector(notifierDidRecieveSignal:)]) {
+		[delegte notifierDidRecieveException:exception];
+	}
     [ABNotifier logException:exception];
 }
 
