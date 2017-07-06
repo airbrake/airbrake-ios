@@ -527,6 +527,14 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
     NSError *error = NULL;
     NSError *jsonSerializationError = nil;
     NSString *dataStr = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+    
+    // chrash reports seems to be limited to 64kb, otherwise they are ignored by the API with the following error
+    // [Airbrake] {"code":400,"type":"Bad Request","message":"http: request body too large"}
+    // so we truncate the string to 60000 characters
+    if(dataStr.length > 60000) {
+        dataStr = [dataStr substringWithRange:NSMakeRange(0, 60000)];
+    }
+    
     if (!dataStr) {
         jsonData = nil;
         ABLog(@"ERROR: Crash report data is not readable.");
