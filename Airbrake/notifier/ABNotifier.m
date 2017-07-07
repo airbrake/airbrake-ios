@@ -525,23 +525,33 @@ void ABNotifierReachabilityDidChange(SCNetworkReachabilityRef target, SCNetworkR
 + (NSData *)JSONString:(NSString *)filePath {
     NSData *jsonData;
     NSError *error = NULL;
-    NSError *jsonSerializationError = nil;
-    NSString *dataStr = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
     
-    // chrash reports seems to be limited to 64kb, otherwise they are ignored by the API with the following error
-    // [Airbrake] {"code":400,"type":"Bad Request","message":"http: request body too large"}
-    // so we truncate the string to 60000 characters
-    if(dataStr.length > 60000) {
-        dataStr = [dataStr substringWithRange:NSMakeRange(0, 60000)];
-    }
+    NSString *dataStr = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
     
     if (!dataStr) {
         jsonData = nil;
         ABLog(@"ERROR: Crash report data is not readable.");
         return jsonData;
     }
-    NSDictionary *notice = @{@"report": dataStr, @"context":@{@"userName":__userName, @"environment":__envName, @"notifier":@{@"name":ABNotifierName,@"version":ABNotifierVersion,@"url":@"https://github.com/airbrake/airbrake-ios"}}};
-    jsonData = [NSJSONSerialization dataWithJSONObject:notice options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
+    
+    jsonData = [self JSONObjectWithPayload:dataStr];
+    
+    int maxSize = 64*1024;
+    
+    if(jsonData.length > maxSize) {
+        // truncate data string
+        dataStr = [dataStr substringWithRange:NSMakeRange(0, dataStr.length - (jsonData.length - maxSize))];
+        jsonData = [self JSONObjectWithPayload:dataStr];
+    }
+    
+    return jsonData;
+}
+    
++(NSData*) JSONObjectWithPayload:(NSString*)payload {
+    
+    NSDictionary *notice = @{@"report": payload, @"context":@{@"userName":__userName, @"environment":__envName, @"notifier":@{@"name":ABNotifierName,@"version":ABNotifierVersion,@"url":@"https://github.com/airbrake/airbrake-ios"}}};
+    NSError *jsonSerializationError = nil;
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:notice options:NSJSONWritingPrettyPrinted error:&jsonSerializationError];
     if(jsonSerializationError) {
         jsonData = nil;
         ABLog(@"ERROR: JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
