@@ -109,8 +109,8 @@ Running the notifier in Swift as framework
    launchOptions: NSDictionary!) -> Bool {'
 
      ```swift
-     ABNotifier.startNotifierWithAPIKey(
-       YOUR_API_KEY,
+     ABNotifier.start(
+       withAPIKey: YOUR_API_KEY,
        projectID: Your_Product_ID,
        environmentName: ABNotifierAutomaticEnvironment
      );
@@ -299,7 +299,7 @@ Supported versions
 
 The notifier requires iOS 6.0 or higher for iOS projects and Mac OS 10.7 or
 higher for Mac OS projects. It's also compitable with Swift. Current iOS
-Notifier version is 4.2.6.
+Notifier version is 4.2.7.
 
 Contact
 -------
