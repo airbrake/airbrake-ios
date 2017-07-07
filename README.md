@@ -112,8 +112,9 @@ Running the notifier in Swift as framework
      ABNotifier.start(
        withAPIKey: YOUR_API_KEY,
        projectID: Your_Product_ID,
-       environmentName: ABNotifierAutomaticEnvironment
-     );
+       environmentName: ABNotifierAutomaticEnvironment,
+       useSSL: true
+     )
      ```
 
 And you're good to go.
@@ -149,12 +150,12 @@ application(application: UIApplication!, didFinishLaunchingWithOptions
 launchOptions: NSDictionary!) -> Bool {'
 
 ```swift
-ABNotifier.startNotifierWithAPIKey(
-  YOUR_API_KEY,
-  projectID: Your_Product_ID,
-  environmentName: ABNotifierAutomaticEnvironment,
-  useSSL: true
-);
+     ABNotifier.start(
+       withAPIKey: YOUR_API_KEY,
+       projectID: Your_Product_ID,
+       environmentName: ABNotifierAutomaticEnvironment,
+       useSSL: true
+     )
 ```
 
 Running the notifier in Objective-C
@@ -237,7 +238,7 @@ as if a real crash happened. Add this code to your
 Similarly you can call the test method in Swift.
 
 ```swift
-ABNotifier.writeTestNotice();
+ABNotifier.writeTestNotice()
 ```
 
 If you use the `DEBUG` macro to signify development builds the notifier will log
