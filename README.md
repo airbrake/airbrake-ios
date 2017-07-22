@@ -300,7 +300,7 @@ Supported versions
 
 The notifier requires iOS 6.0 or higher for iOS projects and Mac OS 10.7 or
 higher for Mac OS projects. It's also compitable with Swift. Current iOS
-Notifier version is 4.2.7.
+Notifier version is 4.2.8.
 
 Contact
 -------
