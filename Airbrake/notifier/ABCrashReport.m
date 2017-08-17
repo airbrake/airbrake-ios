@@ -81,7 +81,18 @@
                 NSString *filePath = [[self pathForNoticesDirectory] stringByAppendingPathComponent: name];
                 NSString *fileName = [filePath stringByAppendingPathExtension:ABNotifierNoticePathExtension];
                 NSError *error = NULL;
-                [[self crashReportStringFormat:report] writeToFile: fileName atomically:YES encoding:NSUTF8StringEncoding error:&error];
+                NSString *sreport=[self crashReportStringFormat:report];
+                [sreport writeToFile: fileName atomically:YES encoding:NSUTF8StringEncoding error:&error];
+                if([report hasExceptionInfo] && [sreport containsString:@"Last Exception Backtrace:"]){
+                    //save the crash again with the last exception backtrace converted to a pseudo thread
+                    name = [[NSProcessInfo processInfo] globallyUniqueString];
+                    filePath = [[self pathForNoticesDirectory] stringByAppendingPathComponent: name];
+                    fileName = [filePath stringByAppendingPathExtension:ABNotifierNoticePathExtension];
+                    sreport=[sreport stringByReplacingOccurrencesOfString:@" Crashed:" withString:@":" ];
+                    sreport=[sreport stringByReplacingOccurrencesOfString:@"Last Exception Backtrace:" withString:@"Thread 99 Crashed:" ];
+                    sreport=[sreport stringByReplacingOccurrencesOfString:@"Incident Identifier: " withString:@"Incident Identifier: FA3E"  ];
+                    [sreport writeToFile: fileName atomically:YES encoding:NSUTF8StringEncoding error:&error];
+                }
                  //ABLog(@"new crash report saved at %@", fileName);
             }
     }
