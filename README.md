@@ -1,7 +1,9 @@
+<p align="center">
+  <img src="https://airbrake-github-assets.s3.amazonaws.com/brand/airbrake-full-logo.png" width="200">
+</p>
+
 Airbrake iOS
 ============
-
-![Airbrake iOS][arthur-ios]
 
 * [Airbrake iOS][airbrake-ios]
 * [Airbrake documentation][airbrake-docs]
@@ -320,7 +322,6 @@ The project uses the MIT License. See LICENSE.md for details.
 
 [airbrake.io]: https://airbrake.io
 [project-idkey]: https://s3.amazonaws.com/airbrake-github-assets/airbrake-ios/project-id-key.png
-[arthur-ios]: https://s3.amazonaws.com/airbrake-github-assets/airbrake-ios/arthur-ios.jpeg
 [airbrake-ios-readme]: https://github.com/airbrake/airbrake-ios
 [airbrake-docs]: https://airbrake.io/docs/
 [semver]: http://semver.org/
