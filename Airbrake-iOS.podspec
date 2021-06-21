@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   
   s.author       = "Jocelyn Harrington"
   
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '6.0'
   
   s.osx.deployment_target = '10.8'
 
